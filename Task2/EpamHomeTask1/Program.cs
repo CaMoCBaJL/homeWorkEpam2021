@@ -5,7 +5,7 @@ namespace EpamHomeTask1
 {
     class Program
     {
-        static void TwoDimArray() 
+        static void TwoDimArray()
         {
             Random r = new Random();
             int n = r.Next(2, 5);
@@ -21,13 +21,13 @@ namespace EpamHomeTask1
                 }
                 Console.WriteLine();
             }
-            for(int i = 0; i < n; i++) //Вместо перебора всех чисел в массиве проще стартовать с первого четного элемента n-ой строки и просматривать все четные, т.е. шаг = 2. 
-                                       //Если строка нечетная n = {1,3,5,..}, то первый четный элемент в ней - [n, 1], иначе - [n, 0].            
+            for (int i = 0; i < n; i++) //Вместо перебора всех чисел в массиве проще стартовать с первого четного элемента n-ой строки и просматривать все четные, т.е. шаг = 2. 
+                                        //Если строка нечетная n = {1,3,5,..}, то первый четный элемент в ней - [n, 1], иначе - [n, 0].            
             {
                 for (int j = i % 2; j < n; j += 2)
                     sum += arr[i, j];
             }
-            Console.WriteLine("Сумма четных элементов - "+sum);
+            Console.WriteLine("Сумма четных элементов - " + sum);
         }
         static void NonNegativeSum()
         {
@@ -92,9 +92,9 @@ namespace EpamHomeTask1
                 int marker = start;
                 for (int i = start; i < end; i++)
                 {
-                    if (array[i] < array[end]) 
+                    if (array[i] < array[end])
                     {
-                        temp = array[marker]; 
+                        temp = array[marker];
                         array[marker] = array[i];
                         array[i] = temp;
                         marker += 1;
@@ -134,7 +134,7 @@ namespace EpamHomeTask1
             Console.WriteLine(Environment.NewLine + "Массив до сортировки:");
             foreach (int elem in arr)
                 Console.Write(elem + " ");
-            Quicksort(ref arr, 0, arr.Length -1);
+            Quicksort(ref arr, 0, arr.Length - 1);
             Console.WriteLine(Environment.NewLine + "Массив после сортировки:");
             foreach (int elem in arr)
                 Console.Write(elem + " ");
@@ -142,9 +142,9 @@ namespace EpamHomeTask1
         static void FontAdjustment()
         {
             int i = 1;
-            while(i % 11 != 0)
+            while (i % 11 != 0)
             {
-                Console.WriteLine($"Параметры надписи: {(i == 1?"None":"")} {(i % 3 == 0?"Bold":"")} " +
+                Console.WriteLine($"Параметры надписи: {(i == 1 ? "None" : "")} {(i % 3 == 0 ? "Bold" : "")} " +
                     $"{(i % 5 == 0 ? "Italic" : "")} {(i % 7 == 0 ? "UnderLine" : "")}");
                 Console.WriteLine("Введите:");
                 Console.WriteLine("\t\t 1: bold");
@@ -156,36 +156,36 @@ namespace EpamHomeTask1
                     switch (int.Parse(Console.ReadLine()))
                     {
                         case 1:
-                                if (i % 3 != 0)
-                                    i *= 3;
-                                else
-                                    i /= 3;
-                                break;
+                            if (i % 3 != 0)
+                                i *= 3;
+                            else
+                                i /= 3;
+                            break;
                         case 2:
-                                if (i % 5 != 0)
-                                    i *= 5;
-                                else
-                                    i /= 5;
-                                break;
+                            if (i % 5 != 0)
+                                i *= 5;
+                            else
+                                i /= 5;
+                            break;
                         case 3:
-                                if (i % 7 != 0)
-                                    i *= 7;
-                                else
-                                    i /= 7;
-                                break;
+                            if (i % 7 != 0)
+                                i *= 7;
+                            else
+                                i /= 7;
+                            break;
                         case 4:
-                                if (i % 11 != 0)
-                                    i *= 11;
-                                else
-                                    i /= 11;
-                                break;
+                            if (i % 11 != 0)
+                                i *= 11;
+                            else
+                                i /= 11;
+                            break;
                         default:
                             Console.WriteLine(Environment.NewLine + "--------------------------------"
                         + "Ввод неверен!" + "--------------------------------" + Environment.NewLine);
                             break;
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     Console.WriteLine(Environment.NewLine + "--------------------------------"
                         + "Ввод неверен!" + "--------------------------------" + Environment.NewLine);
@@ -199,10 +199,10 @@ namespace EpamHomeTask1
         static int SumOfNumbers()
         {
             int res = 0;
-            for (int i = 3; i < 1000; i +=3)
+            for (int i = 3; i < 1000; i += 3)
                 res += i;
-            for (int i = 5; i < 1000; i+=5)
-                res += i % 3 == 0?0:i;
+            for (int i = 5; i < 1000; i += 5)
+                res += i % 3 == 0 ? 0 : i;
             return res;
         }
         static void X_MAS_TREE()
@@ -214,9 +214,9 @@ namespace EpamHomeTask1
                 n = int.Parse(Console.ReadLine());
                 if (n > 0)
                 {
-                    AnotherTriangle(1, 2*n - 1);
-                    for (int i = 3; i <= 2*n - 1; i+=2)
-                        AnotherTriangle(i, 2*n - 1);
+                    AnotherTriangle(1, 2 * n - 1);
+                    for (int i = 3; i <= 2 * n - 1; i += 2)
+                        AnotherTriangle(i, 2 * n - 1);
                 }
             }
             catch (Exception ex)
@@ -233,13 +233,13 @@ namespace EpamHomeTask1
         /// <param name="len"></param>
         static void AnotherTriangle(int n, int len)
         {
-            for (int i = 1; i <= n; i += 2) 
+            for (int i = 1; i <= n; i += 2)
             {
                 for (int j = 0; j < (len - n) / 2 + n / 2 - i / 2; j++)
                     Console.Write(" ");
                 for (int j = 0; j < i; j++)
                     Console.Write("*");
-                for (int j = n / 2 + i / 2; j <= 2*n + len; j++)
+                for (int j = n / 2 + i / 2; j <= 2 * n + len; j++)
                     Console.Write(" ");
                 Console.WriteLine();
             }
@@ -303,18 +303,65 @@ namespace EpamHomeTask1
 
         static void Main(string[] args)
         {
-            //CalculateRectangleSquare();
-            //PrintTriangle();
-            //AnotherTriangle();
-            //X_MAS_TREE();
-            //Console.WriteLine($"Сумма всех чисел, кратных 3 и 5 в 1000 = {SumOfNumbers()}");
-            //FontAdjustment();
-            //ArrayProcessing();
-            //NoPositivie();
-            //NonNegativeSum();
-            TwoDimArray();
+            int res = 0;
+            while (res != 11)
+            {
+                Console.WriteLine("Выберите метод для демонстрации:");
+                Console.WriteLine("1 - Calculate Rectangle Square.");
+                Console.WriteLine("2 - Print Triangle.");
+                Console.WriteLine("3 - Another Triangle.");
+                Console.WriteLine("4 - XMAS-TREE.");
+                Console.WriteLine("5 - SumOfNumbers.");
+                Console.WriteLine("6 - FontAdjustment.");
+                Console.WriteLine("7 - Array Processing.");
+                Console.WriteLine("8 - No Positive.");
+                Console.WriteLine("9 - Non Negative Sum.");
+                Console.WriteLine("10 - Two Dim Array.");
+                Console.WriteLine("11 - Выход.");
+                if (int.TryParse(Console.ReadLine(), out res))
+                    switch (res)
+                    {
+                        case 1:
+                            CalculateRectangleSquare();
+                            break;
+                        case 2:
+                            PrintTriangle();
+                            break;
+                        case 3:
+                            AnotherTriangle();
+                            break;
+                        case 4:
+                            X_MAS_TREE();
+                            break;
+                        case 5:
+                            Console.WriteLine($"Сумма всех чисел, кратных 3 и 5 в 1000 = {SumOfNumbers()}");
+                            break;
+                        case 6:
+                            FontAdjustment();
+                            break;
+                        case 7:
+                            ArrayProcessing();
+                            break;
+                        case 8:
+                            NoPositivie();
+                            break;
+                        case 9:
+                            NonNegativeSum();
+                            break;
+                        case 10:
+                            TwoDimArray();
+                            break;
+                        case 11:
+                            break;
+                        default:
+                            Console.WriteLine("Пункт с введенным номером отсутствует в меню." + Environment.NewLine);
+                            break;
+                    }
+                else
+                    Console.WriteLine("Ввод неверен!" + Environment.NewLine);
+            }
         }
-        
+
     }
 }
 

@@ -21,6 +21,7 @@ namespace ConsoleApp1
             {
                 Console.Write(item + " ");
             }
+            Console.WriteLine();
         }
         static void LowerCase1(bool hardTask)
         {
@@ -70,12 +71,43 @@ namespace ConsoleApp1
         }
         static void Main(string[] args)
         {
-            //StringNotSting();
-            //Doubler();
-            //LowerCase1(false); //входной параметр определяет, вызвается ли задача со *.
-            //LowerCase1(true);
-            Validator();
-            Console.ReadKey();
+            int res = 0;
+            while (res != 6)
+            {
+                Console.WriteLine("Выберите метод для демонстрации: ");
+                Console.WriteLine("1 - String Not Sting.");
+                Console.WriteLine("2 - Doubler.");
+                Console.WriteLine("3 - Lower Case.");
+                Console.WriteLine("4 - Lower Case*.");
+                Console.WriteLine("5 - Validator.");
+                Console.WriteLine("6 - Выход.");
+                if(int.TryParse(Console.ReadLine(), out res))
+                    switch (res)
+                    {
+                        case 1:
+                            StringNotSting();
+                            break;
+                        case 2:
+                            Doubler();
+                            break;
+                        case 3:
+                            LowerCase1(false); //входной параметр определяет, вызвается ли задача со *.
+                            break;
+                        case 4:
+                            LowerCase1(true);
+                            break;
+                        case 5:
+                            Validator();
+                            break;
+                        case 6:
+                            break;
+                        default:
+                            Console.WriteLine("Введенный вариант отсутсвует в меню." + Environment.NewLine);
+                            break;
+                    }
+                else
+                    Console.WriteLine("Ввод неверен!" + Environment.NewLine);
+            }
         }
     }
 }
