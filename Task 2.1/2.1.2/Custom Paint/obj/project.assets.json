@@ -15,11 +15,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Epam\\Task 1.1\\EpamHomeTask1\\EpamHomeTask1.csproj",
-      "projectName": "EpamHomeTask1",
-      "projectPath": "C:\\Epam\\Task 1.1\\EpamHomeTask1\\EpamHomeTask1.csproj",
+      "projectUniqueName": "C:\\Users\\Анотон\\source\\repos\\Custom Paint\\Custom Paint\\Custom Paint.csproj",
+      "projectName": "Custom Paint",
+      "projectPath": "C:\\Users\\Анотон\\source\\repos\\Custom Paint\\Custom Paint\\Custom Paint.csproj",
       "packagesPath": "C:\\Users\\Анотон\\.nuget\\packages\\",
-      "outputPath": "C:\\Epam\\Task 1.1\\EpamHomeTask1\\obj\\",
+      "outputPath": "C:\\Users\\Анотон\\source\\repos\\Custom Paint\\Custom Paint\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",
