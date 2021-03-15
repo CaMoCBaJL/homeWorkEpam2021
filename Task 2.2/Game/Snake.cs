@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Game
 {
-    class Bear : Enemy
+    class Snake : Enemy
     {
         char _img;
         int _health;
@@ -57,32 +57,32 @@ namespace Game
                 Color = ConsoleColor.Gray;
             else
             {
-                _maxDamage += Level * 3;
+                _maxDamage += Level * 2;
                 _minDamage += Level;
             }
         }
 
         public override void MoveDown()
         {
-            _position.y -= 2;
+            _position.y--;
         }
 
         public override void MoveLeft()
         {
-            _position.x -= 2;
+            _position.x--;
         }
 
         public override void MoveRigth()
         {
-            _position.x += 2;
+            _position.x++;
         }
 
         public override void MoveUp()
         {
-            _position.y += 2;
+            _position.y++;
         }
 
-        public Bear()
+        public Snake()
         {
             _health = 0;
             _position = (0, 0);
@@ -91,12 +91,12 @@ namespace Game
             _minDamage = 0;
         }
 
-        public Bear(int health, (int x, int y) position, int level)
+        public Snake(int health, (int x, int y) position, int level)
         {
             _health = health;
             _position = position;
             AutoLeveling(level);
-            _img = char.ConvertFromUtf32(37)[0];
+            _img = char.ConvertFromUtf32(1134)[0];
         }
 
         public override void AutoLeveling(int level)
@@ -104,37 +104,37 @@ namespace Game
             switch (level)
             {
                 case 1:
-                    _health = 13;
-                    _minDamage = 5;
-                    _maxDamage = 8;
+                    _health = 1;
+                    _minDamage = 7;
+                    _maxDamage = 12;
                     Level = level;
                     Color = ConsoleColor.Green;
                     break;
                 case 2:
-                    _health = 20;
-                    _minDamage = 8;
-                    _maxDamage = 12;
+                    _health = 3;
+                    _minDamage = 13;
+                    _maxDamage = 20;
                     Level = level;
                     Color = ConsoleColor.DarkGreen;
                     break;
                 case 3:
-                    _health = 30;
-                    _minDamage = 10;
-                    _maxDamage = 18;
+                    _health = 7;
+                    _minDamage = 19;
+                    _maxDamage = 26;
                     Level = level;
                     Color = ConsoleColor.Yellow;
                     break;
                 case 4:
-                    _health = 40;
-                    _minDamage = 15;
-                    _maxDamage = 25;
+                    _health = 9;
+                    _minDamage = 30;
+                    _maxDamage = 37;
                     Level = level;
                     Color = ConsoleColor.DarkRed;
                     break;
                 case 5:
-                    _health = 55;
-                    _minDamage = 20;
-                    _maxDamage = 36;
+                    _health = 15;
+                    _minDamage = 40;
+                    _maxDamage = 50;
                     Level = level;
                     Color = ConsoleColor.Red;
                     break;
