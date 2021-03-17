@@ -6,23 +6,19 @@ namespace Game
 {
     class Bear : Enemy
     {
-        char _img;
         int _health;
         int _maxDamage;
         int _minDamage;
         (int x, int y) _position;
-
-        public override char Image
-        {
-            get => _img;
-            set => _img = value;
-        }
 
         public override int Health
         {
             get => _health;
             set => _health = value;
         }
+
+        public override char Img { get; set; }
+
 
         public override int MaxDamage
         {
@@ -44,6 +40,8 @@ namespace Game
         {
             return Level * MaxDamage;
         }
+
+        public override (int x, int y) Position { get => _position; set => _position = value; }
 
         public override bool IsDead(int hitValue)
         {
@@ -86,7 +84,7 @@ namespace Game
         {
             _health = 0;
             _position = (0, 0);
-            _img = '\0';
+            Img = '\0';
             _maxDamage = 0;
             _minDamage = 0;
         }
@@ -96,7 +94,7 @@ namespace Game
             _health = health;
             _position = position;
             AutoLeveling(level);
-            _img = char.ConvertFromUtf32(37)[0];
+            Img = char.ConvertFromUtf32(37)[0];
         }
 
         public override void AutoLeveling(int level)
@@ -139,6 +137,11 @@ namespace Game
                     Color = ConsoleColor.Red;
                     break;
             }
+        }
+
+        public override Type GetType()
+        {
+            return this.GetType();
         }
     }
 }

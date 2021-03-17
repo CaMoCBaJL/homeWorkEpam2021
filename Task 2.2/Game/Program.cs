@@ -8,23 +8,17 @@ namespace Game
     {
         static void Main(string[] args)
         {
-            List<string> enemy1 = new List<string>();
-            using(StreamReader fileIn = new StreamReader("enemy_1.txt"))
-            {
-                while(!fileIn.EndOfStream)
-                enemy1.Add(fileIn.ReadLine());
-            }
-            foreach (var item in enemy1)
-            {
-                Console.WriteLine(item);
-            }
-
-            
+            GameEngine g = new GameEngine();
+            Swamp s = new Swamp((14, 14), 5, 5);
+            g.BuildField(20, 30, s, Wall.CreateVerticalWall(5, (5,0)), Wall.CreateHorizontalWall(5, (6, 5)));
+            g.ShowField();
 
             while (true)
             {
                 Console.ForegroundColor = (ConsoleColor)new Random().Next(0,10);
-                Console.WriteLine(Console.ReadKey().Key);
+                string key =  Console.ReadKey().Key.ToString();
+                if (key.Contains("Arrow"))
+                    Console.WriteLine(key);
             }
         }
     }
