@@ -1,0 +1,6 @@
+C:\Users\Анотон\source\repos\MyDll\MyDll\bin\Debug\MyDll.dll
+C:\Users\Анотон\source\repos\MyDll\MyDll\bin\Debug\MyDll.pdb
+C:\Users\Анотон\source\repos\MyDll\MyDll\obj\Debug\MyDll.csprojAssemblyReference.cache
+C:\Users\Анотон\source\repos\MyDll\MyDll\obj\Debug\MyDll.csproj.CoreCompileInputs.cache
+C:\Users\Анотон\source\repos\MyDll\MyDll\obj\Debug\MyDll.dll
+C:\Users\Анотон\source\repos\MyDll\MyDll\obj\Debug\MyDll.pdb
