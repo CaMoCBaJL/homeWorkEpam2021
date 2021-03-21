@@ -8,18 +8,14 @@ namespace Game
     {
         static void Main(string[] args)
         {
+            Console.Clear();
             GameEngine g = new GameEngine();
-            Swamp s = new Swamp((14, 14), 5, 5);
-            g.BuildField(20, 30, s, Wall.CreateVerticalWall(5, (5,0)), Wall.CreateHorizontalWall(5, (6, 5)));
-            g.ShowField();
-
-            while (true)
-            {
-                Console.ForegroundColor = (ConsoleColor)new Random().Next(0,10);
-                string key =  Console.ReadKey().Key.ToString();
-                if (key.Contains("Arrow"))
-                    Console.WriteLine(key);
-            }
+            
+            g.BuildField(31, 31);
+            g.GenerateLandScape(GameEngine.LandScapeType.Big);
+            g.SpawnEnemies(GameEngine.EnemyAmount.WILFDOREST);
+            g.GenerateItems(GameEngine.CollectablesAmount.ChestOfTreasures);
+            g.GameStart();
         }
     }
 }

@@ -14,9 +14,9 @@ namespace Game
         public Crisps((int x, int y) pos)
         {
             Position = pos;
-            Color = ConsoleColor.DarkYellow;
+            Color = ConsoleColor.Yellow;
             EffectOnUser = Effect.effects.SpeedIncrease;
-            Img = char.ConvertFromUtf32(169)[0];
+            Img = 'C';
         }
 
         public override Type GetType()

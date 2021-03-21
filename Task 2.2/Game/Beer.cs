@@ -16,7 +16,7 @@ namespace Game
             Position = pos;
             Color = ConsoleColor.DarkYellow;
             EffectOnUser = Effect.effects.DamageIncrease;
-            Img = char.ConvertFromUtf32(338)[0]; 
+            Img = '8'; 
         }
 
         public override Type GetType()

@@ -74,7 +74,7 @@ namespace Game
         {
         }
 
-        public Snake()
+        private Snake()
         {
             _health = 0;
             _position = (0, 0);
@@ -83,12 +83,11 @@ namespace Game
             _minDamage = 0;
         }
 
-        public Snake(int health, (int x, int y) position, int level)
+        public Snake((int x, int y) position, int level)
         {
-            _health = health;
             _position = position;
             AutoLeveling(level);
-            Img = char.ConvertFromUtf32(1134)[0];
+            Img = 'Z';
         }
 
         public override void AutoLeveling(int level)
@@ -100,14 +99,14 @@ namespace Game
                     _minDamage = 7;
                     _maxDamage = 12;
                     Level = level;
-                    Color = ConsoleColor.Green;
+                    Color = ConsoleColor.White;
                     break;
                 case 2:
                     _health = 3;
                     _minDamage = 13;
                     _maxDamage = 20;
                     Level = level;
-                    Color = ConsoleColor.DarkGreen;
+                    Color = ConsoleColor.Cyan;
                     break;
                 case 3:
                     _health = 7;

@@ -16,7 +16,7 @@ namespace Game
         public Swamp((int x, int y) pos, int width, int height)
         {
             EffectOnUser = Effect.effects.SpeedDecrease;
-            Color = ConsoleColor.DarkGreen;
+            Color = ConsoleColor.Gray;
             Width = width;
             Height = height;
             Position = pos;

@@ -15,7 +15,7 @@ namespace Game
         {
             Position = pos;
             Color = ConsoleColor.Red;
-            Img = '$';
+            Img = 'A';
             EffectOnUser = Effect.effects.LifeIncrease;
         }
 

@@ -78,7 +78,7 @@ namespace Game
 
         public override char Img { get; set; }
 
-        public Wolf()
+        private Wolf()
         {
             _health = 0;
             _position = (0, 0);
@@ -87,12 +87,11 @@ namespace Game
             _minDamage = 0;
         }
 
-        public Wolf(int health, (int x, int y) position, int level)
+        public Wolf ((int x, int y) position, int level)
         {
-            _health = health;
             _position = position;
             AutoLeveling(level);
-            Img = '@';
+            Img = 'W';
         }
 
         public override void AutoLeveling(int level)
@@ -104,14 +103,14 @@ namespace Game
                     _minDamage = 1;
                     _maxDamage = 5;
                     Level = level;
-                    Color = ConsoleColor.Green;
+                    Color = ConsoleColor.White;
                     break;
                 case 2:
                     _health = 7;
                     _minDamage = 3;
                     _maxDamage = 8;
                     Level = level;
-                    Color = ConsoleColor.DarkGreen;
+                    Color = ConsoleColor.Cyan;
                     break;
                 case 3:
                     _health = 10;

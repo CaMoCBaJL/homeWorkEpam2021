@@ -80,7 +80,7 @@ namespace Game
             _position.y += 2;
         }
 
-        public Bear()
+        private Bear()
         {
             _health = 0;
             _position = (0, 0);
@@ -89,12 +89,11 @@ namespace Game
             _minDamage = 0;
         }
 
-        public Bear(int health, (int x, int y) position, int level)
+        public Bear((int x, int y) position, int level)
         {
-            _health = health;
             _position = position;
             AutoLeveling(level);
-            Img = char.ConvertFromUtf32(37)[0];
+            Img = 'B';
         }
 
         public override void AutoLeveling(int level)
@@ -106,14 +105,14 @@ namespace Game
                     _minDamage = 5;
                     _maxDamage = 8;
                     Level = level;
-                    Color = ConsoleColor.Green;
+                    Color = ConsoleColor.White;
                     break;
                 case 2:
                     _health = 20;
                     _minDamage = 8;
                     _maxDamage = 12;
                     Level = level;
-                    Color = ConsoleColor.DarkGreen;
+                    Color = ConsoleColor.Cyan;
                     break;
                 case 3:
                     _health = 30;
