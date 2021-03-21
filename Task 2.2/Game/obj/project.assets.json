@@ -15,11 +15,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Анотон\\source\\repos\\Game\\Game\\Game.csproj",
+      "projectUniqueName": "C:\\Epam\\Task 2.2\\Game\\Game.csproj",
       "projectName": "Game",
-      "projectPath": "C:\\Users\\Анотон\\source\\repos\\Game\\Game\\Game.csproj",
+      "projectPath": "C:\\Epam\\Task 2.2\\Game\\Game.csproj",
       "packagesPath": "C:\\Users\\Анотон\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Анотон\\source\\repos\\Game\\Game\\obj\\",
+      "outputPath": "C:\\Epam\\Task 2.2\\Game\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",

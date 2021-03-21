@@ -11,3 +11,16 @@ C:\Users\Анотон\source\repos\Game\Game\obj\Debug\netcoreapp3.1\Game.csproj
 C:\Users\Анотон\source\repos\Game\Game\obj\Debug\netcoreapp3.1\Game.dll
 C:\Users\Анотон\source\repos\Game\Game\obj\Debug\netcoreapp3.1\Game.pdb
 C:\Users\Анотон\source\repos\Game\Game\obj\Debug\netcoreapp3.1\Game.genruntimeconfig.cache
+C:\Epam\Task 2.2\Game\bin\Debug\netcoreapp3.1\Game.exe
+C:\Epam\Task 2.2\Game\bin\Debug\netcoreapp3.1\Game.deps.json
+C:\Epam\Task 2.2\Game\bin\Debug\netcoreapp3.1\Game.runtimeconfig.json
+C:\Epam\Task 2.2\Game\bin\Debug\netcoreapp3.1\Game.runtimeconfig.dev.json
+C:\Epam\Task 2.2\Game\bin\Debug\netcoreapp3.1\Game.dll
+C:\Epam\Task 2.2\Game\bin\Debug\netcoreapp3.1\Game.pdb
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.csprojAssemblyReference.cache
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.AssemblyInfoInputs.cache
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.AssemblyInfo.cs
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.csproj.CoreCompileInputs.cache
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.dll
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.pdb
+C:\Epam\Task 2.2\Game\obj\Debug\netcoreapp3.1\Game.genruntimeconfig.cache

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "a7kOczMMdHxRzZ5nljr0cGgQ4uejj3Fusfh1aNYKWQ5IEREaRuTpvpKenaWxAkPLnIqLoqOx65pfKXzJs3/1nQ==",
+  "dgSpecHash": "1oErz40EI6fgluv0W54WYOVUmzJbn6J0MESnoOv1PLTP7Mdpk0tc/kjoMjcJDItKgu1QGWokRBjQnwhchUOH8A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Анотон\\source\\repos\\Game\\Game\\Game.csproj",
+  "projectFilePath": "C:\\Epam\\Task 2.2\\Game\\Game.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
