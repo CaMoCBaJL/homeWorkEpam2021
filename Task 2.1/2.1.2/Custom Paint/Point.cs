@@ -6,42 +6,21 @@ namespace Custom_Paint
 {
     class Point
     {
-        double x;
-        double y;
+
         public Point()
         {
-            x = 0;
-            y = 0;
+            X = 0;
+            Y = 0;
         }
         public Point(double x, double y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
-        public double X
-        {
-            get
-            {
-                return x;
-            }
-            set
-            {
-                x = value;
-            }
-        }
+        public double X { get; set; }
 
-        public double Y
-        {
-            get
-            {
-                return y;
-            }
-            set
-            {
-                y = value;
-            }
-        }
+        public double Y { get; set; }
 
         public static Point Parse(string s)
         {
@@ -56,18 +35,20 @@ namespace Custom_Paint
         {
             if (s.Contains(';'))
             {
-                p = new Point(double.Parse(s.Split(';')[0]), double.Parse(s.Split(';')[1]));
-                return true;
+                if (double.TryParse(s.Split(';')[0], out double x) && double.TryParse(s.Split(';')[1], out double y))
+                {
+                    p = new Point(x, y);
+                    return true;
+                }
             }
-            else
-            {
-                p = null;
-                return false;
-            }
+
+            p = null;
+            return false;
         }
+
         public void Show()
         {
-            Console.WriteLine( $"({x}, {y})");
+            Console.WriteLine( $"({X}, {Y})");
         }
     }
 }
