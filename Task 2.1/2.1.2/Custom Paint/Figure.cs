@@ -7,6 +7,5 @@ namespace Custom_Paint
     abstract class Figure
     {
         abstract public void Show();
-        abstract public new Type GetType();
     }
 }

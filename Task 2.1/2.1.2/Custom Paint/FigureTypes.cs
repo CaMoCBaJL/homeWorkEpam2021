@@ -11,7 +11,5 @@ namespace Custom_Paint
             Romb,
             Polygon,
             N_angled_figure,
-            Circle,
-            Ring
         };
 }
