@@ -6,22 +6,23 @@ namespace Game
 {
     class Beer : Collectables
     {
-        public override Effect.effects EffectOnUser { get; set; }
+        public override EffectsOnUser EffectOnUser { get; set; }
+
         public override (int x, int y) Position { get; set; }
+
         public override ConsoleColor Color { get; set; }
+
         public override char Img { get; set; }
+
+        public Beer() : base() { }
 
         public Beer((int x, int y) pos)
         {
             Position = pos;
             Color = ConsoleColor.DarkYellow;
-            EffectOnUser = Effect.effects.DamageIncrease;
+            EffectOnUser = EffectsOnUser.DamageIncrease;
             Img = '8'; 
         }
 
-        public override Type GetType()
-        {
-            return this.GetType();
-        }
     }
 }

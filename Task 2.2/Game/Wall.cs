@@ -11,7 +11,7 @@ namespace Game
         public override int Height { get; set; }
         public override ConsoleColor Color { get; set; }
         public override (int x, int y) Position { get; set; }
-        public override Effect.effects EffectOnUser { get; set; }
+        public override EffectsOnUser EffectOnUser { get; set; }
 
         private Wall() { }
 
@@ -19,7 +19,7 @@ namespace Game
         {
             return new Wall()
             {
-                EffectOnUser = Effect.effects.None,
+                EffectOnUser = EffectsOnUser.None,
                 Color = ConsoleColor.Gray,
                 Position = pos,
                 Width = 1,
@@ -32,7 +32,7 @@ namespace Game
         {
             return new Wall()
             {
-                EffectOnUser = Effect.effects.None,
+                EffectOnUser = EffectsOnUser.None,
                 Color = ConsoleColor.Gray,
                 Position = pos,
                 Width = width,
@@ -41,9 +41,5 @@ namespace Game
             };
         }
 
-        public override Type GetType()
-        {
-            return this.GetType();
-        }
     }
 }

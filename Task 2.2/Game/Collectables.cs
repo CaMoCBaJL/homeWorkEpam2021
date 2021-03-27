@@ -6,7 +6,14 @@ namespace Game
 {
     abstract class Collectables : GameObject
     {
-        abstract public Effect.effects EffectOnUser { get; set; }
+        abstract public EffectsOnUser EffectOnUser { get; set; }
+
+        public Collectables()
+        {
+            Position = (0, 0);
+            Img = '\0';
+
+        }
 
     }
 }
