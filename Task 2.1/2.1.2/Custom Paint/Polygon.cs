@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Custom_Paint
 {
     class Polygon : Figure
     {
         double perimetr;
+
         List<Line> lines;
+
         List<Point> points;
-        FigureType type;
+
 
         public Polygon(params Point[] points)
         {
             if (points.Length < 3)
-                Console.WriteLine("Для создания многоугольника нужно как минимум 3 точки!");
+                throw new Exception("Для создания многоугольника нужно как минимум 3 точки!");
             else
             {
                 this.points = new List<Point>();
                 this.points.AddRange(points);
-                type = FigureType();
+                Type = MatchFigureType();
             }
         }
 
         public override void Show()
         {
-            Console.WriteLine(string.Format("Тип фигуры: " + FigureType()));
+            Console.WriteLine(string.Format("Тип фигуры: " + Type));
             Console.WriteLine("Точки:");
             foreach (var item in points)
             {
@@ -37,32 +39,36 @@ namespace Custom_Paint
 
         public List<Point> GetPoints()
         {
-            return points;
+            Point[] figurePoints = new Point[points.Count];
+            Array.Copy(points.ToArray(), figurePoints, points.Count);
+            points.CopyTo(figurePoints, 0);
+            return figurePoints.Cast<Point>().ToList();
         }
+
+        public FigureType Type { get; set; }
 
         public double Square()
         {
-            switch (type)
+            switch (Type)
             {
-                case Custom_Paint.FigureType.Triangle:
-                    return Math.Sqrt((perimetr / 2)*((perimetr / 2) - lines[0].Length()) * ((perimetr / 2) - lines[1].Length()) * ((perimetr / 2) - lines[2].Length()));
-                case Custom_Paint.FigureType.Square:
-                    return Math.Pow(lines[0].Length(), 2);
-                case Custom_Paint.FigureType.Rectangle:
-                    return lines[0].Length() * lines[1].Length();
-                case Custom_Paint.FigureType.Romb:
-                    return Line.Length(points[0], points[2]) * Line.Length(points[1], points[3]) * 0.5;
+                case FigureType.Triangle:
+                    return Math.Sqrt((perimetr / 2)*((perimetr / 2) - lines[0].Length) * ((perimetr / 2) - lines[1].Length) * ((perimetr / 2) - lines[2].Length));
+
+                case FigureType.Square:
+                    return Math.Pow(lines[0].Length, 2);
+
+                case FigureType.Rectangle:
+                    return lines[0].Length * lines[1].Length;
+
+                case FigureType.Romb:
+                    return Line.DistanceBetweenPoints(points[0], points[2]) * Line.DistanceBetweenPoints(points[1], points[3]) * 0.5;
+
                 default: return double.NaN;
             }
 
         }
 
-        public override Type GetType()
-        {
-            return typeof(Polygon);
-        }
-
-        FigureType FigureType()
+        FigureType MatchFigureType()
         {
             lines = new List<Line>();
             for (int i = 1; i <= points.Count; i++)
@@ -71,35 +77,40 @@ namespace Custom_Paint
                     lines.Add(new Line(points[i - 1], points[0]));
                 else
                     lines.Add(new Line(points[i], points[i - 1]));
-                perimetr += lines[i - 1].Length();
+                perimetr += lines[i - 1].Length;
             }
 
             switch (points.Count)
             {
                 case 3:
-                    return Custom_Paint.FigureType.Triangle;
+                    return FigureType.Triangle;
                 case 4:
                     if (Line.IsPerpendicular(lines[0], lines[1]))
                     {
                         if (Line.IsParallel(lines[0], lines[2]) && Line.IsParallel(lines[1], lines[3]))
                         {
-                            if (lines[0].Length() == lines[2].Length() && lines[1].Length() == lines[3].Length() && lines[1].Length() == lines[3].Length())
-                                return Custom_Paint.FigureType.Square;
+                            if (lines[0].Length == lines[2].Length && 
+                                lines[1].Length == lines[3].Length && 
+                                lines[1].Length == lines[3].Length)
+                                return FigureType.Square;
                             else
-                                return Custom_Paint.FigureType.Rectangle;
+                                return FigureType.Rectangle;
                         }
-                        else return Custom_Paint.FigureType.Polygon;
+                        else return FigureType.Polygon;
                     }
                     else
                     {
-                        if (Line.IsParallel(lines[0], lines[2]) && Line.IsParallel(lines[1], lines[3]) &&
-                       lines[0].Length() == lines[2].Length() && lines[1].Length() == lines[3].Length() && lines[1].Length() == lines[3].Length())
-                            return Custom_Paint.FigureType.Romb;
+                        if (Line.IsParallel(lines[0], lines[2]) && 
+                            Line.IsParallel(lines[1], lines[3]) &&
+                            lines[0].Length == lines[2].Length &&
+                            lines[1].Length == lines[3].Length && 
+                            lines[1].Length == lines[3].Length)
+                            return FigureType.Romb;
                         else
-                            return Custom_Paint.FigureType.Polygon;
+                            return FigureType.Polygon;
                     }
                 default:
-                    return Custom_Paint.FigureType.N_angled_figure;
+                    return FigureType.N_angled_figure;
             }
         }
 
