@@ -146,7 +146,7 @@ namespace Task_3._1
             List<string> words = new List<string>(text.ToString().ToLower().Split(',', ' ', '.', '!', '\r', '\n'));
             words.RemoveAll(s => s == string.Empty);
             words.RemoveAll(s => s == "-");
-
+             
             int textLength = words.Count;
 
             Dictionary<string, int> analisysResult = new Dictionary<string, int>();
