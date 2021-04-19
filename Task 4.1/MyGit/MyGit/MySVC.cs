@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.IO;
 
@@ -7,20 +7,26 @@ namespace MyGit
 {
     static class MySVC
     {
+        private static readonly string _fileIdentifier = "<<File>>";
+
+        private static readonly string _dirIdentifier = "<<Directory>>";
+
+        private static readonly string _summaryFile = Path.Combine(_commitDirPath, "Summary.txt");
+
         /// <summary>
         /// Working directory.
         /// </summary>
-        private static readonly string dirPath = "./CurDir";
+        private static readonly string _workDirPath = "./CurDir";
 
         /// <summary>
         /// Location of commits.
         /// </summary>
-        private static readonly string commitDir = Path.Combine(dirPath + Path.DirectorySeparatorChar, "Commits");
+        private static readonly string _commitDirPath = Path.Combine(_workDirPath + Path.DirectorySeparatorChar, "Commits");
 
         /// <summary>
         /// Word to stop work in the Viewer mode.
         /// </summary>
-        private static readonly string stopWord = "/stop/";
+        private static readonly string _stopWord = "/stop/";
 
 
         public static void InitializeMySVC(int mode)
@@ -31,12 +37,12 @@ namespace MyGit
                 case 1:
                     Console.WriteLine("Viewer mode enabled.");
 
-                    Console.WriteLine($"To commit changes, write {stopWord}.");
+                    Console.WriteLine($"To commit changes, write {_stopWord}.");
 
                     do
                     {
 
-                    } while (Console.ReadLine() != stopWord);
+                    } while (Console.ReadLine() != _stopWord);
                     break;
 
                 case 2:
@@ -47,17 +53,19 @@ namespace MyGit
 
             try
             {
-                if (!Directory.Exists(dirPath))
+                if (!Directory.Exists(_workDirPath))
                 {
-                    Directory.CreateDirectory(dirPath);
+                    Directory.CreateDirectory(_workDirPath);
 
-                    var commitsDir = new DirectoryInfo(commitDir);
+                    var commitsDir = new DirectoryInfo(_commitDirPath);
 
                     commitsDir.Create();
 
                     commitsDir.Attributes = FileAttributes.Hidden | FileAttributes.Directory;
 
                     File.Create(Path.Combine(commitsDir.FullName, "initialCommit.txt"));
+
+                    File.Create(_summaryFile);
                 }
             }
             catch (Exception ex)
@@ -69,27 +77,61 @@ namespace MyGit
                 GC.Collect();
             }
 
-            CloseMySVC();
+            CommitChanges();
         }
 
-        public static void ChooseTimestampToRollback()
+        private static void CommitChanges()
         {
-            int item = -1;
+            MySVCDir lastCommitCond = GetMyDirInfo(new DirectoryInfo(_workDirPath));
 
-            do
-            {
-                ShowAllCommits();
+            MySVCDir currentCond = GetMyDirInfo(new DirectoryInfo(_workDirPath));
 
-                if (item < Directory.GetFiles(commitDir).Length && item > 0)
-                    Rollback(item - 1);
-                else
-                    Console.WriteLine("Incorrect input!");
-            } while (!int.TryParse(Console.ReadLine(), out item));
+            //TODO: directories comparison
         }
 
+        private static void Rollback(int commitNum)
+        {
+            
+        }
+
+        private static MySVCDir GetMyDirInfo(DirectoryInfo dir)
+        {
+            MySVCDir result = new MySVCDir() { DirName = dir.Name };
+
+            foreach (var item in dir.GetDirectories())
+            {
+                result.AddDir(GetMyDirInfo(item));
+            }
+
+            foreach (var item in dir.GetFiles())
+            {
+                result.AddFile(item);
+            }
+
+            return result;
+        }
+
+        private static StringBuilder PrintDirInfo(DirectoryInfo dir)
+        {
+            StringBuilder result = new StringBuilder();
+
+            foreach (var item in dir.GetDirectories())
+            {
+                result.Append($"{_dirIdentifier} {item.Name + Environment.NewLine + PrintDirInfo(item) + Environment.NewLine}");
+            }
+
+            foreach (var item in dir.GetFiles())
+            {
+                result.Append($"{_fileIdentifier} {item.Name + Environment.NewLine + File.ReadAllText(item.FullName) + Environment.NewLine}");
+            }
+
+            return result.Append(Environment.NewLine);
+
+        }
+        
         private static void ShowAllCommits()
         {
-            var commits = new DirectoryInfo(commitDir);
+            var commits = new DirectoryInfo(_commitDirPath);
 
             if (commits.Exists)
             {
@@ -103,26 +145,22 @@ namespace MyGit
                 }
             }
         }
-
-        private static void Rollback(int commitNum)
+        
+        public static void ChooseTimestampToRollback()
         {
-            
+            int item = -1;
+
+            do
+            {
+                ShowAllCommits();
+
+                if (item < Directory.GetFiles(_commitDirPath).Length && item > 0)
+                    Rollback(item - 1);
+                else
+                    Console.WriteLine("Incorrect input!");
+            } while (!int.TryParse(Console.ReadLine(), out item));
         }
 
-        private static void SeekForChanges()
-        {
-            ParseChanges();
-        }
-
-        private static void ParseChanges()
-        {
-
-        }
-
-        public static void CloseMySVC()
-        {
-            SeekForChanges();
-        }
 
     }
 }
