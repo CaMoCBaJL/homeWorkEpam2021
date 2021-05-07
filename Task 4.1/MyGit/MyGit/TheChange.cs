@@ -10,18 +10,18 @@ namespace MyGit
     {
         public TheChange() { }
 
-        public TheChange(string distName, DifType chType, string changedContent)
+        public TheChange(string distName, ChangeType changeType, string changedContent)
         {
             FileName = distName;
 
-            ChangeType = chType;
+            ChangeType = changeType;
 
             NewContent = changedContent;
         }
 
         public string FileName { get; init; }
 
-        public DifType ChangeType { get; init; }
+        public ChangeType ChangeType { get; init; }
 
         public string NewContent { get; init; }
 

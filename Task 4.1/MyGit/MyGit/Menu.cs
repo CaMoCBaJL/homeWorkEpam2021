@@ -18,15 +18,33 @@ namespace MyGit
 
                 Console.WriteLine("2. Rollback mode.");
 
+                Console.WriteLine("3. End of work.");
+
 
                 if (int.TryParse(Console.ReadLine(), out mode))
                 {
+                    MySVC git = new MySVC();
+
                     switch (mode)
                     {
+
                         case 1:
+                            Console.WriteLine("Viewer mode enabled.");
+
+                            Console.WriteLine($"To commit changes, write {MySVC._stopWord}.");
+
+                            git.InitializeMySVC(WorkType.Viewer);
+                            break;
+
                         case 2:
-                            MySVC.InitializeMySVC(mode);
-                            return;
+                            Console.WriteLine("Rollback mode enabled." + Environment.NewLine);
+
+                            git.InitializeMySVC(WorkType.Rollback);
+                            break;
+
+                        case 3:
+                            git.InitializeMySVC(WorkType.None);
+                            break;
 
                         default:
                             Console.WriteLine("Incorrect input!");

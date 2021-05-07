@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace MyGit
 {
-    enum DifType
+    enum ChangeType
     {
         None,
-        Added_Text,
-        Changed_Text,
-        Removed_Text,
-        Added_File,
-        Removed_File,
+        AddedText,
+        ChangedText,
+        RemovedText,
+        AddedFile,
+        RemovedFile,
     }
 }
