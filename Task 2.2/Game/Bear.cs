@@ -6,97 +6,45 @@ namespace Game
 {
     class Bear : Enemy
     {
-        char _img;
-        int _health;
-        int _maxDamage;
-        int _minDamage;
-        (int x, int y) _position;
+        public override (int x, int y) Position { get; set; }
 
-        public override char Image
-        {
-            get => _img;
-            set => _img = value;
-        }
+        public override int Health { get; set; }
 
-        public override int Health
-        {
-            get => _health;
-            set => _health = value;
-        }
+        public override char Img { get; set; }
 
-        public override int MaxDamage
-        {
-            get => new Random().Next(_minDamage, _maxDamage);
-            set => _maxDamage = value;
-        }
+        public override int MaxDamage { get; set; }
 
-        public override int Level
-        {
-            get; set;
-        }
+        public override int MinDamage { get; set; }
 
-        public override ConsoleColor Color
-        {
-            get; set;
-        }
+        public override int Level { get; set; }
 
-        public override int Hit()
-        {
-            return Level * MaxDamage;
-        }
-
-        public override bool IsDead(int hitValue)
-        {
-            _health -= hitValue;
-            return _health - hitValue > 0;
-        }
-
-        public override void Hitted(int damageValue)
-        {
-            if (IsDead(damageValue))
-                Color = ConsoleColor.Gray;
-            else
-            {
-                _maxDamage += Level * 3;
-                _minDamage += Level;
-            }
-        }
+        public override ConsoleColor Color { get; set; }
 
         public override void MoveDown()
         {
-            _position.y -= 2;
+            Position = (Position.x ,Position.y + 2);
         }
 
         public override void MoveLeft()
         {
-            _position.x -= 2;
+            Position = (Position.x - 2, Position.y);
         }
 
         public override void MoveRigth()
         {
-            _position.x += 2;
+            Position = (Position.x + 2, Position.y);
         }
 
         public override void MoveUp()
         {
-            _position.y += 2;
+            Position = (Position.x, Position.y - 2);
         }
 
-        public Bear()
-        {
-            _health = 0;
-            _position = (0, 0);
-            _img = '\0';
-            _maxDamage = 0;
-            _minDamage = 0;
-        }
+        public Bear() : base() { }
 
-        public Bear(int health, (int x, int y) position, int level)
+        public Bear((int x, int y) position, int level) : base(position, level)
         {
-            _health = health;
-            _position = position;
-            AutoLeveling(level);
-            _img = char.ConvertFromUtf32(37)[0];
+            Img = 'B';
         }
 
         public override void AutoLeveling(int level)
@@ -104,41 +52,42 @@ namespace Game
             switch (level)
             {
                 case 1:
-                    _health = 13;
-                    _minDamage = 5;
-                    _maxDamage = 8;
+                    Health = 13;
+                    MinDamage = 5;
+                    MaxDamage = 8;
                     Level = level;
-                    Color = ConsoleColor.Green;
+                    Color = ConsoleColor.White;
                     break;
                 case 2:
-                    _health = 20;
-                    _minDamage = 8;
-                    _maxDamage = 12;
+                    Health = 20;
+                    MinDamage = 8;
+                    MaxDamage = 12;
                     Level = level;
-                    Color = ConsoleColor.DarkGreen;
+                    Color = ConsoleColor.Cyan;
                     break;
                 case 3:
-                    _health = 30;
-                    _minDamage = 10;
-                    _maxDamage = 18;
+                    Health = 30;
+                    MinDamage = 10;
+                    MaxDamage = 18;
                     Level = level;
                     Color = ConsoleColor.Yellow;
                     break;
                 case 4:
-                    _health = 40;
-                    _minDamage = 15;
-                    _maxDamage = 25;
+                    Health = 40;
+                    MinDamage = 15;
+                    MaxDamage = 25;
                     Level = level;
                     Color = ConsoleColor.DarkRed;
                     break;
                 case 5:
-                    _health = 55;
-                    _minDamage = 20;
-                    _maxDamage = 36;
+                    Health = 55;
+                    MinDamage = 20;
+                    MaxDamage = 36;
                     Level = level;
                     Color = ConsoleColor.Red;
                     break;
             }
         }
+
     }
 }

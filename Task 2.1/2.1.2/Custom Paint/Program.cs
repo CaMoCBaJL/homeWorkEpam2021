@@ -8,6 +8,168 @@ namespace Custom_Paint
 {
     class Program
     {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Введите имя пользователя:");
+            string name = Console.ReadLine();
+            List<Figure> curUserFigures;
+            while (true)
+            {
+                curUserFigures = DoesUserExists(name);
+                ShowStartMenu();
+                try
+                {
+                    switch (int.Parse(Console.ReadLine()))
+                    {
+                        case 1:
+                            ChooseFigureToAdd();
+                            try
+                            {
+                                switch (int.Parse(Console.ReadLine()))
+                                {
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                        curUserFigures.Add(InputPolygon());
+                                        break;
+                                    case 4:
+                                        curUserFigures.Add(InputCircle());
+                                        break;
+                                    case 5:
+                                        curUserFigures.Add(InputRing());
+                                        break;
+                                }
+                                SaveChanges(curUserFigures, name);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Ввод неверен!");
+                            }
+                            break;
+                        case 2:
+                            ShowUserFigures(curUserFigures);
+                            break;
+                        case 3:
+                            curUserFigures = new List<Figure>();
+                            break;
+                        case 4:
+                            ChangeUser();
+                            break;
+                        case 5:
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.WriteLine("Пункт с таким номером отсутствует в меню.");
+                            break;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Ввод неверен!");
+                }
+            }
+        }
+
+        static string ChangeUser()
+        {
+            Console.Clear();
+            Console.WriteLine("Введите имя пользователя");
+            return Console.ReadLine();
+        }
+
+        static void ShowUserFigures(List<Figure> curUserFigures)
+        {
+            if (curUserFigures.Count > 0)
+                foreach (var item in curUserFigures)
+                {
+                    item.Show();
+                    Console.WriteLine();
+                }
+            else
+                Console.WriteLine("Холст пуст.");
+        }
+
+        static Ring InputRing()
+        {
+            return new Ring(InputCircle(), InputCircle());
+        }
+
+        static Circle InputCircle()
+        {
+            Console.WriteLine("Введите радиус окружности:");
+            double r = 0;
+            Point center;
+            if (r <= 0)
+            {
+                while (!double.TryParse(Console.ReadLine(), out r))
+                {
+                    Console.WriteLine("Радуис - неотрицательное число!");
+                    Console.WriteLine("Повторите ввод.");
+                }
+            }
+            Console.WriteLine("Введите центр окружности:");
+            while (!Point.TryParse(Console.ReadLine(), out center))
+            {
+                Console.WriteLine("Введите координаты точки (через ;)");
+                Console.WriteLine("Повторите ввод.");
+            }
+            return new Circle(r, center);
+
+        }
+
+        static Polygon InputPolygon()
+        {
+            List<Point> points = new List<Point>();
+
+            string s = default;
+
+            while (s != "стоп")
+            {
+
+                Console.WriteLine("Введите координаты точки (через ;)");
+                Console.WriteLine("Слово \"стоп\" - окончание ввода." + Environment.NewLine);
+
+                s = Console.ReadLine();
+
+                Point p;
+                if (Point.TryParse(s, out p))
+                {
+                    points.Add(p);
+                    Console.WriteLine("Ввод успешен)" + Environment.NewLine);
+                }
+                else
+                    Console.WriteLine("Ввод неверен!" + Environment.NewLine);
+            }
+
+            if (points.Count < 3)
+            {
+                Console.WriteLine("Добавление фигуры не произошло! Для добавления угольника нужно минимум 3 точки!");
+                return null;
+            }
+            else
+                return new Polygon(points.ToArray());
+
+        }
+
+        static void ChooseFigureToAdd()
+        {
+            Console.WriteLine("Выберите фигуру для добавления:");
+            Console.WriteLine("1. Треугольник");
+            Console.WriteLine("2. Четырехугольник"); ;
+            Console.WriteLine("3. N-угольник");
+            Console.WriteLine("4. Окружность");
+            Console.WriteLine("5. Кольцо");
+        }
+
+        static void ShowStartMenu()
+        {
+            Console.WriteLine("Выберите действие:");
+            Console.WriteLine("1.Добавить фигуру");
+            Console.WriteLine("2.Вывести все фигуры");
+            Console.WriteLine("3.Очистить холст");
+            Console.WriteLine("4.Смена пользователя");
+            Console.WriteLine("5.Выход");
+        }
 
         static List<Figure> DoesUserExists(string name)
         {
@@ -39,12 +201,12 @@ namespace Custom_Paint
                                     {
                                         if (s.Length == 2)
                                         {
-                                            curUserFigures.Add(new Circle_and_Ring(double.Parse(s[0]), Point.Parse(s[1])));
+                                            curUserFigures.Add(new Ring(double.Parse(s[0]), Point.Parse(s[1])));
                                             break;
                                         }
                                         if (s.Length == 4)
                                         {
-                                            curUserFigures.Add(new Circle_and_Ring(double.Parse(s[0]), Point.Parse(s[1]), double.Parse(s[2]), Point.Parse(s[3])));
+                                            curUserFigures.Add(new Ring(double.Parse(s[0]), Point.Parse(s[1]), double.Parse(s[2]), Point.Parse(s[3])));
                                             break;
                                         }
 
@@ -90,33 +252,29 @@ namespace Custom_Paint
                 }
 
             }
+
             inf.Add($"user {userName}:");
             foreach (var item in figures)
             {
                 StringBuilder res = new StringBuilder();
-                if (typeof(Polygon) == item.GetType())
-                {
-                    foreach (var p in (item as Polygon).GetPoints())
+                switch (item)
+                    {
+                    case Polygon poly:
+                    foreach (var p in poly.GetPoints())
                     {
                         res.Append($"{p.X};{p.Y} ");
                     }
                     inf.Add(res.ToString());
-                }
-                else
-                {
-                    Circle_and_Ring elem = item as Circle_and_Ring;
-                    if (!Circle_and_Ring.IsRing(elem))
-                    {
-                        (double r, Point center) circle = elem.GetCircle();
-                        inf.Add($"{circle.r} {circle.center.X};{circle.center.Y}");
-                    }
-                    else
-                    {
-                        (double r, Point center, double r1, Point center1) ring = elem.GetRing();
-                        inf.Add($"{ring.r} {ring.center.X};{ring.center.Y} {ring.r1} {ring.center1.X};{ring.center1.Y}");
-                    }
+                        break;
+                    case Circle c:
+                        inf.Add($"{c.R};{c.Center}");
+                        break;
+                    case Ring r:
+                        inf.Add($"{r.InnerCircle.R} {r.InnerCircle.Center};{r.OuterCicle.R} {r.OuterCicle.Center}");
+                        break;
                 }
             }
+
             using (StreamWriter newfile = new StreamWriter("users_info.txt"))
             {
                 foreach (var item in inf)
@@ -126,157 +284,5 @@ namespace Custom_Paint
             }
         }
 
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Введите имя пользователя:");
-            string name = Console.ReadLine();
-            List<Figure> curUserFigures;
-            while (true)
-            {
-                curUserFigures = DoesUserExists(name);
-                Console.WriteLine("Выберите действие:");
-                Console.WriteLine("1.Добавить фигуру");
-                Console.WriteLine("2.Вывести все фигуры");
-                Console.WriteLine("3.Очистить холст");
-                Console.WriteLine("4.Смена пользователя");
-                Console.WriteLine("5.Выход");
-                try
-                {
-                    switch (int.Parse(Console.ReadLine()))
-                    {
-                        case 1:
-                            Console.WriteLine("Выберите фигуру для добавления:");
-                            Console.WriteLine("1. Треугольник");
-                            Console.WriteLine("2. Четырехугольник"); ;
-                            Console.WriteLine("3. N-угольник");
-                            Console.WriteLine("4. Окружность");
-                            Console.WriteLine("5. Кольцо");
-                            try
-                            {
-                                switch (int.Parse(Console.ReadLine()))
-                                {
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                        List<Point> points = new List<Point>();
-                                        Console.WriteLine("Введите координаты точки (через ;)");
-                                        Console.WriteLine("Слово \"стоп\" - окончание ввода.");
-                                        string s = Console.ReadLine();
-
-                                        while (s != "стоп")
-                                        {
-                                            Point p;
-                                            if (Point.TryParse(s, out p))
-                                                points.Add(p);
-                                            else
-                                                Console.WriteLine("Ввод неверен!");
-
-                                            Console.WriteLine("Введите координаты точки (через ;)");
-                                            Console.WriteLine("Слово \"стоп\" - окончание ввода.");
-                                            s = Console.ReadLine();
-                                        }
-
-                                        if (points.Count < 3)
-                                            Console.WriteLine("Добавление фигуры не произошло! Для добавления угольника нужно минимум 3 точки!");
-                                        else
-                                            curUserFigures.Add(new Polygon(points.ToArray()));
-                                        break;
-                                    case 4:
-                                        Console.WriteLine("Введите радиус окружности:");
-                                        double r;
-                                        Point center;
-                                        while(!double.TryParse(Console.ReadLine(), out r))
-                                        {
-                                            Console.WriteLine("Радуис - неотрицательное число!");
-                                            Console.WriteLine("Повторите ввод.");
-                                        }
-                                        if (r < 0)
-                                        {
-                                            while (!double.TryParse(Console.ReadLine(), out r))
-                                            {
-                                                Console.WriteLine("Радуис - неотрицательное число!");
-                                                Console.WriteLine("Повторите ввод.");
-                                            }
-                                        }
-                                        Console.WriteLine("Введите центр окружности:");
-                                        while (!Point.TryParse(Console.ReadLine(), out center))
-                                        {
-                                            Console.WriteLine("Введите координаты точки (через ;)");
-                                            Console.WriteLine("Повторите ввод.");
-                                        }
-                                        curUserFigures.Add(new Circle_and_Ring(r, center));
-                                        break;
-                                    case 5:
-                                        double[] radiuses = new double[2];
-                                        Point[] centers = new Point[2];
-                                        for (int i = 0; i < 2; i++)
-                                        {
-                                            Console.WriteLine("Введите радиус окружности:");
-                                            while (!double.TryParse(Console.ReadLine(), out radiuses[i]))
-                                            {
-                                                Console.WriteLine("Радуис - неотрицательное число!");
-                                                Console.WriteLine("Повторите ввод.");
-                                            }
-                                            if (radiuses[i] < 0)
-                                            {
-                                                while (!double.TryParse(Console.ReadLine(), out radiuses[i]))
-                                                {
-                                                    Console.WriteLine("Радуис - неотрицательное число!");
-                                                    Console.WriteLine("Повторите ввод.");
-                                                }
-                                            }
-                                            Console.WriteLine("Введите центр окружности:");
-                                            while (!Point.TryParse(Console.ReadLine(), out centers[i]))
-                                            {
-                                                Console.WriteLine("Введите координаты точки (через ;)");
-                                                Console.WriteLine("Повторите ввод.");
-                                            }
-                                        }
-                                        curUserFigures.Add(new Circle_and_Ring(radiuses[0], centers[0], radiuses[1], centers[1]));
-                                        break;
-                                    default:
-                                        Console.WriteLine("Пункт с таким номером отсутствует в меню.");
-                                        break;
-                                }
-                                SaveChanges(curUserFigures, name);
-
-                            }
-                            catch
-                            {
-                                Console.WriteLine("Ввод неверен!");
-                            }
-                            break;
-                        case 2:
-                            if (curUserFigures.Count > 0)
-                            foreach (var item in curUserFigures)
-                            {
-                                item.Show();
-                                Console.WriteLine();
-                            }
-                            else
-                                Console.WriteLine("Холст пуст.");
-                            break;
-                        case 3:
-                            curUserFigures = new List<Figure>(); 
-                            break;
-                        case 4:
-                            Console.Clear();
-                            Console.WriteLine("Введите имя пользователя");
-                            name = Console.ReadLine();
-                            break;
-                        case 5:
-                            Environment.Exit(0);
-                            break;
-                        default:
-                            Console.WriteLine("Пункт с таким номером отсутствует в меню.");
-                            break;
-                    }
-                        }
-                catch
-                {
-                    Console.WriteLine("Ввод неверен!");
-                }
-            }
-        }
     }
 }
