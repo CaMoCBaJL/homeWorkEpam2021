@@ -12,12 +12,13 @@ export class Service{
             this.array.push(object);
         }
         else
-            try{
+            if (typeof(object) === object)
+            {
                 object.id = this.array.length;
                 
                 this.array.push(object);
             }
-            catch{
+            else{
                 console.log("Ввод неверен!");
             }
     }
@@ -25,11 +26,11 @@ export class Service{
     searchForId(object){
         for (var key in object){
             if (key == "id"){
-                return true;
+                return object;
             }
         }
 
-        return false;
+        return undefined;
     }
 
     getById(id){
@@ -44,10 +45,23 @@ export class Service{
         let objectToDelete = this.searchById(id);
             if (objectToDelete != null){
                     this.array.splice(id, 1);
+
+                    this.updateArray();
+
                     return objectToDelete;
             }
         
         return null;
+    }
+
+    updateArray(){
+
+        let counter = 1;
+        for (let element of this.array){
+            element.id = counter;
+
+            counter++;
+        }
     }
 
     updateById(id, newValue){
@@ -55,8 +69,10 @@ export class Service{
 
         let objectToUpdate = this.searchById(id);
             if (objectToUpdate != null){
-                this.array[this.array.indexOf(objectToUpdate)]
-                = newValue;
+                for (let prop in newValue){
+                    if (objectToUpdate.hasOwnProperty(prop))
+                        objectToUpdate[prop] = newValue[prop];
+                }
 
                 return undefined;
             } 
@@ -109,13 +125,13 @@ console.log(arr.getById("2"));
 
 console.log("Удалили "+ arr.deleteById("2").name);
 
-console.log(arr.getById("1"));
+console.log(arr.getById("1").name);
 
 arr.updateById("1", {name:"Boris"});
 
-console.log(arr.getById("1"));
+console.log(arr.getById("1").name);
 
-console.log(arr.replaceById("0", {name:"8acuJLuu"}));
+console.log(arr.replaceById("1", {name:"8acuJLuu"}));
 
 
 
