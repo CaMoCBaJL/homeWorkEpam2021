@@ -26,6 +26,8 @@ namespace ConsolePl
 
         static void Menu()
         {
+            Console.WriteLine();
+
             Console.WriteLine("Выберите действие:");
 
             Console.WriteLine("1. Просмотреть список пользователей.");
@@ -48,13 +50,9 @@ namespace ConsolePl
             switch (input)
             {
                 case 1:
-                    Console.WriteLine("Список пользователей:" + Environment.NewLine);
-
                     ShowEntities(EntityType.User);
                     break;
                 case 2:
-                    Console.WriteLine("Список наград:" + Environment.NewLine);
-
                     ShowEntities(EntityType.Award);
                     break;
                 case 3:
@@ -82,7 +80,11 @@ namespace ConsolePl
         static void ShowEntities(EntityType entityType)
         {
             foreach (var entity in BuisnessLogic.GetListOfEntities(entityType))
+            {
                 Console.WriteLine(entity);
+
+                Console.WriteLine();
+            }
         }
 
         static void AddEntityDialogue(EntityType entityType)
@@ -118,20 +120,25 @@ namespace ConsolePl
         {
             Console.WriteLine($"Выберите {entityType.ToString()} для удаления:");
 
-            do
+            if (BuisnessLogic.GetListOfEntities(entityType).Count > 0)
             {
-                ShowEntities(entityType);
-
-                if(int.TryParse(Console.ReadLine(), out int result))
+                do
                 {
-                    Console.WriteLine(BuisnessLogic.RemoveEntity(entityType, result));
+                    ShowEntities(entityType);
 
-                    return;
-                }
-                else
-                    Console.WriteLine("Выбранный вариант отсутствует в списке!");
+                    if (int.TryParse(Console.ReadLine(), out int result))
+                    {
+                        Console.WriteLine(BuisnessLogic.RemoveEntity(entityType, result));
 
-            } while (true);
+                        return;
+                    }
+                    else
+                        Console.WriteLine("Выбранный вариант отсутствует в списке!");
+
+                } while (true);
+            }
+            else
+                Console.WriteLine("В базе отсутствуют " + entityType.ToString());
         }
     }
 }

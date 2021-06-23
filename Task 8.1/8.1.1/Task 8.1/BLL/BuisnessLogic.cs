@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using JsonDAL;
@@ -9,7 +8,7 @@ namespace BLL
 {
     public class BuisnessLogic
     {
-        const string emptyStringValue = "Пользователи отсутствуют.";
+        const string emptyStringValue = " отсутствуют.";
 
         const string successfullOperationResult = "Операция успешно завершена.";
 
@@ -36,7 +35,7 @@ namespace BLL
                     break;
                 case EntityType.None:
                 default:
-                    return new List<string>(new string[] { emptyStringValue });
+                    return new List<string>(new string[] { entityType.ToString() + emptyStringValue });
             }
 
             List<string> result = new List<string>();
@@ -47,7 +46,9 @@ namespace BLL
             }
 
             if (result.Count == 0)
-                result.Add(emptyStringValue);
+                result.Add(entityType.ToString() + emptyStringValue);
+            else
+                result.Insert(0, $"Список {entityType.ToString()}: " + Environment.NewLine);
 
             return result;
         }

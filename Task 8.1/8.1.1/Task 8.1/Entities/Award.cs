@@ -1,14 +1,14 @@
-﻿namespace Entities
+﻿using Newtonsoft.Json;
+
+namespace Entities
 {
     public class Award : CommonEntity
     {
         static int awardCount = 0;
 
+        [JsonProperty]
+        public string Title { get; private set; }
 
-        public string Title { get; set; }
-
-
-        static Award() => awardCount++;
 
         protected Award() : base(awardCount) { }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Entities
 {
@@ -7,20 +8,20 @@ namespace Entities
     {
         static int userCount = 0;
 
+        [JsonProperty]
+        public string Name { get; private set; }
 
-        public string Name { get;}
+        [JsonProperty]
+        public string DateOfBirth { get; private set; }
 
-        public string DateOfBirth { get;}
+        [JsonProperty]
+        public int Age { get; private set; }
 
-        public int Age { get;}
-
-        public List<int> UserAwards { get;}
-
-
-        static User() => userCount++;
+        [JsonProperty]
+        public List<int> UserAwards { get; private set; }
 
 
-        public User() : base(userCount) { }
+        public User(){ }
 
         public User(string name, string dateOfBirth, int age, List<int> userAwards, int id) : base(id)
         {
@@ -58,11 +59,15 @@ namespace Entities
 
             res.Append("Cписок наград:"+System.Environment.NewLine);
 
-            foreach (var award in UserAwards)
+            if (UserAwards.Count > 0)
             {
-                res.Append(award.ToString() + System.Environment.NewLine);
+                foreach (var award in UserAwards)
+                {
+                    res.Append(award.ToString() + System.Environment.NewLine);
+                }
             }
-
+            else
+                res.Append("Наград пока нет.");
             return res.ToString();
         }
 

@@ -8,7 +8,7 @@ namespace Entities
 {
     public abstract class CommonEntity
     {
-        public int Id { get;}
+        public int Id { get; set; }
 
 
         public CommonEntity() { }
