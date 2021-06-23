@@ -8,12 +8,14 @@ namespace Entities
 {
     public abstract class CommonEntity
     {
-        public Guid Id { get; }
+        public int Id { get;}
 
 
-        public CommonEntity()
+        public CommonEntity() { }
+
+        public CommonEntity(int id)
         {
-            Id = new Guid();
+            Id = id;
         }
     }
 }

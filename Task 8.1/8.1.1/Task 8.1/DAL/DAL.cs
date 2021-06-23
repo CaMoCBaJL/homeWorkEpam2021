@@ -49,9 +49,19 @@ namespace JsonDAL
 
         public DAL()
         {
-            Users = JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(usersDataLocation));
+            Users = GetCurrentEntitiesInfo<User>(usersDataLocation);
 
-            Awards = JsonConvert.DeserializeObject<List<Award>>(File.ReadAllText(awardsDataLocation));
+            Awards = GetCurrentEntitiesInfo<Award>(awardsDataLocation);
+        }
+
+        List<T> GetCurrentEntitiesInfo<T>(string pathToData)
+        {
+            var result = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(pathToData));
+
+            if (result == null)
+                return new List<T>();
+
+            return result;
         }
 
         void UpdateData()

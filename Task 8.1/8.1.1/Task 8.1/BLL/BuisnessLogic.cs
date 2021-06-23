@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using JsonDAL;
 using Entities;
@@ -15,8 +15,12 @@ namespace BLL
 
         const string unsuccessfullOperationResult = "Не удалось завешрить операцию.";
 
+        public const string birthDateRegexPattern = "\\d{2}(\\.\\d{2}){2}";
 
-        public static List<string> GetListOfEntities(EntityType entityType)
+        public const string ageRegexPattern = "\\d{1,3}";
+
+
+    public static List<string> GetListOfEntities(EntityType entityType)
         {
             var dal = new DAL();
 
@@ -25,10 +29,10 @@ namespace BLL
             switch (entityType)
             {
                 case EntityType.User:
-                    data = new List<User>();
+                    data = dal.GetUsers();
                     break;
                 case EntityType.Award:
-                    data = new List<Award>();
+                    data = dal.GetAwards();
                     break;
                 case EntityType.None:
                 default:
@@ -76,6 +80,27 @@ namespace BLL
 
         }
 
+        public static string CorrectInputTheParameter(string entityField, string regularExpression)
+        {
+            string parameter;
+
+            do
+            {
+                Console.WriteLine($"Введите параметр " + entityField);
+
+                parameter = Console.ReadLine();
+
+                if (BuisnessLogic.ValidateParameter(parameter, regularExpression))
+                    return parameter;
+                else
+                    Console.WriteLine("Ввод неверен");
+
+
+            } while (true);
+        }
+
+        static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
+       
         public static string AddEntity(EntityType entityType, string entityData)
         {
             var dal = new DAL();
@@ -85,7 +110,7 @@ namespace BLL
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToAdd = new User(new List<string>(entityData.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries)));
+                    entityToAdd = new User(new List<string>(entityData.Split(new char[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)));
                     break;
                 case EntityType.Award:
                     entityToAdd = new Award(entityData);
@@ -100,6 +125,7 @@ namespace BLL
             else
                 return unsuccessfullOperationResult;
         }
+
     }
 }
 
