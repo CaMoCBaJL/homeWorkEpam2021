@@ -1,5 +1,6 @@
 ﻿using System;
 using BLL;
+using Entities;
 
 namespace ConsolePl
 {
@@ -13,39 +14,48 @@ namespace ConsolePl
 
                 if (int.TryParse(Console.ReadLine(), out int input))
                 {
-                    switch (input)
-                    {
-                        case 1:
-                            ShowUsers();
-                            break;
-                        case 2:
-                            ShowAwards();
-                            break;
-                        case 3:
-                            AddUserDialogue();
-                            break;
-                        case 4:
-                            AddAwardDialogue();
-                            break;
-                        case 5:
-                            DeleteUserDialogue();
-                            break;
-                        case 6:
-                            DeleteAwardDialogue();
-                            break;
-                        case 7:
-                            Console.WriteLine("Конец работы.");
-                            Environment.Exit(123123);
-                            break;
-                        default:
-                            Console.WriteLine("Введенный пункт отсутствует в меню");
-                            break;
-                    }
+                    ActionChoose(input);
                 }
                 else
                     Console.WriteLine("Ошибка ввода!");
 
             } while (true) ;
+        }
+
+        static void ActionChoose(int input)
+        {
+            switch (input)
+            {
+                case 1:
+                    Console.WriteLine("Список пользователей:" + Environment.NewLine);
+
+                    ShowEntities(EntityType.User);
+                    break;
+                case 2:
+                    Console.WriteLine("Список наград:" + Environment.NewLine);
+
+                    ShowEntities(EntityType.Award);
+                    break;
+                case 3:
+                    AddEntityDialogue(EntityType.User);
+                    break;
+                case 4:
+                    AddEntityDialogue(EntityType.Award);
+                    break;
+                case 5:
+                    DeleteEntityDialogue(EntityType.User);
+                    break;
+                case 6:
+                    DeleteEntityDialogue(EntityType.Award);
+                    break;
+                case 7:
+                    Console.WriteLine("Конец работы.");
+                    Environment.Exit(123123);
+                    break;
+                default:
+                    Console.WriteLine("Введенный пункт отсутствует в меню");
+                    break;
+            }
         }
 
         static void Menu()
@@ -67,41 +77,35 @@ namespace ConsolePl
             Console.WriteLine("7 Выход.");
         }
 
-        static void ShowUsers()
+        static void ShowEntities(EntityType entityType)
         {
-            foreach (var user in BuisnessLogic.GetListOfUsers())
+            foreach (var entity in BuisnessLogic.GetListOfEntities(entityType))
+                Console.WriteLine(entity);
+        }
+
+        static void AddEntityDialogue(EntityType entityType)
+        {
+
+        }
+
+        static void DeleteEntityDialogue(EntityType entityType)
+        {
+            Console.WriteLine($"Выберите удаляемого {entityType.ToString()}:");
+
+            do
             {
-                Console.WriteLine(user.ToString());
-            }
+                ShowEntities(entityType);
+
+                if(int.TryParse(Console.ReadLine(), out int result))
+                {
+                    Console.WriteLine(BuisnessLogic.RemoveEntity(entityType, result));
+
+                    return;
+                }
+                else
+                    Console.WriteLine("Выбранный вариант отсутствует в списке!");
+
+            } while (true);
         }
-
-        static void ShowAwards()
-        {
-            foreach (var award in BuisnessLogic.GetListOfAwards())
-            {
-                Console.WriteLine(award.ToString());
-            }
-        }
-
-        static void AddUserDialogue()
-        {
-
-        }
-
-        static void AddAwardDialogue()
-        {
-
-        }
-
-        static void DeleteUserDialogue()
-        {
-
-        }
-
-        static void DeleteAwardDialogue()
-        {
-
-        }
-
     }
 }

@@ -61,65 +61,86 @@ namespace JsonDAL
             File.WriteAllText(awardsDataLocation, JsonConvert.SerializeObject(Awards));
         }
 
-        public bool AddUser(User user)
+        public bool AddEntity(CommonEntity entity)
         {
-            if (Users.Contains(user))
-                return false;
-            else
+            switch (entity)
             {
-                Users.Add(user);
+                case User user:
+                    if (Users.Contains(user))
+                        return false;
+                    else
+                    {
+                        Users.Add(user);
 
-                UpdateData();
+                        UpdateData();
 
-                return true;
+                        return true;
+                    }
+
+                case Award award:
+                    if (Awards.Contains(award))
+                        return false;
+                    else
+                    {
+                        Awards.Add(award);
+
+                        UpdateData();
+
+                        return true;
+                    }
+                default:
+                    return false;
             }
         }
 
-        public bool AddAward(Award award)
+        public bool DeleteEntity(CommonEntity entity)
         {
-            if (Awards.Contains(award))
-                return false;
-            else
+            switch (entity)
             {
-                Awards.Add(award);
+                case User user:
 
-                UpdateData();
+                    if (!Users.Contains(user))
+                        return false;
+                    else
+                    {
+                        Users.Remove(user);
 
-                return true;
+                        UpdateData();
+
+                        return true;
+                    }
+                case Award award:
+
+                    if (!Awards.Contains(award))
+                        return false;
+                    else
+                    {
+                        Awards.Remove(award);
+
+                        UpdateData();
+
+                        return true;
+                    }
+                default:
+                    return false;
             }
+        }    
+
+        public List<User> GetUsers()
+        {
+            if (Users != null)
+                return new List<User>(Users);
+
+            return new List<User>();
         }
 
-        public bool DeleteUser(User user)
+        public List<Award> GetAwards()
         {
-            if (!Users.Contains(user))
-                return false;
-            else
-            {
-                Users.Remove(user);
+            if (Awards != null)
+                return new List<Award>(Awards);
 
-                UpdateData();
-
-                return true;
-            }
+            return new List<Award>();
         }
-
-        public bool DeleteAward(Award award)
-        {
-            if (!Awards.Contains(award))
-                return false;
-            else
-            {
-                Awards.Remove(award);
-
-                UpdateData();
-
-                return true;
-            }
-        }
-
-        public List<User> GetUsers() => new List<User>(Users);
-
-        public List<Award> GetAwards() => new List<Award>(Awards);
 
     }
 }
