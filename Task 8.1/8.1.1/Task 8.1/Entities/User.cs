@@ -32,9 +32,11 @@ namespace Entities
             Age = age;
 
             UserAwards = userAwards;
+
+            userCount++;
         }
 
-        public User(List<string> userData) : base(userCount)
+        public User(List<string> userData, List<int> awards) : base(userCount++)
         {
             Name = userData[0];
 
@@ -42,7 +44,7 @@ namespace Entities
 
             Age = int.Parse(userData[2]);
 
-            UserAwards = new List<int>();
+            UserAwards = awards;
         }
 
         public void AddAward(Award award) => UserAwards.Add(award.Id);
@@ -53,11 +55,13 @@ namespace Entities
 
             res.Append("Имя пользователя: " + Name + System.Environment.NewLine);
 
+            res.Append(base.ToString());
+
             res.Append("Возраст пользователя: " + Age + System.Environment.NewLine);
 
             res.Append("Дата рождения пользователя: " + DateOfBirth + System.Environment.NewLine);
 
-            res.Append("Cписок наград:"+System.Environment.NewLine);
+            res.Append(System.Environment.NewLine + "Cписок наград:" + System.Environment.NewLine);
 
             if (UserAwards.Count > 0)
             {
@@ -71,6 +75,5 @@ namespace Entities
             return res.ToString();
         }
 
-        public int Last { get => userCount; }
-    }
+    }    
 }

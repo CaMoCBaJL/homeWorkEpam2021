@@ -8,7 +8,7 @@ namespace BLL
 {
     public class BuisnessLogic
     {
-        const string emptyStringValue = " отсутствуют.";
+        public const string emptyStringValue = " отсутствуют.";
 
         const string successfullOperationResult = "Операция успешно завершена.";
 
@@ -19,7 +19,34 @@ namespace BLL
         public const string ageRegexPattern = "\\d{1,3}";
 
 
-    public static List<string> GetListOfEntities(EntityType entityType)
+        public static List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
+        {
+            List<string> result = new List<string>();
+
+            foreach (var entity in GetListOfEntities(entityType))
+            {
+                if (!DoesStringContainsCommonParts(entity))
+                {
+                    if (!addedEntities.Contains(int.Parse(entity.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[1].Split()[1])))
+                        result.Add(entity);
+                }
+                else
+                    result.Add(entity);
+            }
+
+
+
+            //allEntities.RemoveAll(entity => addedEntities.Contains(
+            //                      int.Parse(entity.Split(
+            //                      new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)[1]
+            //                      .Split()[1])));
+
+            return result;
+        }
+
+        public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(emptyStringValue) || entity.StartsWith("Список ");
+
+        public static List<string> GetListOfEntities(EntityType entityType)
         {
             var dal = new DAL();
 
@@ -40,9 +67,9 @@ namespace BLL
 
             List<string> result = new List<string>();
 
-            foreach (var user in data)
+            foreach (var entity in data)
             {
-                result.Add(user.ToString());
+                result.Add(entity.ToString());
             }
 
             if (result.Count == 0)
@@ -62,11 +89,11 @@ namespace BLL
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToRemove = dal.GetUsers()[entityId];
+                    entityToRemove = dal.GetUsers()[entityId - 1];
                     break;
 
                 case EntityType.Award:
-                    entityToRemove = dal.GetAwards()[entityId];
+                    entityToRemove = dal.GetAwards()[entityId - 1];
                     break;
 
                 case EntityType.None:
@@ -91,7 +118,7 @@ namespace BLL
 
                 parameter = Console.ReadLine();
 
-                if (BuisnessLogic.ValidateParameter(parameter, regularExpression))
+                if (ValidateParameter(parameter, regularExpression))
                     return parameter;
                 else
                     Console.WriteLine("Ввод неверен");
@@ -100,9 +127,11 @@ namespace BLL
             } while (true);
         }
 
+        public static int GetEntityId(string entityInfo) => int.Parse(entityInfo.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)[1].Split()[1]);
+
         static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
-       
-        public static string AddEntity(EntityType entityType, string entityData)
+
+        public static string AddEntity(EntityType entityType, string entityData, List<int> additionalEntitiesIds)
         {
             var dal = new DAL();
 
@@ -111,10 +140,12 @@ namespace BLL
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToAdd = new User(new List<string>(entityData.Split(new char[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)));
+                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), additionalEntitiesIds);
+
+                    AddAwardedUser(additionalEntitiesIds);
                     break;
                 case EntityType.Award:
-                    entityToAdd = new Award(entityData);
+                    entityToAdd = new Award(entityData, new List<int>());
                     break;
                 case EntityType.None:
                 default:
@@ -125,6 +156,20 @@ namespace BLL
                 return successfullOperationResult;
             else
                 return unsuccessfullOperationResult;
+        }
+
+        static void AddAwardedUser(List<int> awardIds)
+        {
+            var dal = new DAL();
+
+            int awardedUserId = dal.GetUsers().Count;
+
+            foreach (var award in dal.GetAwards())
+            {
+                if (awardIds.Contains(award.Id))
+                    award.AddAwardedUser(awardedUserId);
+            }
+
         }
 
     }
