@@ -13,6 +13,8 @@ namespace ConsolePl
         {
             do
             {
+                BuisnessLogic.CheckDataLocation();
+
                 Menu();
 
                 if (int.TryParse(Console.ReadLine(), out int input))
@@ -22,7 +24,7 @@ namespace ConsolePl
                 else
                     Console.WriteLine("Ошибка ввода!");
 
-            } while (true) ;
+            } while (true);
         }
 
         static void Menu()
@@ -152,7 +154,7 @@ namespace ConsolePl
                 {
                     if (input == 0)
                         break;
-                    else if (input > 0)
+                    else if (input > 0 && input < remainingAwards.Count)
                         result.Add(BuisnessLogic.GetEntityId(remainingAwards[input]));
                     else
                         Console.WriteLine("Выбранный пункт отсутствует в списке.");

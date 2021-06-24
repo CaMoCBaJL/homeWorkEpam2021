@@ -14,10 +14,12 @@ namespace BLL
 
         const string unsuccessfullOperationResult = "Не удалось завешрить операцию.";
 
-        public const string birthDateRegexPattern = "\\d{2}(\\.\\d{2}){2}";
+        public const string birthDateRegexPattern = "\\d{1,2}(\\.\\d{1,2}){2}";
 
-        public const string ageRegexPattern = "\\d{1,3}";
+        public const string ageRegexPattern = "\\d{1,2}";
 
+
+        public static void CheckDataLocation() => DAL.CheckDataLocationForExistence();
 
         public static List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
         {
@@ -33,13 +35,6 @@ namespace BLL
                 else
                     result.Add(entity);
             }
-
-
-
-            //allEntities.RemoveAll(entity => addedEntities.Contains(
-            //                      int.Parse(entity.Split(
-            //                      new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)[1]
-            //                      .Split()[1])));
 
             return result;
         }
@@ -140,12 +135,12 @@ namespace BLL
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), additionalEntitiesIds);
+                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), additionalEntitiesIds, dal.Users.Count + 1);
 
                     AddAwardedUser(additionalEntitiesIds);
                     break;
                 case EntityType.Award:
-                    entityToAdd = new Award(entityData, new List<int>());
+                    entityToAdd = new Award(entityData, new List<int>(), dal.Awards.Count + 1);
                     break;
                 case EntityType.None:
                 default:
@@ -162,7 +157,7 @@ namespace BLL
         {
             var dal = new DAL();
 
-            int awardedUserId = dal.GetUsers().Count;
+            int awardedUserId = dal.GetUsers().Count + 1;
 
             foreach (var award in dal.GetAwards())
             {
@@ -170,6 +165,7 @@ namespace BLL
                     award.AddAwardedUser(awardedUserId);
             }
 
+            dal.UpdateData();
         }
 
     }

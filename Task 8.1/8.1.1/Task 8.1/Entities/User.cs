@@ -6,8 +6,6 @@ namespace Entities
 {
     public class User : CommonEntity
     {
-        static int userCount = 0;
-
         [JsonProperty]
         public string Name { get; private set; }
 
@@ -17,11 +15,8 @@ namespace Entities
         [JsonProperty]
         public int Age { get; private set; }
 
-        [JsonProperty]
-        public List<int> UserAwards { get; private set; }
 
-
-        public User(){ }
+        public User(){}
 
         public User(string name, string dateOfBirth, int age, List<int> userAwards, int id) : base(id)
         {
@@ -31,12 +26,10 @@ namespace Entities
 
             Age = age;
 
-            UserAwards = userAwards;
-
-            userCount++;
+            ConnectedEntities = userAwards;
         }
 
-        public User(List<string> userData, List<int> awards) : base(userCount++)
+        public User(List<string> userData, List<int> awards, int id) : base(id)
         {
             Name = userData[0];
 
@@ -44,10 +37,10 @@ namespace Entities
 
             Age = int.Parse(userData[2]);
 
-            UserAwards = awards;
+            ConnectedEntities = awards;
         }
 
-        public void AddAward(Award award) => UserAwards.Add(award.Id);
+        public void AddAward(Award award) => ConnectedEntities.Add(award.Id);
 
         public override string ToString()
         {
@@ -55,23 +48,12 @@ namespace Entities
 
             res.Append("Имя пользователя: " + Name + System.Environment.NewLine);
 
-            res.Append(base.ToString());
-
             res.Append("Возраст пользователя: " + Age + System.Environment.NewLine);
 
             res.Append("Дата рождения пользователя: " + DateOfBirth + System.Environment.NewLine);
 
-            res.Append(System.Environment.NewLine + "Cписок наград:" + System.Environment.NewLine);
-
-            if (UserAwards.Count > 0)
-            {
-                foreach (var award in UserAwards)
-                {
-                    res.Append(award.ToString() + System.Environment.NewLine);
-                }
-            }
-            else
-                res.Append("Наград пока нет.");
+            res.Append(base.ToString());
+            
             return res.ToString();
         }
 

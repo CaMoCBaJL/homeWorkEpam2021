@@ -7,22 +7,17 @@ namespace Entities
 {
     public class Award : CommonEntity
     {
-        static int awardCount = 0;
-
         [JsonProperty]
         public string Title { get; private set; }
 
-        [JsonProperty]
-        public List<int> AwardedUsers { get; protected set; }
 
+        protected Award() {}
 
-        protected Award() : base(awardCount++) {}
-
-        public Award(string title, List<int> awardedUsers) : base(awardCount++)
+        public Award(string title, List<int> awardedUsers, int id) : base(id)
         {
             Title = title;
 
-            AwardedUsers = awardedUsers;
+            ConnectedEntities = awardedUsers;
         }
 
         public override string ToString()
@@ -33,23 +28,11 @@ namespace Entities
 
             result.Append(base.ToString());
 
-            if (AwardedUsers.Count > 0)
-            {
-                result.Append(Environment.NewLine + "Список награжденных пользователей:" +Environment.NewLine);
-
-                foreach (var user in AwardedUsers)
-                {
-                    result.Append(user.ToString() + Environment.NewLine);
-                }
-            }
-            else
-                result.Append(Environment.NewLine + "Пока ни 1 пользователь не обладает данной наградой.");
-
             return result.ToString();
         }
 
-        public void AddAwardedUser(User user) => AwardedUsers.Add(user.Id);
+        public void AddAwardedUser(User user) => ConnectedEntities.Add(user.Id);
 
-        public void AddAwardedUser(int id) => AwardedUsers.Add(id);
+        public void AddAwardedUser(int id) => ConnectedEntities.Add(id);
     }
 }

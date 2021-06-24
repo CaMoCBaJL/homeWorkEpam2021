@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using System;
 
 namespace JsonDAL
 {
@@ -15,9 +16,9 @@ namespace JsonDAL
         const string awardsDataLocation = @"./data/awardsData.json";
 
 
-        List<User> Users { get; }
+        public List<User> Users { get; }
 
-        List<Award> Awards { get; }
+        public List<Award> Awards { get; }
 
 
         static void CheckUnitForExistence(string path, FileSystemObjectType type)
@@ -26,11 +27,11 @@ namespace JsonDAL
             {
                 case FileSystemObjectType.File:
                     if (!File.Exists(path))
-                        File.Create(path);
+                        new FileStream(path, FileMode.CreateNew).Dispose();
                     break;
                 case FileSystemObjectType.Folder:
                     if (!Directory.Exists(path))
-                        Directory.CreateDirectory(path);
+                        new DirectoryInfo(dataFolderLocation).Create();
                     break;
                 case FileSystemObjectType.None:
                 default:
@@ -38,7 +39,7 @@ namespace JsonDAL
             }
         }
 
-        static DAL()
+        public static void CheckDataLocationForExistence()
         {
             CheckUnitForExistence(dataFolderLocation, FileSystemObjectType.Folder);
 
@@ -64,7 +65,7 @@ namespace JsonDAL
             return result;
         }
 
-        void UpdateData()
+        public void UpdateData()
         {
             File.WriteAllText(usersDataLocation, JsonConvert.SerializeObject(Users));
 
