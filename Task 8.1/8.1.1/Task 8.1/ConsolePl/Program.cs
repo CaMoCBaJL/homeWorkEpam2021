@@ -169,7 +169,6 @@ namespace ConsolePl
                 return new List<int>();
             do
             {
-
                 var remainingAwards = BuisnessLogic.GetListOfEntities(connectedEntitiesType, result);
 
                 ShowSomeStrings(remainingAwards);
