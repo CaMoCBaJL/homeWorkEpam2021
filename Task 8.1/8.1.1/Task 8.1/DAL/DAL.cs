@@ -16,9 +16,13 @@ namespace JsonDAL
         const string awardsDataLocation = @"./data/awardsData.json";
 
 
-        public List<User> Users { get; }
+        List<User> Users { get; }
 
-        public List<Award> Awards { get; }
+        List<Award> Awards { get; }
+
+        public int UsersCount { get => Users.Count; }
+
+        public int AwardsCount { get => Awards.Count; }
 
 
         static void CheckUnitForExistence(string path, FileSystemObjectType type)
@@ -67,6 +71,10 @@ namespace JsonDAL
 
         public void UpdateData()
         {
+            UpdateIds(EntityType.Award);
+
+            UpdateIds(EntityType.User);
+
             File.WriteAllText(usersDataLocation, JsonConvert.SerializeObject(Users));
 
             File.WriteAllText(awardsDataLocation, JsonConvert.SerializeObject(Awards));
@@ -135,7 +143,7 @@ namespace JsonDAL
                 default:
                     return false;
             }
-        }    
+        }
 
         public List<User> GetUsers()
         {
@@ -151,6 +159,48 @@ namespace JsonDAL
                 return new List<Award>(Awards);
 
             return new List<Award>();
+        }
+
+        public void UpdateIds(EntityType entityType)
+        {
+            switch (entityType)
+            {
+                case EntityType.User:
+                    UpdateCommonEntityList(Users);
+                    break;
+                case EntityType.Award:
+                    UpdateCommonEntityList(Awards);
+                    break;
+                case EntityType.None:
+                default:
+                    break;
+            }
+        }
+
+        void UpdateCommonEntityList(IEnumerable<CommonEntity> entities)
+        {
+            int counter = 1;
+
+            foreach (var item in entities)
+            {
+                item.ChangeId(counter);
+
+                counter++;
+            }
+        }
+
+        public int GetEntityId(EntityType entityType, string entityName)
+        {
+            switch (entityType)
+            {
+                case EntityType.User:
+                    return Users[Users.FindIndex(user => user.Name == entityName)].Id;
+                case EntityType.Award:
+                    return Awards[Awards.FindIndex(award => award.Title == entityName)].Id;
+                case EntityType.None:
+                default:
+                    return -1;
+            }
         }
 
     }

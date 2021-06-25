@@ -13,12 +13,12 @@ namespace ConsolePl
         {
             do
             {
-                BuisnessLogic.CheckDataLocation();
-
                 Menu();
 
                 if (int.TryParse(Console.ReadLine(), out int input))
                 {
+                    BuisnessLogic.CheckDataLocation();
+
                     ChooseTheAction(input);
                 }
                 else
@@ -104,7 +104,7 @@ namespace ConsolePl
 
         static void ShowEntities(EntityType entityType)
         {
-            ShowSomeStrings(BuisnessLogic.GetListOfEntities(entityType));
+            ShowSomeStrings(BuisnessLogic.GetListOfEntities(entityType, false));
         }
 
         static void AddEntityDialogue(EntityType entityType)
@@ -122,15 +122,31 @@ namespace ConsolePl
 
                     userInfo.Append(BuisnessLogic.CorrectInputTheParameter("Возраст", BuisnessLogic.ageRegexPattern));
 
-                    Console.WriteLine("Выберите список наград пользователя:");
+                    Console.WriteLine($"{Environment.NewLine}Наградите пользователя:{Environment.NewLine}");
 
-                    Console.WriteLine(BuisnessLogic.AddEntity(entityType, userInfo.ToString(), AddAwards()));
+                    Console.WriteLine(BuisnessLogic.AddEntity(entityType, userInfo.ToString(), AddConnectedIds(entityType)));
+
+                    Console.WriteLine();
 
                     break;
                 case EntityType.Award:
                     Console.WriteLine("Введите название награды:");
 
-                    Console.WriteLine(BuisnessLogic.AddEntity(entityType, Console.ReadLine(), new List<int>()));
+                    string awardTitle;
+
+                    do
+                    {
+                        awardTitle = Console.ReadLine();
+
+                        if (string.IsNullOrEmpty(awardTitle.Trim()))
+                            Console.WriteLine("Ошибка ввода!");
+                        else
+                            break;
+                    } while (true);
+
+                    Console.WriteLine($"{Environment.NewLine}Выберите пользователей для награждения созданной наградой:{Environment.NewLine}");
+
+                    Console.WriteLine(BuisnessLogic.AddEntity(entityType, awardTitle, AddConnectedIds(entityType)));
                     break;
                 case EntityType.None:
                 default:
@@ -138,13 +154,23 @@ namespace ConsolePl
             }
         }
 
-        static List<int> AddAwards()
+        static List<int> AddConnectedIds(EntityType entityType)
         {
             List<int> result = new List<int>();
 
+            EntityType connectedEntitiesType;
+
+            if (entityType == EntityType.User)
+                connectedEntitiesType = EntityType.Award;
+
+            else if (entityType == EntityType.Award)
+                connectedEntitiesType = EntityType.User;
+            else 
+                return new List<int>();
             do
             {
-                var remainingAwards = BuisnessLogic.GetListOfEntities(EntityType.Award, result);
+
+                var remainingAwards = BuisnessLogic.GetListOfEntities(connectedEntitiesType, result);
 
                 ShowSomeStrings(remainingAwards);
 
@@ -155,7 +181,7 @@ namespace ConsolePl
                     if (input == 0)
                         break;
                     else if (input > 0 && input < remainingAwards.Count)
-                        result.Add(BuisnessLogic.GetEntityId(remainingAwards[input]));
+                        result.Add(BuisnessLogic.GetEntityId(connectedEntitiesType ,remainingAwards[input]));
                     else
                         Console.WriteLine("Выбранный пункт отсутствует в списке.");
                 }
@@ -171,7 +197,7 @@ namespace ConsolePl
         {
             Console.WriteLine($"Выберите {entityType.ToString()} для удаления:");
 
-            if (BuisnessLogic.GetListOfEntities(entityType).Count > 0)
+            if (BuisnessLogic.GetListOfEntities(entityType, true).Count > 0)
             {
                 do
                 {

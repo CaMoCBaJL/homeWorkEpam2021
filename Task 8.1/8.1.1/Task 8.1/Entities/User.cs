@@ -40,8 +40,6 @@ namespace Entities
             ConnectedEntities = awards;
         }
 
-        public void AddAward(Award award) => ConnectedEntities.Add(award.Id);
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
