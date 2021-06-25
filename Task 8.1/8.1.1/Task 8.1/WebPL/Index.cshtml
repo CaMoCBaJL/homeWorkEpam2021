@@ -1,0 +1,30 @@
+﻿@using BLL;
+@using Entities;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    BuisnessLogic.CheckDataLocation();
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title> Главная страница</title>
+</head>
+<body>
+    <h1 class="header_text"> Меню сайта</h1>
+    <hr />
+    <ul class="small_text">
+        <li>
+            <a href="~/Pages/UsersPage.cshtml" class="lead"> Просмотр и редактирование списка пользователей</a>
+        </li>
+        <li>
+            <a href="~/Pages/AwardsPage.cshtml" class="h2"> Просмотр и редактирование списка наград</a>
+        </li>
+    </ul>
+</body>
+</html>

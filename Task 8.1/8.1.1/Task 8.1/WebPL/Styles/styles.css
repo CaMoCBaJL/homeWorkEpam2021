@@ -1,0 +1,15 @@
+﻿body {
+    background: linear-gradient(0.75turn, #3f87a6, #ebf8e1, #f69d3c);
+
+}
+
+.small_text{
+    font-family: 'Viaoda Libre', cursive;
+    font-size:22px;
+    font-weight:600;
+}
+
+.header_text {
+    font-family: 'Roboto Slab', sans-serif;
+    font-weight:900;
+}
