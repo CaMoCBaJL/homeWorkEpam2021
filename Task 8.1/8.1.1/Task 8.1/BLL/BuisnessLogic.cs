@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using JsonDAL;
+using System.Linq;
 using Entities;
 
 namespace BLL
@@ -25,23 +26,20 @@ namespace BLL
         {
             List<string> result = new List<string>();
 
-            foreach (var entity in GetListOfEntities(entityType))
-            {
-                if (!DoesStringContainsCommonParts(entity))
-                {
-                    if (!addedEntities.Contains(int.Parse(entity.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[1].Split()[1])))
-                        result.Add(entity);
-                }
-                else
-                    result.Add(entity);
-            }
+            var data = GetListOfEntities(entityType, true);
 
+            addedEntities = addedEntities.OrderByDescending(id => id).ToList();
+
+            addedEntities.ForEach(entityId => data.RemoveAt(entityId));
+
+            data.ForEach(entity => result.Add(entity));
+            
             return result;
         }
 
         public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(emptyStringValue) || entity.StartsWith("Список ");
 
-        public static List<string> GetListOfEntities(EntityType entityType)
+        public static List<string> GetListOfEntities(EntityType entityType, bool onlyNamesNeeded)
         {
             var dal = new DAL();
 
@@ -64,7 +62,22 @@ namespace BLL
 
             foreach (var entity in data)
             {
-                result.Add(entity.ToString());
+                if (onlyNamesNeeded)
+                {
+                    switch (entity)
+                    {
+                        case User user:
+                            result.Add(user.Name);
+                            break;
+                        case Award award:
+                            result.Add(award.Title);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                    result.Add(entity.ToString());
             }
 
             if (result.Count == 0)
@@ -122,11 +135,11 @@ namespace BLL
             } while (true);
         }
 
-        public static int GetEntityId(string entityInfo) => int.Parse(entityInfo.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)[1].Split()[1]);
+        public static int GetEntityId(EntityType entityType, string entityName) => new DAL().GetEntityId(entityType, entityName);
 
         static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
 
-        public static string AddEntity(EntityType entityType, string entityData, List<int> additionalEntitiesIds)
+        public static string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {
             var dal = new DAL();
 
@@ -135,12 +148,14 @@ namespace BLL
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), additionalEntitiesIds, dal.Users.Count + 1);
+                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), connectedEntitiesIds, dal.UsersCount + 1);
 
-                    AddAwardedUser(additionalEntitiesIds);
+                    UpdateConnnectedEntities(connectedEntitiesIds, dal.GetAwards(), entityToAdd.Id);
                     break;
                 case EntityType.Award:
-                    entityToAdd = new Award(entityData, new List<int>(), dal.Awards.Count + 1);
+                    entityToAdd = new Award(entityData, connectedEntitiesIds, dal.AwardsCount + 1);
+
+                    UpdateConnnectedEntities(connectedEntitiesIds, dal.GetUsers(), entityToAdd.Id);
                     break;
                 case EntityType.None:
                 default:
@@ -153,19 +168,16 @@ namespace BLL
                 return unsuccessfullOperationResult;
         }
 
-        static void AddAwardedUser(List<int> awardIds)
+        static void UpdateConnnectedEntities(List<int> connectedIds, IEnumerable<CommonEntity> otherEntitiesToConnect, int newEntityId)
         {
-            var dal = new DAL();
 
-            int awardedUserId = dal.GetUsers().Count + 1;
-
-            foreach (var award in dal.GetAwards())
+            foreach (var entity in otherEntitiesToConnect)
             {
-                if (awardIds.Contains(award.Id))
-                    award.AddAwardedUser(awardedUserId);
+                if (connectedIds.Contains(entity.Id))
+                    entity.AddConnectedEntity(newEntityId);
             }
 
-            dal.UpdateData();
+            new DAL().UpdateData();
         }
 
     }

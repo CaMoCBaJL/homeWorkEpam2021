@@ -50,5 +50,7 @@ namespace Entities
         }
 
         public void AddConnectedEntity(int id) => ConnectedEntities.Add(id);
+
+        public void ChangeId(int id) => Id = id;
     }
 }
