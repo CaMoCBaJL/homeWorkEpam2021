@@ -1,0 +1,38 @@
+﻿@using WebPL.Models;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div style="float:left">
+        <div class="buttons_position">
+            <button class="button add_button"> Добавить сущность</button>
+            <button class="button remove_button"> Удалить сущность</button>
+        </div>
+        <h2 class="header_text"> @DataToRoute.Data[0]</h2>
+
+        @for (int i = 1; i < DataToRoute.Data.Count; i++)
+        {
+            <p>
+                <ul>
+                    @foreach (var str in DataToRoute.Data[i].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <li class="list_element">
+                            @str
+                        </li>
+                    }
+                </ul>
+            </p>
+        }
+
+    </div>
+</body>
+</html>

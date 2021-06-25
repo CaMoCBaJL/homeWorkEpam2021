@@ -1,11 +1,18 @@
 ﻿@using BLL;
 @using Entities;
-
+@using WebPL.Models;
+@using System.Web.Routing;
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
     BuisnessLogic.CheckDataLocation();
 
+    if (IsPost)
+    {
+        DataToRoute.Data = BuisnessLogic.GetListOfEntities((EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"])), false);
+
+        Response.Redirect("~/Pages/EntitiesList.cshtml");
+    }
 }
 
 <!DOCTYPE html>
@@ -18,13 +25,13 @@
 <body>
     <h1 class="header_text"> Меню сайта</h1>
     <hr />
-    <ul class="small_text">
-        <li>
-            <a href="~/Pages/UsersPage.cshtml" class="lead"> Просмотр и редактирование списка пользователей</a>
-        </li>
-        <li>
-            <a href="~/Pages/AwardsPage.cshtml" class="h2"> Просмотр и редактирование списка наград</a>
-        </li>
-    </ul>
+    <form method="post" action="">
+        <select id="select" name="select" class="small_text">
+            <option value="1"> Просмотр и редактирование списка пользователей </option>
+            <option value="2"> Просмотр и редактирование списка наград </option>
+        </select>
+
+        <input type="submit"/>
+    </form>
 </body>
 </html>

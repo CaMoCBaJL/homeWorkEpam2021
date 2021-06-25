@@ -92,13 +92,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DataToRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Index.cshtml" />
-    <Content Include="Pages\AwardsPage.cshtml" />
     <None Include="packages.config" />
-    <Content Include="Pages\UsersPage.cshtml" />
+    <Content Include="Pages\EntitiesList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
