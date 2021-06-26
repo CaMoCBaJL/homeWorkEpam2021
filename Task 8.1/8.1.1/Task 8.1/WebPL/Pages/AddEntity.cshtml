@@ -7,8 +7,6 @@
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
-    
-
     switch (DataToRoute.DataType)
     {
         case EntityType.User:
@@ -24,6 +22,20 @@
             additionalData.Add("Список пуст.");
             break;
     }
+
+    if (DataToRoute.id > 0)
+    {
+        GetDataToReplace();
+
+        buttonName = $"Изменить {DataToRoute.DataType.ToString()}";
+    }
+    else
+    {
+        connectedIds = new List<int>();
+
+        buttonName = $"Добавить {DataToRoute.DataType.ToString()}";
+    }
+
     if (IsPost)
     {
         entityName = Request["name"];
@@ -42,10 +54,19 @@
                 connectedIds.Add(i);
             }
         }
+
+        if (DataToRoute.id > 0)
+        {
+            updateStarted = true;
+        }
     }
 }
 
 @functions{
+    string buttonName;
+
+    bool updateStarted = false;
+
     public List<string> additionalData;
 
     public bool allOk = false;
@@ -56,9 +77,10 @@
 
     public string userAge = null;
 
-    public List<int> connectedIds = new List<int>();
+    public List<int> connectedIds;
 
-    string BuildCorrectEntityStringInfo()
+
+    string BuildNewEntityInfo()
     {
         StringBuilder result = new StringBuilder();
 
@@ -71,7 +93,42 @@
             result.Append(userAge + Environment.NewLine);
         }
 
+        if (DataToRoute.id > 0)
+        {
+            result.Append(DataToRoute.id.ToString() + Environment.NewLine);
+        }
+
         return result.ToString();
+    }
+
+    void GetDataToReplace()
+    {
+        var entityInfo = DataToRoute.Data[DataToRoute.id].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        entityName = entityInfo[0].Split(':')[1];
+
+        switch (DataToRoute.DataType)
+        {
+            case EntityType.User:
+                userAge = entityInfo[1].Split(':')[1];
+
+                userBirthDate = entityInfo[2].Split(':')[1];
+
+                for (int i = 5; i < entityInfo.Length; i++)
+                {
+                    connectedIds.Add(int.Parse(entityInfo[i]));
+                }
+                break;
+            case EntityType.Award:
+                for (int i = 3; i < entityInfo.Length; i++)
+                {
+                    connectedIds.Add(int.Parse(entityInfo[i]));
+                }
+                break;
+            case EntityType.None:
+            default:
+                return;
+        }
     }
 }
 
@@ -125,24 +182,47 @@
     }
     @if (allOk)
     {
-        if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildCorrectEntityStringInfo(), connectedIds).StartsWith("Оп"))
+        if (DataToRoute.id == 0)
         {
+            if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+            {
 
-            <div class="alert_succesfull">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Добавление прошло успешно! Перенаправление на страницу со списком @DataToRoute.DataType.ToString()...
-            </div>
+                <div class="alert_succesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Добавление прошло успешно!
+                </div>
 
-            DataToRoute.UpdateData();
+                DataToRoute.UpdateData();
 
-            Response.Redirect("~/Pages/EntitiesList.cshtml");
+                Response.Redirect("~/Pages/EntitiesList.cshtml");
+            }
+            else
+            {
+                <div class="alert_unsuccesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Не удалось добавить @DataToRoute.DataType.ToString()
+                </div>
+            }
         }
         else
         {
-            <div class="alert_unsuccesfull">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Не удалось добавить @DataToRoute.DataType.ToString()
-            </div>
+            if (updateStarted)
+            {
+                if (BuisnessLogic.UpdateEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+                {
+                    <div class="alert_succesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Обновление данных прошло успешно!
+                    </div>
+                }
+                else
+                {
+                    <div class="alert_unsuccesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Не удалось обновить @DataToRoute.DataType.ToString()
+                    </div>
+                }
+            }
         }
     }
     <form method="post" action="">
@@ -179,11 +259,22 @@
         {
             <p class="small_text">
                 <label for="@i.ToString()">@additionalData[i]</label>
-                <input name="@i.ToString()" id="@i.ToString()" type="checkbox" />
+                @if (connectedIds != null)
+                {
+                    if (connectedIds.Contains(i))
+                    {
+                        <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" checked />
+                    }
+                }
+                else
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" />
+
+                }
             </p>
         }
 
-        <button class="add_button button" type="submit"> Добавить @DataToRoute.DataType.ToString()</button>
+        <button class="add_button button" type="submit"> @buttonName</button>
 
 
     </form>

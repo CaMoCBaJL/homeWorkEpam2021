@@ -4,6 +4,8 @@
 @{
     DataToRoute.Data = BuisnessLogic.GetListOfEntities(DataToRoute.DataType, false);
 
+    DataToRoute.id = 0;
+
     bool? isAdding = null;
 
     string deletionResult = null;
@@ -29,7 +31,9 @@
 
             if (Request[i.ToString() + "upd"] != null)
             {
-                isAdding = false;
+                isAdding = true;
+
+                DataToRoute.id = i;
 
                 break;
             }
@@ -102,7 +106,7 @@
                     <input name='@i.ToString()del' style="margin-left:40px; width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/delete.png); " class=" button " type="submit"
                            value="" />
                     <input name='@i.ToString()upd' style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/edit.png); " class=" button " type="submit"
-                           onclick="alert('Будет реализовано в следующем пункте)');" value="" />
+                           value="" />
                 </form>
             </div>
         }

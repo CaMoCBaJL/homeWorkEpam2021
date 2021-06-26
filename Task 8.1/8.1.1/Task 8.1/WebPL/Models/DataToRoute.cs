@@ -10,7 +10,7 @@ namespace WebPL.Models
 
         public static EntityType DataType { get; set; }
 
-        public static string id { get; set; }
+        public static int id { get; set; }
 
 
         public static void UpdateData()

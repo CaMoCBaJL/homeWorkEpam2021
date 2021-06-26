@@ -230,6 +230,29 @@ namespace JsonDAL
             }
         }
 
+        public bool UpdateEntity(CommonEntity entity)
+        {
+            switch (entity)
+            {
+                case User user:
+                    Users[entity.Id - 1] = user;
+
+                    UpdateData();
+
+                    return true;
+
+                case Award award:
+
+                    Awards[entity.Id - 1] = award;
+
+                    UpdateData();
+
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
 
     }
 }

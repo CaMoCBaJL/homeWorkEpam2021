@@ -135,6 +135,35 @@ namespace BLL
             } while (true);
         }
 
+        public static string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
+        {
+            var dal = new DAL();
+
+            CommonEntity entityToUpdate;
+
+            List<string> entityParameters = entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            switch (entityType)
+            {
+                case EntityType.User:
+                    entityToUpdate = new User(entityParameters[0], entityParameters[1], int.Parse(entityParameters[2]),
+                        connectedEntitiesIds, int.Parse(entityParameters[3]));
+                    break;
+                case EntityType.Award:
+                    entityToUpdate = new Award(entityParameters[0], connectedEntitiesIds,
+                        int.Parse(entityParameters[1]));
+                    break;
+                case EntityType.None:
+                default:
+                    return unsuccessfullOperationResult;
+            }
+
+            if (dal.UpdateEntity(entityToUpdate))
+                return successfullOperationResult;
+            else
+                return unsuccessfullOperationResult;
+        }
+
         public static int GetEntityId(EntityType entityType, string entityName) => new DAL().GetEntityId(entityType, entityName);
 
         public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
