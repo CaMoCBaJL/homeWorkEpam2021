@@ -12,25 +12,26 @@
     <title></title>
 </head>
 <body>
-    <div style="float:left">
-        <div class="buttons_position">
-            <button class="button add_button"> Добавить сущность</button>
-            <button class="button remove_button"> Удалить сущность</button>
-        </div>
+    <div>
+        <button style="position:fixed; right:20px;" class="button add_button"> Добавить сущность</button>
         <h2 class="header_text"> @DataToRoute.Data[0]</h2>
 
         @for (int i = 1; i < DataToRoute.Data.Count; i++)
         {
-            <p>
+            <div style="float:left;">
                 <ul>
                     @foreach (var str in DataToRoute.Data[i].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        <li class="list_element">
+                        <li  class="list_element">
                             @str
                         </li>
                     }
+                <div>
+                    <input style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/delete.png); " class=" button " type="button" />
+                    <input onclick="alert('Будет реализовано в следующем пункте)');" style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/edit.png); " class=" button " type="button" />
+                </div>
                 </ul>
-            </p>
+            </div>
         }
 
     </div>
