@@ -124,6 +124,8 @@ namespace JsonDAL
                     {
                         Users.Remove(user);
 
+                        UpdateEntitiesConnectedWithDeleted(entity);
+
                         UpdateData();
 
                         return true;
@@ -135,6 +137,8 @@ namespace JsonDAL
                     else
                     {
                         Awards.Remove(award);
+
+                        UpdateEntitiesConnectedWithDeleted(entity);
 
                         UpdateData();
 
@@ -202,6 +206,30 @@ namespace JsonDAL
                     return -1;
             }
         }
+
+        void UpdateEntitiesConnectedWithDeleted(CommonEntity deletedEntity)
+        {
+            IEnumerable<CommonEntity> connectedEntities;
+
+            switch (deletedEntity)
+            {
+                case User user:
+                    connectedEntities = Awards;
+                    break;
+                case Award award:
+                    connectedEntities = Users;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach (var entity in connectedEntities)
+            {
+                if (entity.ConnectedEntities.Contains(deletedEntity.Id))
+                    entity.ConnectedEntities.Remove(deletedEntity.Id);
+            }
+        }
+
 
     }
 }

@@ -2,6 +2,8 @@
 @using BLL;
 
 @{
+    DataToRoute.Data = BuisnessLogic.GetListOfEntities(DataToRoute.DataType, false);
+
     bool? isAdding = null;
 
     string deletionResult = null;

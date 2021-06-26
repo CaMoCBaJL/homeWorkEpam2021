@@ -112,7 +112,6 @@ namespace JsonDAL
             }
         }
 
-        void UpdateEntitiesConnectedWithDeleted(CommonEntity deletedEntity)
         {
             IEnumerable<CommonEntity> connectedEntities;
 

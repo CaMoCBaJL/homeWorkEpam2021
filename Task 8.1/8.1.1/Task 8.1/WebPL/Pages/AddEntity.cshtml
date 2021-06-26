@@ -7,6 +7,23 @@
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
+    
+
+    switch (DataToRoute.DataType)
+    {
+        case EntityType.User:
+            additionalData = BuisnessLogic.GetListOfEntities(EntityType.Award, true);
+            break;
+        case EntityType.Award:
+            additionalData = BuisnessLogic.GetListOfEntities(EntityType.User, true);
+            break;
+        case EntityType.None:
+        default:
+            additionalData = new List<string>();
+
+            additionalData.Add("Список пуст.");
+            break;
+    }
     if (IsPost)
     {
         entityName = Request["name"];
@@ -17,10 +34,20 @@
 
             userAge = Request["age"];
         }
+
+        for (int i = 1; i < additionalData.Count; i++)
+        {
+            if (Request.Form[i.ToString()] == "on")
+            {
+                connectedIds.Add(i);
+            }
+        }
     }
 }
 
 @functions{
+    public List<string> additionalData;
+
     public bool allOk = false;
 
     public string entityName = null;
@@ -28,6 +55,8 @@
     public string userBirthDate = null;
 
     public string userAge = null;
+
+    public List<int> connectedIds = new List<int>();
 
     string BuildCorrectEntityStringInfo()
     {
@@ -54,7 +83,7 @@
     <title>Страница добавления @DataToRoute.DataType.ToString()</title>
 </head>
 <body>
-    @if (entityName != null)
+    @if (!string.IsNullOrEmpty(entityName))
     {
         if (userBirthDate != null && userAge != null && DataToRoute.DataType == EntityType.User)
         {
@@ -89,22 +118,20 @@
     }
     else
     {
-<div class="alert_warning">
-    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-    Введите имя  @DataToRoute.DataType.ToString()
-</div>
+        <div class="alert_warning">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            Введите имя  @DataToRoute.DataType.ToString()
+        </div>
     }
     @if (allOk)
     {
-        if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildCorrectEntityStringInfo(), new List<int>()).StartsWith("Оп"))
+        if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildCorrectEntityStringInfo(), connectedIds).StartsWith("Оп"))
         {
 
             <div class="alert_succesfull">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 Добавление прошло успешно! Перенаправление на страницу со списком @DataToRoute.DataType.ToString()...
             </div>
-
-            Thread.Sleep(3000);
 
             DataToRoute.UpdateData();
 
@@ -136,15 +163,27 @@
                     <label for="userAge"> Дата рождения пользователя</label>
                     <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
                 </p>
+                <p>
+                    Добавить награды:
+                </p>
+            }
+            else
+            {
+                <p>
+                    Добавить пользователей:
+                </p>
             }
 
         </div>
-        @for (int i = 1; i < DataToRoute.Data.Count; i++)
+        @for (int i = 1; i < additionalData.Count; i++)
         {
-            <input id="@i" type="checkbox" value="@DataToRoute.Data[i]" />
+            <p class="small_text">
+                <label for="@i.ToString()">@additionalData[i]</label>
+                <input name="@i.ToString()" id="@i.ToString()" type="checkbox" />
+            </p>
         }
 
-        <button class="add_button button" type="submit"> Добавить пользователя</button>
+        <button class="add_button button" type="submit"> Добавить @DataToRoute.DataType.ToString()</button>
 
 
     </form>
