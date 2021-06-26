@@ -1,8 +1,49 @@
 ﻿@using WebPL.Models;
+@using BLL;
 
 @{
+    bool? isAdding = null;
+
+    string deletionResult = null;
+
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    if (IsPost)
+    {
+        for (int i = 1; i < DataToRoute.Data.Count; i++)
+        {
+            if (Request[i.ToString() + "del"] != null)
+            {
+                deletionResult = BuisnessLogic.RemoveEntity(DataToRoute.DataType, i);
+
+                isAdding = false;
+
+                break;
+            }
+
+            if (Request[i.ToString() + "upd"] != null)
+            {
+                isAdding = false;
+
+                break;
+            }
+        }
+
+        if(!isAdding.HasValue)
+        {
+            isAdding = true;
+        }
+    }
+
+    if (isAdding.HasValue)
+    {
+        if (isAdding.Value)
+        {
+            Response.Redirect("~/Pages/AddEntity.cshtml");
+        }
+    }
 }
+
 
 <!DOCTYPE html>
 
@@ -12,8 +53,32 @@
     <title></title>
 </head>
 <body>
+    @if (deletionResult != null)
+    {
+        if (deletionResult.StartsWith("Не"))
+        {
+            <div class="alert_unsuccesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                @deletionResult
+            </div>
+        }
+        else
+        {
+            <div class="alert_succesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                @deletionResult
+            </div>
+        }
+        DataToRoute.UpdateData();
+
+        deletionResult = null;
+    }
     <div>
-        <button style="position:fixed; right:20px;" class="button add_button"> Добавить сущность</button>
+        <form id="form" method="post" action="">
+            <div style="position:fixed; right:20px;">
+                <button class="button add_button"> Добавить сущность</button>
+            </div>
+        </form>
         <h2 class="header_text"> @DataToRoute.Data[0]</h2>
 
         @for (int i = 1; i < DataToRoute.Data.Count; i++)
@@ -22,16 +87,17 @@
                 <ul>
                     @foreach (var str in DataToRoute.Data[i].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        <li  class="list_element">
+                        <li class="list_element">
                             @str
                         </li>
                     }
-                <div>
-                    <input style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/delete.png); " class=" button " type="button" />
-                    <input style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/edit.png); " class=" button " type="button" 
-                           onclick="alert('Будет реализовано в следующем пункте)');"  />
-                </div>
                 </ul>
+                <form id="form" method="post" action="">
+                    <input name='@i.ToString()del' style="margin-left:40px; width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/delete.png); " class=" button " type="submit"
+                           value="" />
+                    <input name='@i.ToString()upd' style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/edit.png); " class=" button " type="submit"
+                           onclick="alert('Будет реализовано в следующем пункте)');" value="" />
+                </form>
             </div>
         }
 

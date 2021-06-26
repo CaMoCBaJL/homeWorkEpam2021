@@ -137,7 +137,7 @@ namespace BLL
 
         public static int GetEntityId(EntityType entityType, string entityName) => new DAL().GetEntityId(entityType, entityName);
 
-        static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
+        public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
 
         public static string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {

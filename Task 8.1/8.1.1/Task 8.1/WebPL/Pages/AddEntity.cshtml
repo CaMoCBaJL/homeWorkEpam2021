@@ -1,0 +1,152 @@
+﻿@using BLL;
+@using Entities;
+@using WebPL.Models;
+@using System.Threading;
+@using System.Text;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    if (IsPost)
+    {
+        entityName = Request["name"];
+
+        if (DataToRoute.DataType == Entities.EntityType.User)
+        {
+            userBirthDate = Request["birthDate"];
+
+            userAge = Request["age"];
+        }
+    }
+}
+
+@functions{
+    public bool allOk = false;
+
+    public string entityName = null;
+
+    public string userBirthDate = null;
+
+    public string userAge = null;
+
+    string BuildCorrectEntityStringInfo()
+    {
+        StringBuilder result = new StringBuilder();
+
+        result.Append(entityName + Environment.NewLine);
+
+        if (DataToRoute.DataType == EntityType.User)
+        {
+            result.Append(userBirthDate + Environment.NewLine);
+
+            result.Append(userAge + Environment.NewLine);
+        }
+
+        return result.ToString();
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Страница добавления @DataToRoute.DataType.ToString()</title>
+</head>
+<body>
+    @if (entityName != null)
+    {
+        if (userBirthDate != null && userAge != null && DataToRoute.DataType == EntityType.User)
+        {
+            if (BuisnessLogic.ValidateParameter(userBirthDate, BuisnessLogic.birthDateRegexPattern))
+            {
+                if (BuisnessLogic.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
+                {
+                    allOk = true;
+                }
+                else
+                {
+                    userAge = null;
+                    <div class="alert_warning">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Возраст пользователя введен неверно!
+                    </div>
+                }
+            }
+            else
+            {
+                userBirthDate = null;
+                <div class="alert_warning">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Дата рождения пользователя введена неверно!
+                </div>
+            }
+        }
+        else
+        {
+            allOk = true;
+        }
+    }
+    else
+    {
+<div class="alert_warning">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    Введите имя  @DataToRoute.DataType.ToString()
+</div>
+    }
+    @if (allOk)
+    {
+        if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildCorrectEntityStringInfo(), new List<int>()).StartsWith("Оп"))
+        {
+
+            <div class="alert_succesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Добавление прошло успешно! Перенаправление на страницу со списком @DataToRoute.DataType.ToString()...
+            </div>
+
+            Thread.Sleep(3000);
+
+            DataToRoute.UpdateData();
+
+            Response.Redirect("~/Pages/EntitiesList.cshtml");
+        }
+        else
+        {
+            <div class="alert_unsuccesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Не удалось добавить @DataToRoute.DataType.ToString()
+            </div>
+        }
+    }
+    <form method="post" action="">
+
+        <div class="small_text">
+            <p>
+                <label for="entityName"> Название @DataToRoute.DataType.ToString()</label>
+                <input type="text" name="name" id="entityName" value="@entityName" placeholder="Имя @DataToRoute.DataType.ToString()" />
+            </p>
+
+            @if (DataToRoute.DataType == EntityType.User)
+            {
+                <p>
+                    <label for="userBirthDate"> Дата рождения пользователя</label>
+                    <input type="text" name="birthDate" id="userBirthDate" value="@userBirthDate" placeholder="Дата рождения " />
+                </p>
+                <p>
+                    <label for="userAge"> Дата рождения пользователя</label>
+                    <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
+                </p>
+            }
+
+        </div>
+        @for (int i = 1; i < DataToRoute.Data.Count; i++)
+        {
+            <input id="@i" type="checkbox" value="@DataToRoute.Data[i]" />
+        }
+
+        <button class="add_button button" type="submit"> Добавить пользователя</button>
+
+
+    </form>
+</body>
+</html>

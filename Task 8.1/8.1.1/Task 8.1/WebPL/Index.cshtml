@@ -11,6 +11,8 @@
     {
         DataToRoute.Data = BuisnessLogic.GetListOfEntities((EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"])), false);
 
+        DataToRoute.DataType = (EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"]));
+
         Response.Redirect("~/Pages/EntitiesList.cshtml");
     }
 }
