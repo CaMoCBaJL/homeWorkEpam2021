@@ -1,0 +1,36 @@
+﻿@using BLL;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    string userName;
+
+    string password;
+    
+    if (IsPost)
+    {
+        userName = Request["login"];
+
+        password = Request["password"];
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <label for="userBirthDate"> Введите имя пользователя</label>
+        <input type="text" name="login" id="userBirthDate" placeholder="Дата рождения " />
+        <label for="userBirthDate"> Введите пароль</label>
+        <input type="password" name="password" id="userBirthDate" placeholder="Дата рождения " />
+        <form method="post" action="">
+            <button type="submit"> Ок</button>
+        </form>
+    </div>
+</body>
+</html>

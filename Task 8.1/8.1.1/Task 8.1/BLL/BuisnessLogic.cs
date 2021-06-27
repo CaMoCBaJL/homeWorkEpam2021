@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JsonDAL;
 using System.Linq;
 using Entities;
+using System.Text;
 
 namespace BLL
 {
@@ -18,6 +19,10 @@ namespace BLL
         public const string birthDateRegexPattern = "\\d{1,2}(\\.\\d{1,2}){2}";
 
         public const string ageRegexPattern = "\\d{1,2}";
+
+        const int firstSmallEnglLetterId = 65;
+
+        const int firstHighEnglLetterId = 97;
 
 
         public static void CheckDataLocation() => DAL.CheckDataLocationForExistence();
@@ -113,8 +118,49 @@ namespace BLL
                 return successfullOperationResult;
             else
                 return unsuccessfullOperationResult;
-
         }
+
+        public static bool CheckPassword(string password, string userName)
+        {
+            if (userName != "admin")
+            {
+                var dal = new DAL();
+
+                int userId = dal.GetEntityId(EntityType.User, userName);
+
+                if (userId > 0)
+                {
+                    return GeneratePassword(dal.GetUsers()[userId - 1]) == password;
+                }
+
+                return false;
+            }
+
+            return password == GetAdminPassword(userName);
+        }
+        static string GeneratePassword(User user)
+        {
+            StringBuilder result = new StringBuilder();
+
+            foreach (var number in user.DateOfBirth.Split('.'))
+            {
+                char newChar;
+
+                if (int.Parse(number) % 2 == 0)
+                    newChar = (char)(int.Parse(number) + firstSmallEnglLetterId);
+                else
+                    newChar = (char)(int.Parse(number) + firstHighEnglLetterId);
+
+                result.Append(newChar + number);
+            }
+
+            return result.ToString();
+        }
+
+        static string GetAdminPassword(string userName) => GeneratePassword(userName);
+
+        static string GeneratePassword(string str) => "admin";
+
 
         public static string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {

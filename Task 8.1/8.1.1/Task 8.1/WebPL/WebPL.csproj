@@ -92,11 +92,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AuthUserInfo.cs" />
     <Compile Include="Models\DataToRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Index.cshtml" />
+    <Content Include="Login.cshtml" />
     <None Include="packages.config" />
     <Content Include="Pages\EntitiesList.cshtml" />
     <Content Include="Pages\AddEntity.cshtml" />
