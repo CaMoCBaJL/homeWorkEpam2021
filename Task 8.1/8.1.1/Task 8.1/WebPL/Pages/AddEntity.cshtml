@@ -44,6 +44,8 @@
 
     public string userAge = null;
 
+    public string password = null;
+
     public List<int> connectedIds;
 
 
@@ -75,6 +77,8 @@
             userBirthDate = Request["birthDate"];
 
             userAge = Request["age"];
+
+            password = Request["password"];
         }
 
         connectedIds = new List<int>();
@@ -162,16 +166,26 @@
         {
             if (BuisnessLogic.ValidateParameter(userBirthDate, BuisnessLogic.birthDateRegexPattern))
             {
-                if (BuisnessLogic.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
+                if (password != null)
                 {
-                    allOk = true;
+                    if (BuisnessLogic.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
+                    {
+                        allOk = true;
+                    }
+                    else
+                    {
+                        userAge = null;
+                        <div class="alert_warning">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            Возраст пользователя введен неверно!
+                        </div>
+                    }
                 }
                 else
                 {
-                    userAge = null;
                     <div class="alert_warning">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        Возраст пользователя введен неверно!
+                        Введите пароль!
                     </div>
                 }
             }
@@ -242,7 +256,6 @@
         }
     }
     <form method="post" action="">
-
         <div class="small_text">
             <p>
                 <label for="entityName"> Название @DataToRoute.DataType.ToString()</label>
@@ -251,24 +264,25 @@
 
             @if (DataToRoute.DataType == EntityType.User)
             {
+                
                 <p>
                     <label for="userBirthDate"> Дата рождения пользователя</label>
                     <input type="text" name="birthDate" id="userBirthDate" value="@userBirthDate" placeholder="Дата рождения " />
                 </p>
+
                 <p>
                     <label for="userAge"> Дата рождения пользователя</label>
                     <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
+                </p>
+
+                <p>
+                    <label for="password"> Пароль для входа в учетную запись</label>
+                    <input type="password" name="password" id="password" value="@password" placeholder="Пароль" />
                 </p>
                 if (additionalData.Count > 1)
                 {
                     <p>
                         Добавить награды:
-                    </p>
-                }
-                else
-                {
-                    <p>
-                        @additionalData[0]
                     </p>
                 }
             }
@@ -278,12 +292,6 @@
                 {
                     <p>
                         Добавить пользователей:
-                    </p>
-                }
-                else
-                {
-                    <p>
-                        @additionalData[0]
                     </p>
                 }
             }

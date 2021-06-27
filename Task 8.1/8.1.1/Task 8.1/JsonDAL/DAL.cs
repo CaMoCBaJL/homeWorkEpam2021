@@ -211,12 +211,25 @@ namespace JsonDAL
             {
                 case EntityType.User:
                     if (Users.Count > 0)
-                        return Users[Users.FindIndex(user => user.Name == entityName)].Id;
+                    {
+                        int index = Users.FindIndex(user => user.Name == entityName);
+
+                        if (index > -1)
+                            return Users[index].Id;
+                        else return -1;
+                    }
                     else
                         return 1;
                 case EntityType.Award:
                     if (Awards.Count > 0)
-                        return Awards[Awards.FindIndex(award => award.Title == entityName)].Id;
+                    {
+                        int index = Awards.FindIndex(award => award.Title == entityName);
+
+                        if (index > -1)
+                            return Awards[index].Id;
+                        else
+                            return -1;
+                    }
                     else
                         return 1;
                 case EntityType.None:
@@ -283,7 +296,10 @@ namespace JsonDAL
 
         public bool CheckUserIdentity(string userName, string password)
         {
-            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(identitiesDataLocation);
+            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(identitiesDataLocation));
+
+            if (identities == null)
+                identities = new List<Identity>();
 
             Identity currentUserIdentity = new Identity(GetEntityId(EntityType.User, userName), HashThePassword(password));
 
@@ -296,7 +312,7 @@ namespace JsonDAL
 
             int result = 0;
 
-            foreach(var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
+            foreach (var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
             {
                 result += hashValue;
             }

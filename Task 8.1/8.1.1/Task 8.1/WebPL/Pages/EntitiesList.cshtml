@@ -27,6 +27,8 @@
 }
 
 @functions{
+    public string id;
+
     public bool? isAdding = null;
 
     public string deletionResult = null;
@@ -36,6 +38,8 @@
     {
         for (int i = 1; i < DataToRoute.Data.Count; i++)
         {
+            var c = Request[i.ToString()];
+
             if (Request[i.ToString() + "del"] != null)
             {
                 deletionResult = BuisnessLogic.RemoveEntity(DataToRoute.DataType, i);
@@ -109,12 +113,18 @@
                         </li>
                     }
                 </ul>
-                <form id="form" method="post" action="">
-                    <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); " class=" button " type="submit"
-                           value="" />
-                    <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
-                           value="" />
-                </form>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form id="form" method="post" action="">
+                        @if (AuthUser.UserName == "admin")
+                        {
+                            <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); " class=" button " type="submit"
+                                   value="@id" />
+                        }
+                        <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
+                               value="@id" />
+                    </form>
+                }
             </div>
         }
 

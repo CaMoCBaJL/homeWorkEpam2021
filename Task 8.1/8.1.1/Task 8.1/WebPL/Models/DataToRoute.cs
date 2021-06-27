@@ -4,7 +4,7 @@ using BLL;
 
 namespace WebPL.Models
 {
-    public static class DataToRoute
+    public class DataToRoute
     {
         public static List<string> Data { get; set; }
 

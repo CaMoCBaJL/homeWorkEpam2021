@@ -1,19 +1,19 @@
 ﻿@using BLL;
+@using Entities;
+@using WebPL.Models;
 
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
-    string userName;
+    string userName = null;
 
-    string password;
-    
+    string password = null;
+
     if (IsPost)
     {
         userName = Request["login"];
 
         password = Request["password"];
-
-        BuisnessLogic.CheckPassword(password, userName);
     }
 }
 
@@ -25,13 +25,56 @@
     <title></title>
 </head>
 <body>
-    <div>
-        <label for="userBirthDate"> Введите имя пользователя</label>
-        <input type="text" name="login" id="userBirthDate" placeholder="Дата рождения " />
-        <label for="userBirthDate"> Введите пароль</label>
-        <input type="password" name="password" id="userBirthDate" placeholder="Дата рождения " />
+    @if (!string.IsNullOrEmpty(userName))
+    {
+        if (!string.IsNullOrEmpty(password))
+        {
+            if (BuisnessLogic.CheckPassword(password, userName))
+            {
+                Response.Redirect("~/Index.cshtml");
+            }
+            else
+            {
+                DataToRoute.DataType = EntityType.User;
+
+                <div class="alert_unsuccesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+                    Пользователь с введенными данными не найден.
+                    <p>
+                        <a href="~/Pages/AddEntity.cshtml"> Регистрация</a>
+                    </p>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert_warning">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+                Введите пароль
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert_warning">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+            Введите имя пользователя
+        </div>
+    }
+    <div class="small_text">
         <form method="post" action="">
-            <button type="submit"> Ок</button>
+            <p>
+                <label for="loginInput"> Введите имя пользователя</label>
+                <input value="@userName" type="text" name="login" id="loginInput" placeholder="Имя пользователя" />
+            </p>
+            <p>
+                <label for="passwordInput"> Введите пароль</label>
+                <input value="@password" type="password" name="password" id="passwordInput" placeholder="пароль" />
+            </p>
+            <button class="ok_button" type="submit"> Ок</button>
         </form>
     </div>
 </body>
