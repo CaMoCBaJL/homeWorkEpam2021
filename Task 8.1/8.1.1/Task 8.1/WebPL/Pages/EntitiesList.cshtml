@@ -4,11 +4,7 @@
 @{
     DataToRoute.Data = BuisnessLogic.GetListOfEntities(DataToRoute.DataType, false);
 
-    DataToRoute.id = 0;
-
-    bool? isAdding = null;
-
-    string deletionResult = null;
+    DataToRoute.EntityToUpdateId = 0;
 
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
@@ -31,6 +27,11 @@
 }
 
 @functions{
+    public bool? isAdding = null;
+
+    public string deletionResult = null;
+
+
     void DefineClickTarget()
     {
         for (int i = 1; i < DataToRoute.Data.Count; i++)
@@ -48,7 +49,7 @@
             {
                 isAdding = true;
 
-                DataToRoute.id = i;
+                DataToRoute.EntityToUpdateId = i;
 
                 break;
             }

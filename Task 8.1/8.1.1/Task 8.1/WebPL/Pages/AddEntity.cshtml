@@ -12,7 +12,7 @@
     connectedIds = new List<int>();
 
 
-    if (DataToRoute.id > 0)
+    if (DataToRoute.EntityToUpdateId > 0)
     {
         ParseDataToUpdate();
 
@@ -90,7 +90,7 @@
             }
         }
 
-        if (DataToRoute.id > 0)
+        if (DataToRoute.EntityToUpdateId > 0)
         {
             updateStarted = true;
         }
@@ -109,9 +109,9 @@
             result.Append(userAge + Environment.NewLine);
         }
 
-        if (DataToRoute.id > 0)
+        if (DataToRoute.EntityToUpdateId > 0)
         {
-            result.Append(DataToRoute.id.ToString() + Environment.NewLine);
+            result.Append(DataToRoute.EntityToUpdateId.ToString() + Environment.NewLine);
         }
 
         return result.ToString();
@@ -119,7 +119,7 @@
 
     void ParseDataToUpdate()
     {
-        var entityInfo = DataToRoute.Data[DataToRoute.id].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        var entityInfo = DataToRoute.Data[DataToRoute.EntityToUpdateId].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
         entityName = entityInfo[0].Split(':')[1];
 
@@ -198,7 +198,7 @@
     }
     @if (allOk)
     {
-        if (DataToRoute.id == 0)
+        if (DataToRoute.EntityToUpdateId == 0)
         {
             if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
             {
