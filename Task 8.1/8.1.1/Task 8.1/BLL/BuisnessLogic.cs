@@ -38,7 +38,7 @@ namespace BLL
             addedEntities.ForEach(entityId => data.RemoveAt(entityId));
 
             data.ForEach(entity => result.Add(entity));
-            
+
             return result;
         }
 
@@ -122,45 +122,10 @@ namespace BLL
 
         public static bool CheckPassword(string password, string userName)
         {
-            if (userName != "admin")
-            {
-                var dal = new DAL();
+            var dal = new DAL();
 
-                int userId = dal.GetEntityId(EntityType.User, userName);
-
-                if (userId > 0)
-                {
-                    return GeneratePassword(dal.GetUsers()[userId - 1]) == password;
-                }
-
-                return false;
-            }
-
-            return password == GetAdminPassword(userName);
+            return dal.CheckUserIdentity(userName, password);
         }
-        static string GeneratePassword(User user)
-        {
-            StringBuilder result = new StringBuilder();
-
-            foreach (var number in user.DateOfBirth.Split('.'))
-            {
-                char newChar;
-
-                if (int.Parse(number) % 2 == 0)
-                    newChar = (char)(int.Parse(number) + firstSmallEnglLetterId);
-                else
-                    newChar = (char)(int.Parse(number) + firstHighEnglLetterId);
-
-                result.Append(newChar + number);
-            }
-
-            return result.ToString();
-        }
-
-        static string GetAdminPassword(string userName) => GeneratePassword(userName);
-
-        static string GeneratePassword(string str) => "admin";
-
 
         public static string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {

@@ -12,6 +12,8 @@
         userName = Request["login"];
 
         password = Request["password"];
+
+        BuisnessLogic.CheckPassword(password, userName);
     }
 }
 

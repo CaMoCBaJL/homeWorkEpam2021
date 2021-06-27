@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="DAL.cs" />
     <Compile Include="FileSystemObjectType.cs" />
+    <Compile Include="IdentityUpdateType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+
 
 namespace JsonDAL
 {
@@ -14,6 +16,8 @@ namespace JsonDAL
         const string usersDataLocation = @"./data/usersData.json";
 
         const string awardsDataLocation = @"./data/awardsData.json";
+
+        const string identitiesDataLocation = @"./data/identities.json";
 
 
         List<User> Users { get; }
@@ -50,6 +54,8 @@ namespace JsonDAL
             CheckUnitForExistence(usersDataLocation, FileSystemObjectType.File);
 
             CheckUnitForExistence(awardsDataLocation, FileSystemObjectType.File);
+
+            CheckUnitForExistence(identitiesDataLocation, FileSystemObjectType.File);
         }
 
         public DAL()
@@ -126,6 +132,8 @@ namespace JsonDAL
                     {
                         Users.Remove(user);
 
+                        DeleteIdentity(user.Id);
+
                         UpdateEntitiesConnectedWithDeleted(entity);
 
                         UpdateData();
@@ -150,6 +158,8 @@ namespace JsonDAL
                     return false;
             }
         }
+
+        void DeleteIdentity(int userId) => UpdateIdentities(new Identity(userId, default), IdentityUpdateType.Delete);
 
         public List<User> GetUsers()
         {
@@ -262,5 +272,56 @@ namespace JsonDAL
             }
         }
 
+        public void AddNewUser(CommonEntity newUser, string password)
+        {
+            AddEntity(newUser);
+
+            AddIdentity(newUser.Id, password);
+        }
+
+        void AddIdentity(int userId, string password) => UpdateIdentities(new Identity(userId, HashThePassword(password)), IdentityUpdateType.Add);
+
+        public bool CheckUserIdentity(string userName, string password)
+        {
+            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(identitiesDataLocation);
+
+            Identity currentUserIdentity = new Identity(GetEntityId(EntityType.User, userName), HashThePassword(password));
+
+            return identities.FindIndex(id => id == currentUserIdentity) > -1;
+        }
+
+        int HashThePassword(string password)
+        {
+            HashAlgorithm sha = SHA256.Create();
+
+            int result = 0;
+
+            foreach(var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
+            {
+                result += hashValue;
+            }
+
+            return result;
+        }
+
+        void UpdateIdentities(Identity identity, IdentityUpdateType updateType)
+        {
+            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(identitiesDataLocation);
+
+            switch (updateType)
+            {
+                case IdentityUpdateType.Add:
+                    identities.Add(identity);
+                    break;
+                case IdentityUpdateType.Delete:
+                    identities.Remove(identities.Find(id => id.UserId == identity.UserId));
+                    break;
+                case IdentityUpdateType.None:
+                default:
+                    return;
+            }
+
+            File.WriteAllText(identitiesDataLocation, JsonConvert.SerializeObject(identities));
+        }
     }
 }
