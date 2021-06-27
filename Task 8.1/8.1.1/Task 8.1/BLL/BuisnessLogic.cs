@@ -116,25 +116,6 @@ namespace BLL
 
         }
 
-        public static string CorrectInputTheParameter(string entityField, string regularExpression)
-        {
-            string parameter;
-
-            do
-            {
-                Console.WriteLine($"Введите параметр " + entityField);
-
-                parameter = Console.ReadLine();
-
-                if (ValidateParameter(parameter, regularExpression))
-                    return parameter;
-                else
-                    Console.WriteLine("Ввод неверен");
-
-
-            } while (true);
-        }
-
         public static string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {
             var dal = new DAL();
