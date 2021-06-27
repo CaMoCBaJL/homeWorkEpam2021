@@ -7,58 +7,25 @@
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
-    switch (DataToRoute.DataType)
-    {
-        case EntityType.User:
-            additionalData = BuisnessLogic.GetListOfEntities(EntityType.Award, true);
-            break;
-        case EntityType.Award:
-            additionalData = BuisnessLogic.GetListOfEntities(EntityType.User, true);
-            break;
-        case EntityType.None:
-        default:
-            additionalData = new List<string>();
+    GetAdditionalData();
 
-            additionalData.Add("Список пуст.");
-            break;
-    }
+    connectedIds = new List<int>();
+
 
     if (DataToRoute.id > 0)
     {
-        GetDataToReplace();
+        ParseDataToUpdate();
 
         buttonName = $"Изменить {DataToRoute.DataType.ToString()}";
     }
     else
     {
-        connectedIds = new List<int>();
-
         buttonName = $"Добавить {DataToRoute.DataType.ToString()}";
     }
 
     if (IsPost)
     {
-        entityName = Request["name"];
-
-        if (DataToRoute.DataType == Entities.EntityType.User)
-        {
-            userBirthDate = Request["birthDate"];
-
-            userAge = Request["age"];
-        }
-
-        for (int i = 1; i < additionalData.Count; i++)
-        {
-            if (Request.Form[i.ToString()] == "on")
-            {
-                connectedIds.Add(i);
-            }
-        }
-
-        if (DataToRoute.id > 0)
-        {
-            updateStarted = true;
-        }
+        GetPageData();
     }
 }
 
@@ -79,6 +46,55 @@
 
     public List<int> connectedIds;
 
+
+    void GetAdditionalData()
+    {
+        switch (DataToRoute.DataType)
+        {
+            case EntityType.User:
+                additionalData = BuisnessLogic.GetListOfEntities(EntityType.Award, true);
+                break;
+            case EntityType.Award:
+                additionalData = BuisnessLogic.GetListOfEntities(EntityType.User, true);
+                break;
+            case EntityType.None:
+            default:
+                additionalData = new List<string>();
+
+                additionalData.Add("Список пуст.");
+                break;
+        }
+    }
+
+    void GetPageData()
+    {
+        entityName = Request["name"];
+
+        if (DataToRoute.DataType == Entities.EntityType.User)
+        {
+            userBirthDate = Request["birthDate"];
+
+            userAge = Request["age"];
+        }
+
+        connectedIds = new List<int>();
+
+        //This works like the thing previously described in EntitiesList.DefineClickTarget
+
+        for (int i = 1; i < additionalData.Count; i++)
+        {
+
+            if (Request[i.ToString()] != null)
+            {
+                connectedIds.Add(i);
+            }
+        }
+
+        if (DataToRoute.id > 0)
+        {
+            updateStarted = true;
+        }
+    }
 
     string BuildNewEntityInfo()
     {
@@ -101,7 +117,7 @@
         return result.ToString();
     }
 
-    void GetDataToReplace()
+    void ParseDataToUpdate()
     {
         var entityInfo = DataToRoute.Data[DataToRoute.id].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -200,7 +216,7 @@
             {
                 <div class="alert_unsuccesfull">
                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    Не удалось добавить @DataToRoute.DataType.ToString()
+                    В базе уже имеется @DataToRoute.DataType.ToString() с таким именем!
                 </div>
             }
         }
@@ -243,15 +259,33 @@
                     <label for="userAge"> Дата рождения пользователя</label>
                     <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
                 </p>
-                <p>
-                    Добавить награды:
-                </p>
+                if (additionalData.Count > 1)
+                {
+                    <p>
+                        Добавить награды:
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        @additionalData[0]
+                    </p>
+                }
             }
             else
             {
-                <p>
-                    Добавить пользователей:
-                </p>
+                if (additionalData.Count > 1)
+                {
+                    <p>
+                        Добавить пользователей:
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        @additionalData[0]
+                    </p>
+                }
             }
 
         </div>
@@ -259,13 +293,12 @@
         {
             <p class="small_text">
                 <label for="@i.ToString()">@additionalData[i]</label>
-                @if (connectedIds != null)
+
+                @if (connectedIds.Contains(i))
                 {
-                    if (connectedIds.Contains(i))
-                    {
-                        <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" checked />
-                    }
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" checked />
                 }
+
                 else
                 {
                     <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" />

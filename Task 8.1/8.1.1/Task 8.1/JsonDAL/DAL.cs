@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using System;
+using System.Linq;
 
 namespace JsonDAL
 {
@@ -85,7 +85,9 @@ namespace JsonDAL
             switch (entity)
             {
                 case User user:
-                    if (Users.Contains(user))
+                    int indx = Users.FindIndex(u => u.Name == user.Name);
+
+                    if (indx > -1)
                         return false;
                     else
                     {
@@ -97,7 +99,7 @@ namespace JsonDAL
                     }
 
                 case Award award:
-                    if (Awards.Contains(award))
+                    if (Awards.FindIndex(a => a.Title == award.Title) > -1)
                         return false;
                     else
                     {
@@ -198,9 +200,15 @@ namespace JsonDAL
             switch (entityType)
             {
                 case EntityType.User:
-                    return Users[Users.FindIndex(user => user.Name == entityName)].Id;
+                    if (Users.Count > 0)
+                        return Users[Users.FindIndex(user => user.Name == entityName)].Id;
+                    else
+                        return 1;
                 case EntityType.Award:
-                    return Awards[Awards.FindIndex(award => award.Title == entityName)].Id;
+                    if (Awards.Count > 0)
+                        return Awards[Awards.FindIndex(award => award.Title == entityName)].Id;
+                    else
+                        return 1;
                 case EntityType.None:
                 default:
                     return -1;

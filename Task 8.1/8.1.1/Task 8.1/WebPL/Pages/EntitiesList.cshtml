@@ -18,6 +18,21 @@
 
     if (IsPost)
     {
+        DefineClickTarget();
+    }
+
+    if (isAdding.HasValue)
+    {
+        if (isAdding.Value)
+        {
+            Response.Redirect("~/Pages/AddEntity.cshtml");
+        }
+    }
+}
+
+@functions{
+    void DefineClickTarget()
+    {
         for (int i = 1; i < DataToRoute.Data.Count; i++)
         {
             if (Request[i.ToString() + "del"] != null)
@@ -39,21 +54,12 @@
             }
         }
 
-        if(!isAdding.HasValue)
+        if (!isAdding.HasValue)
         {
             isAdding = true;
         }
     }
-
-    if (isAdding.HasValue)
-    {
-        if (isAdding.Value)
-        {
-            Response.Redirect("~/Pages/AddEntity.cshtml");
-        }
-    }
 }
-
 
 <!DOCTYPE html>
 
@@ -103,9 +109,9 @@
                     }
                 </ul>
                 <form id="form" method="post" action="">
-                    <input name='@i.ToString()del' style="margin-left:40px; width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/delete.png); " class=" button " type="submit"
+                    <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); " class=" button " type="submit"
                            value="" />
-                    <input name='@i.ToString()upd' style="width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/128x128/edit.png); " class=" button " type="submit"
+                    <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
                            value="" />
                 </form>
             </div>
