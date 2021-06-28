@@ -25,7 +25,7 @@ namespace BLL
         const int firstHighEnglLetterId = 97;
 
 
-        public static void CheckDataLocation() => DAL.CheckDataLocationForExistence();
+        public static void CheckDataLocation() => new DAL().CheckDataLocationForExistence();
 
         public static List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
         {
@@ -159,6 +159,13 @@ namespace BLL
         public static int GetEntityId(EntityType entityType, string entityName) => new DAL().GetEntityId(entityType, entityName);
 
         public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
+
+        public static bool AddUser(string entityData, List<int> connectedEntitiesIds, string password)
+        {
+            var dal = new DAL();
+
+            return dal.AddNewUser(new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), connectedEntitiesIds, dal.UsersCount + 1), password);
+        }
 
         public static string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {

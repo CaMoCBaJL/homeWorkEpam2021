@@ -4,7 +4,7 @@
 @{
     DataToRoute.Data = BuisnessLogic.GetListOfEntities(DataToRoute.DataType, false);
 
-    DataToRoute.EntityToUpdateId = 0;
+    DataToRoute.EntityToUpdateId = -1;
 
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
@@ -95,11 +95,14 @@
         deletionResult = null;
     }
     <div>
-        <form id="form" method="post" action="">
-            <div style="position:fixed; right:20px;">
-                <button class="button add_button"> Добавить сущность</button>
-            </div>
-        </form>
+        @if (UserIdentity.UserName == "admin")
+        {
+            <form id="form" method="post" action="">
+                <div style="position:fixed; right:20px;">
+                    <button class="button add_button"> Добавить сущность</button>
+                </div>
+            </form>
+        }
         <h2 class="header_text"> @DataToRoute.Data[0]</h2>
 
         @for (int i = 1; i < DataToRoute.Data.Count; i++)
@@ -116,13 +119,13 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <form id="form" method="post" action="">
-                        @if (AuthUser.UserName == "admin")
+                        @if (UserIdentity.UserName == "admin")
                         {
                             <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); " class=" button " type="submit"
                                    value="@id" />
+                            <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
+                                   value="@id" />
                         }
-                        <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
-                               value="@id" />
                     </form>
                 }
             </div>

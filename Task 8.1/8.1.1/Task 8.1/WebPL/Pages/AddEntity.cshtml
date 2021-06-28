@@ -12,7 +12,12 @@
     connectedIds = new List<int>();
 
 
-    if (DataToRoute.EntityToUpdateId > 0)
+    if (!User.Identity.IsAuthenticated)
+    {
+        DataToRoute.EntityToUpdateId = -1;
+    }
+
+    if (DataToRoute.EntityToUpdateId > -1)
     {
         ParseDataToUpdate();
 
@@ -212,26 +217,51 @@
     }
     @if (allOk)
     {
-        if (DataToRoute.EntityToUpdateId == 0)
+        if (DataToRoute.EntityToUpdateId == -1)
         {
-            if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+            if (DataToRoute.DataType == EntityType.User)
             {
+                if (BuisnessLogic.AddUser(BuildNewEntityInfo(), connectedIds, password))
+                {
 
-                <div class="alert_succesfull">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    Добавление прошло успешно!
-                </div>
+                    <div class="alert_succesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Добавление прошло успешно!
+                    </div>
 
-                DataToRoute.UpdateData();
+                    DataToRoute.UpdateData();
 
-                Response.Redirect("~/Pages/EntitiesList.cshtml");
+                    Response.Redirect("~/Index.cshtml");
+                }
+                else
+                {
+                    <div class="alert_unsuccesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Не удалось добавить пользователя
+                    </div>
+                }
             }
             else
             {
-                <div class="alert_unsuccesfull">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    В базе уже имеется @DataToRoute.DataType.ToString() с таким именем!
-                </div>
+                if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+                {
+
+                    <div class="alert_succesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Добавление прошло успешно!
+                    </div>
+
+                    DataToRoute.UpdateData();
+
+                    Response.Redirect("~/Index.cshtml");
+                }
+                else
+                {
+                    <div class="alert_unsuccesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        В базе уже имеется @DataToRoute.DataType.ToString() с таким именем!
+                    </div>
+                }
             }
         }
         else
@@ -264,7 +294,7 @@
 
             @if (DataToRoute.DataType == EntityType.User)
             {
-                
+
                 <p>
                     <label for="userBirthDate"> Дата рождения пользователя</label>
                     <input type="text" name="birthDate" id="userBirthDate" value="@userBirthDate" placeholder="Дата рождения " />

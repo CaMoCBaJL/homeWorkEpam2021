@@ -5,6 +5,8 @@
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
+    DataToRoute.DataType = EntityType.User;
+
     string userName = null;
 
     string password = null;
@@ -31,19 +33,16 @@
         {
             if (BuisnessLogic.CheckPassword(password, userName))
             {
+                FormsAuthentication.SetAuthCookie(userName, true);
+
                 Response.Redirect("~/Index.cshtml");
             }
             else
             {
-                DataToRoute.DataType = EntityType.User;
-
                 <div class="alert_unsuccesfull">
                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
 
-                    Пользователь с введенными данными не найден.
-                    <p>
-                        <a href="~/Pages/AddEntity.cshtml"> Регистрация</a>
-                    </p>
+                    Пользователь с введенными данными не найден
                 </div>
             }
         }
@@ -75,6 +74,9 @@
                 <input value="@password" type="password" name="password" id="passwordInput" placeholder="пароль" />
             </p>
             <button class="ok_button" type="submit"> Ок</button>
+            <p>
+                <a href="~/Pages/AddEntity.cshtml"> Регистрация</a>
+            </p>
         </form>
     </div>
 </body>

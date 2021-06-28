@@ -47,7 +47,7 @@ namespace JsonDAL
             }
         }
 
-        public static void CheckDataLocationForExistence()
+        public void CheckDataLocationForExistence()
         {
             CheckUnitForExistence(dataFolderLocation, FileSystemObjectType.Folder);
 
@@ -60,9 +60,14 @@ namespace JsonDAL
 
         public DAL()
         {
+            CheckDataLocationForExistence();
+
             Users = GetCurrentEntitiesInfo<User>(usersDataLocation);
 
             Awards = GetCurrentEntitiesInfo<Award>(awardsDataLocation);
+
+            if (!CheckUserIdentity("admin", "admin"))
+                AddAdmin();
         }
 
         List<T> GetCurrentEntitiesInfo<T>(string pathToData)
@@ -285,11 +290,16 @@ namespace JsonDAL
             }
         }
 
-        public void AddNewUser(CommonEntity newUser, string password)
+        public bool AddNewUser(CommonEntity newUser, string password)
         {
-            AddEntity(newUser);
+            if (AddEntity(newUser))
+            {
+                AddIdentity(newUser.Id, password);
 
-            AddIdentity(newUser.Id, password);
+                return true;
+            }
+
+            return false;
         }
 
         void AddIdentity(int userId, string password) => UpdateIdentities(new Identity(userId, HashThePassword(password)), IdentityUpdateType.Add);
@@ -303,7 +313,9 @@ namespace JsonDAL
 
             Identity currentUserIdentity = new Identity(GetEntityId(EntityType.User, userName), HashThePassword(password));
 
-            return identities.FindIndex(id => id == currentUserIdentity) > -1;
+            int index = identities.FindIndex(id => id.PasswordHashSumm == currentUserIdentity.PasswordHashSumm);
+
+            return index > -1;
         }
 
         int HashThePassword(string password)
@@ -322,7 +334,10 @@ namespace JsonDAL
 
         void UpdateIdentities(Identity identity, IdentityUpdateType updateType)
         {
-            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(identitiesDataLocation);
+            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(identitiesDataLocation));
+
+            if (identities == null)
+                identities = new List<Identity>();
 
             switch (updateType)
             {
@@ -338,6 +353,15 @@ namespace JsonDAL
             }
 
             File.WriteAllText(identitiesDataLocation, JsonConvert.SerializeObject(identities));
+        }
+
+        void AddAdmin()
+        {
+            Users.Add(new User("admin", "0.0.0", 0, new List<int>(), 0));
+
+            UpdateData();
+
+            AddIdentity(0, "admin");
         }
     }
 }

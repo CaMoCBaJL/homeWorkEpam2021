@@ -5,7 +5,7 @@ using System.Web;
 
 namespace WebPL.Models
 {
-    public static class AuthUser
+    public static class UserIdentity
     {
         public static string UserName { get; set; }
 
