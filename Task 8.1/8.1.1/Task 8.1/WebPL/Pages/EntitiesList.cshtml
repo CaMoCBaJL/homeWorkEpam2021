@@ -2,7 +2,7 @@
 @using BLL;
 
 @{
-    DataToRoute.Data = BuisnessLogic.GetListOfEntities(DataToRoute.DataType, false);
+    DataToRoute.Data = bll.GetListOfEntities(DataToRoute.DataType, false);
 
     DataToRoute.EntityToUpdateId = 0;
 
@@ -27,6 +27,8 @@
 }
 
 @functions{
+    BuisnessLogic bll = new BuisnessLogic();
+
     public bool? isAdding = null;
 
     public string deletionResult = null;
@@ -38,7 +40,7 @@
         {
             if (Request[i.ToString() + "del"] != null)
             {
-                deletionResult = BuisnessLogic.RemoveEntity(DataToRoute.DataType, i);
+                deletionResult = bll.RemoveEntity(DataToRoute.DataType, i);
 
                 isAdding = false;
 

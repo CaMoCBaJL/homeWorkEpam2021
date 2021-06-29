@@ -30,6 +30,8 @@
 }
 
 @functions{
+    BuisnessLogic bll = new BuisnessLogic();
+
     string buttonName;
 
     bool updateStarted = false;
@@ -52,10 +54,10 @@
         switch (DataToRoute.DataType)
         {
             case EntityType.User:
-                additionalData = BuisnessLogic.GetListOfEntities(EntityType.Award, true);
+                additionalData = bll.GetListOfEntities(EntityType.Award, true);
                 break;
             case EntityType.Award:
-                additionalData = BuisnessLogic.GetListOfEntities(EntityType.User, true);
+                additionalData = bll.GetListOfEntities(EntityType.User, true);
                 break;
             case EntityType.None:
             default:
@@ -160,9 +162,9 @@
     {
         if (userBirthDate != null && userAge != null && DataToRoute.DataType == EntityType.User)
         {
-            if (BuisnessLogic.ValidateParameter(userBirthDate, BuisnessLogic.birthDateRegexPattern))
+            if (bll.ValidateParameter(userBirthDate, BuisnessLogic.birthDateRegexPattern))
             {
-                if (BuisnessLogic.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
+                if (bll.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
                 {
                     allOk = true;
                 }
@@ -200,7 +202,7 @@
     {
         if (DataToRoute.EntityToUpdateId == 0)
         {
-            if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+            if (bll.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
             {
 
                 <div class="alert_succesfull">
@@ -224,7 +226,7 @@
         {
             if (updateStarted)
             {
-                if (BuisnessLogic.UpdateEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+                if (bll.UpdateEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
                 {
                     <div class="alert_succesfull">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>

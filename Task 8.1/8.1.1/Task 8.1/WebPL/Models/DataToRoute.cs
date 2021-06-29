@@ -15,7 +15,7 @@ namespace WebPL.Models
 
         public static void UpdateData()
         {
-            Data = BuisnessLogic.GetListOfEntities(DataType, false);
+            Data = new BuisnessLogic().GetListOfEntities(DataType, false);
         }
     }
 }

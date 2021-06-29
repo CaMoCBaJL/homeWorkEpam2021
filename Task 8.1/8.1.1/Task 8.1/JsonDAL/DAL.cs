@@ -54,6 +54,8 @@ namespace JsonDAL
 
         public DAL()
         {
+            CheckDataLocationForExistence();
+
             Users = GetCurrentEntitiesInfo<User>(usersDataLocation);
 
             Awards = GetCurrentEntitiesInfo<Award>(awardsDataLocation);
@@ -61,7 +63,9 @@ namespace JsonDAL
 
         List<T> GetCurrentEntitiesInfo<T>(string pathToData)
         {
-            var result = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(pathToData));
+            var fileData = File.ReadAllText(pathToData);
+
+            var result = JsonConvert.DeserializeObject<List<T>>(fileData);
 
             if (result == null)
                 return new List<T>();

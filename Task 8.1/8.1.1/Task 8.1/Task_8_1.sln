@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPL", "WebPL\WebPL.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonDAL", "JsonDAL\JsonDAL.csproj", "{99963E97-4FDA-4CEF-AED0-C72775C85118}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolePL", "ConsolePL\ConsolePL.csproj", "{66EF492E-2647-41AD-B875-B6589CAE550B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{99963E97-4FDA-4CEF-AED0-C72775C85118}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99963E97-4FDA-4CEF-AED0-C72775C85118}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99963E97-4FDA-4CEF-AED0-C72775C85118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66EF492E-2647-41AD-B875-B6589CAE550B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66EF492E-2647-41AD-B875-B6589CAE550B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66EF492E-2647-41AD-B875-B6589CAE550B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66EF492E-2647-41AD-B875-B6589CAE550B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

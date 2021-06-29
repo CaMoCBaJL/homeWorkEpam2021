@@ -22,7 +22,7 @@ namespace BLL
 
         public static void CheckDataLocation() => DAL.CheckDataLocationForExistence();
 
-        public static List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
+        public List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
         {
             List<string> result = new List<string>();
 
@@ -39,7 +39,7 @@ namespace BLL
 
         public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(emptyStringValue) || entity.StartsWith("Список ");
 
-        public static List<string> GetListOfEntities(EntityType entityType, bool onlyNamesNeeded)
+        public List<string> GetListOfEntities(EntityType entityType, bool onlyNamesNeeded)
         {
             var dal = new DAL();
 
@@ -88,7 +88,7 @@ namespace BLL
             return result;
         }
 
-        public static string RemoveEntity(EntityType entityType, int entityId)
+        public string RemoveEntity(EntityType entityType, int entityId)
         {
             var dal = new DAL();
 
@@ -116,7 +116,7 @@ namespace BLL
 
         }
 
-        public static string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
+        public string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {
             var dal = new DAL();
 
@@ -149,7 +149,7 @@ namespace BLL
 
         public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
 
-        public static string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
+        public  string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {
             var dal = new DAL();
 
@@ -178,7 +178,7 @@ namespace BLL
                 return unsuccessfullOperationResult;
         }
 
-        static void UpdateConnnectedEntities(List<int> connectedIds, IEnumerable<CommonEntity> otherEntitiesToConnect, int newEntityId)
+         void UpdateConnnectedEntities(List<int> connectedIds, IEnumerable<CommonEntity> otherEntitiesToConnect, int newEntityId)
         {
 
             foreach (var entity in otherEntitiesToConnect)

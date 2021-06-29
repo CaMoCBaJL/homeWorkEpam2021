@@ -9,7 +9,9 @@
 
     if (IsPost)
     {
-        DataToRoute.Data = BuisnessLogic.GetListOfEntities((EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"])), false);
+        var bll = new BuisnessLogic();
+
+        DataToRoute.Data = bll.GetListOfEntities((EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"])), false);
 
         DataToRoute.DataType = (EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"]));
 
