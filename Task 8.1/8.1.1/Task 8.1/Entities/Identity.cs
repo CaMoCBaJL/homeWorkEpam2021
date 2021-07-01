@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -23,6 +24,20 @@ namespace Entities
             UserId = userId;
 
             PasswordHashSumm = hashSumm;
+        }
+
+        public static int HashThePassword(string password)
+        {
+            HashAlgorithm sha = SHA256.Create();
+
+            int result = 0;
+
+            foreach (var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
+            {
+                result += hashValue;
+            }
+
+            return result;
         }
     }
 }

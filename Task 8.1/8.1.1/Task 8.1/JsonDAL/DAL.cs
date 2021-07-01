@@ -4,22 +4,13 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
-
+using DALInterfaces;
 
 namespace JsonDAL
 {
 
-    public class DAL
+    public class DAL : IDataLayer
     {
-        const string dataFolderLocation = @"./data";
-
-        const string usersDataLocation = @"./data/usersData.json";
-
-        const string awardsDataLocation = @"./data/awardsData.json";
-
-        const string identitiesDataLocation = @"./data/identities.json";
-
-
         List<User> Users { get; }
 
         List<Award> Awards { get; }
@@ -39,7 +30,7 @@ namespace JsonDAL
                     break;
                 case FileSystemObjectType.Folder:
                     if (!Directory.Exists(path))
-                        new DirectoryInfo(dataFolderLocation).Create();
+                        new DirectoryInfo(PathConstants.dataFolderLocation).Create();
                     break;
                 case FileSystemObjectType.None:
                 default:
@@ -49,25 +40,25 @@ namespace JsonDAL
 
         public void CheckDataLocationForExistence()
         {
-            CheckUnitForExistence(dataFolderLocation, FileSystemObjectType.Folder);
+            CheckUnitForExistence(PathConstants.dataFolderLocation, FileSystemObjectType.Folder);
 
-            CheckUnitForExistence(usersDataLocation, FileSystemObjectType.File);
+            CheckUnitForExistence(PathConstants.usersDataLocation, FileSystemObjectType.File);
 
-            CheckUnitForExistence(awardsDataLocation, FileSystemObjectType.File);
+            CheckUnitForExistence(PathConstants.awardsDataLocation, FileSystemObjectType.File);
 
-            CheckUnitForExistence(identitiesDataLocation, FileSystemObjectType.File);
+            CheckUnitForExistence(PathConstants.identitiesDataLocation, FileSystemObjectType.File);
         }
 
         public DAL()
         {
             CheckDataLocationForExistence();
 
-            Users = GetCurrentEntitiesInfo<User>(usersDataLocation);
+            Users = GetCurrentEntitiesInfo<User>(PathConstants.usersDataLocation);
 
-            Awards = GetCurrentEntitiesInfo<Award>(awardsDataLocation);
+            Awards = GetCurrentEntitiesInfo<Award>(PathConstants.awardsDataLocation);
 
-            if (!CheckUserIdentity("admin", "admin"))
-                AddAdmin();
+            if (!UserIdentities.CheckUserIdentity("admin", "admin"))
+                UserIdentities.AddAdmin();
         }
 
         List<T> GetCurrentEntitiesInfo<T>(string pathToData)
@@ -86,9 +77,9 @@ namespace JsonDAL
 
             UpdateIds(EntityType.User);
 
-            File.WriteAllText(usersDataLocation, JsonConvert.SerializeObject(Users));
+            File.WriteAllText(PathConstants.usersDataLocation, JsonConvert.SerializeObject(Users));
 
-            File.WriteAllText(awardsDataLocation, JsonConvert.SerializeObject(Awards));
+            File.WriteAllText(PathConstants.awardsDataLocation, JsonConvert.SerializeObject(Awards));
         }
 
         public bool AddEntity(CommonEntity entity)
@@ -137,7 +128,7 @@ namespace JsonDAL
                     {
                         Users.Remove(user);
 
-                        DeleteIdentity(user.Id);
+                        new UserIdentities().DeleteIdentity(user.Id);
 
                         UpdateEntitiesConnectedWithDeleted(entity);
 
@@ -162,24 +153,6 @@ namespace JsonDAL
                 default:
                     return false;
             }
-        }
-
-        void DeleteIdentity(int userId) => UpdateIdentities(new Identity(userId, default), IdentityUpdateType.Delete);
-
-        public List<User> GetUsers()
-        {
-            if (Users != null)
-                return new List<User>(Users);
-
-            return new List<User>();
-        }
-
-        public List<Award> GetAwards()
-        {
-            if (Awards != null)
-                return new List<Award>(Awards);
-
-            return new List<Award>();
         }
 
         public void UpdateIds(EntityType entityType)
@@ -294,7 +267,9 @@ namespace JsonDAL
         {
             if (AddEntity(newUser))
             {
-                AddIdentity(newUser.Id, password);
+                var identities = new UserIdentities();
+
+                identities.AddIdentity(newUser.Id, password);
 
                 return true;
             }
@@ -302,66 +277,34 @@ namespace JsonDAL
             return false;
         }
 
-        void AddIdentity(int userId, string password) => UpdateIdentities(new Identity(userId, HashThePassword(password)), IdentityUpdateType.Add);
-
-        public bool CheckUserIdentity(string userName, string password)
+        public bool AddEntity(CommonEntity entity, int passwordHashSum)
         {
-            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(identitiesDataLocation));
-
-            if (identities == null)
-                identities = new List<Identity>();
-
-            Identity currentUserIdentity = new Identity(GetEntityId(EntityType.User, userName), HashThePassword(password));
-
-            int index = identities.FindIndex(id => id.PasswordHashSumm == currentUserIdentity.PasswordHashSumm);
-
-            return index > -1;
+            throw new System.NotImplementedException();
         }
 
-        int HashThePassword(string password)
+        public bool UpdateEntity(CommonEntity entity, int passwordHashSum)
         {
-            HashAlgorithm sha = SHA256.Create();
-
-            int result = 0;
-
-            foreach (var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
-            {
-                result += hashValue;
-            }
-
-            return result;
+            throw new System.NotImplementedException();
         }
 
-        void UpdateIdentities(Identity identity, IdentityUpdateType updateType)
+        public IEnumerable<CommonEntity> GetEntities(EntityType entityType)
         {
-            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(identitiesDataLocation));
-
-            if (identities == null)
-                identities = new List<Identity>();
-
-            switch (updateType)
+            switch (entityType)
             {
-                case IdentityUpdateType.Add:
-                    identities.Add(identity);
-                    break;
-                case IdentityUpdateType.Delete:
-                    identities.Remove(identities.Find(id => id.UserId == identity.UserId));
-                    break;
-                case IdentityUpdateType.None:
+                case EntityType.User:
+                    if (Users != null)
+                        return new List<User>(Users);
+
+                    return new List<User>();
+                case EntityType.Award:
+                    if (Awards != null)
+                        return new List<Award>(Awards);
+
+                    return new List<Award>();
+                case EntityType.None:
                 default:
-                    return;
+                    return new List<CommonEntity>();
             }
-
-            File.WriteAllText(identitiesDataLocation, JsonConvert.SerializeObject(identities));
-        }
-
-        void AddAdmin()
-        {
-            Users.Add(new User("admin", "0.0.0", 0, new List<int>(), 0));
-
-            UpdateData();
-
-            AddIdentity(0, "admin");
         }
     }
 }

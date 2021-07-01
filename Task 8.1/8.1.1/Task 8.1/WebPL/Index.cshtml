@@ -1,4 +1,4 @@
-﻿@using BLL;
+﻿@using BL;
 @using Entities;
 @using WebPL.Models;
 @using System.Web.Routing;
@@ -6,7 +6,7 @@
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
-    BuisnessLogic.CheckDataLocation();
+    StaticMethods.CheckDataLocation();
 
     if (IsPost)
     {

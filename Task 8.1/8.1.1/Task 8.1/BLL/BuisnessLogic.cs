@@ -5,29 +5,19 @@ using JsonDAL;
 using System.Linq;
 using Entities;
 using System.Text;
+using BLInterfaces;
+using DALInterfaces;
 
-namespace BLL
+namespace BL
 {
-    public class BuisnessLogic
+    public class BuisnessLogic: ILogicLayer
     {
-        public const string emptyStringValue = " отсутствуют.";
-
-        const string successfullOperationResult = "Операция успешно завершена.";
-
-        const string unsuccessfullOperationResult = "Не удалось завешрить операцию.";
-
-        public const string birthDateRegexPattern = "\\d{1,2}(\\.\\d{1,2}){2}";
-
-        public const string ageRegexPattern = "\\d{1,2}";
-
-        const int firstSmallEnglLetterId = 65;
-
-        const int firstHighEnglLetterId = 97;
+        private IDataLayer _DAO;
 
 
-        public static void CheckDataLocation() => new DAL().CheckDataLocationForExistence();
+        public BuisnessLogic(IDataLayer currentDAO) => _DAO = currentDAO;
 
-        public static List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
+        public List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities)
         {
             List<string> result = new List<string>();
 
@@ -42,25 +32,21 @@ namespace BLL
             return result;
         }
 
-        public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(emptyStringValue) || entity.StartsWith("Список ");
-
-        public static List<string> GetListOfEntities(EntityType entityType, bool onlyNamesNeeded)
+        public List<string> GetListOfEntities(EntityType entityType, bool onlyNamesNeeded)
         {
-            var dal = new DAL();
-
             IEnumerable<CommonEntity> data;
 
             switch (entityType)
             {
                 case EntityType.User:
-                    data = dal.GetUsers();
+                    data = _DAO.GetEntities(EntityType.User);
                     break;
                 case EntityType.Award:
-                    data = dal.GetAwards();
+                    data = _DAO.GetEntities(EntityType.Award);
                     break;
                 case EntityType.None:
                 default:
-                    return new List<string>(new string[] { entityType.ToString() + emptyStringValue });
+                    return new List<string>(new string[] { entityType.ToString() + StringConstants.emptyStringValue });
             }
 
             List<string> result = new List<string>();
@@ -86,51 +72,40 @@ namespace BLL
             }
 
             if (result.Count == 0)
-                result.Add(entityType.ToString() + emptyStringValue);
+                result.Add(entityType.ToString() + StringConstants.emptyStringValue);
             else
                 result.Insert(0, $"Список {entityType.ToString()}: " + Environment.NewLine);
 
             return result;
         }
 
-        public static string RemoveEntity(EntityType entityType, int entityId)
+        public string RemoveEntity(EntityType entityType, int entityId)
         {
-            var dal = new DAL();
-
             CommonEntity entityToRemove;
 
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToRemove = dal.GetUsers()[entityId - 1];
+                    entityToRemove = _DAO.GetEntities(EntityType.User).ElementAt(entityId - 1);
                     break;
 
                 case EntityType.Award:
-                    entityToRemove = dal.GetAwards()[entityId - 1];
+                    entityToRemove = _DAO.GetEntities(EntityType.Award).ElementAt(entityId - 1);
                     break;
 
                 case EntityType.None:
                 default:
-                    return unsuccessfullOperationResult;
+                    return StringConstants.unsuccessfullOperationResult;
             }
 
-            if (dal.DeleteEntity(entityToRemove))
-                return successfullOperationResult;
+            if (_DAO.DeleteEntity(entityToRemove))
+                return StringConstants.successfullOperationResult;
             else
-                return unsuccessfullOperationResult;
+                return StringConstants.unsuccessfullOperationResult;
         }
 
-        public static bool CheckPassword(string password, string userName)
+        public string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
         {
-            var dal = new DAL();
-
-            return dal.CheckUserIdentity(userName, password);
-        }
-
-        public static string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
-        {
-            var dal = new DAL();
-
             CommonEntity entityToUpdate;
 
             List<string> entityParameters = entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -147,65 +122,40 @@ namespace BLL
                     break;
                 case EntityType.None:
                 default:
-                    return unsuccessfullOperationResult;
+                    return StringConstants.unsuccessfullOperationResult;
             }
 
-            if (dal.UpdateEntity(entityToUpdate))
-                return successfullOperationResult;
+            if (_DAO.UpdateEntity(entityToUpdate))
+                return StringConstants.successfullOperationResult;
             else
-                return unsuccessfullOperationResult;
-        }
+                return StringConstants.unsuccessfullOperationResult;
+        }        
 
-        public static int GetEntityId(EntityType entityType, string entityName) => new DAL().GetEntityId(entityType, entityName);
-
-        public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
-
-        public static bool AddUser(string entityData, List<int> connectedEntitiesIds, string password)
+        public string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds, string password = "")
         {
-            var dal = new DAL();
-
-            return dal.AddNewUser(new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), connectedEntitiesIds, dal.UsersCount + 1), password);
-        }
-
-        public static string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds)
-        {
-            var dal = new DAL();
-
             CommonEntity entityToAdd;
 
             switch (entityType)
             {
                 case EntityType.User:
-                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), connectedEntitiesIds, dal.UsersCount + 1);
+                    entityToAdd = new User(new List<string>(entityData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)), connectedEntitiesIds, _DAO.UsersCount + 1);
 
-                    UpdateConnnectedEntities(connectedEntitiesIds, dal.GetAwards(), entityToAdd.Id);
+                    StaticLogic.UpdateConnnectedEntities(connectedEntitiesIds, _DAO.GetEntities(EntityType.Award), entityToAdd.Id);
                     break;
                 case EntityType.Award:
-                    entityToAdd = new Award(entityData, connectedEntitiesIds, dal.AwardsCount + 1);
+                    entityToAdd = new Award(entityData, connectedEntitiesIds, _DAO.AwardsCount + 1);
 
-                    UpdateConnnectedEntities(connectedEntitiesIds, dal.GetUsers(), entityToAdd.Id);
+                    StaticLogic.UpdateConnnectedEntities(connectedEntitiesIds, _DAO.GetEntities(EntityType.User), entityToAdd.Id);
                     break;
                 case EntityType.None:
                 default:
-                    return unsuccessfullOperationResult;
+                    return StringConstants.unsuccessfullOperationResult;
             }
 
-            if (dal.AddEntity(entityToAdd))
-                return successfullOperationResult;
+            if (_DAO.AddEntity(entityToAdd, Identity.HashThePassword(password)))
+                return StringConstants.successfullOperationResult;
             else
-                return unsuccessfullOperationResult;
-        }
-
-        static void UpdateConnnectedEntities(List<int> connectedIds, IEnumerable<CommonEntity> otherEntitiesToConnect, int newEntityId)
-        {
-
-            foreach (var entity in otherEntitiesToConnect)
-            {
-                if (connectedIds.Contains(entity.Id))
-                    entity.AddConnectedEntity(newEntityId);
-            }
-
-            new DAL().UpdateData();
+                return StringConstants.unsuccessfullOperationResult;
         }
 
     }

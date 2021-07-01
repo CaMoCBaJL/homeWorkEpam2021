@@ -1,6 +1,7 @@
 ﻿using Entities;
 using System.Collections.Generic;
-using BLL;
+using BL;
+using Dependencies;
 
 namespace WebPL.Models
 {
@@ -15,7 +16,7 @@ namespace WebPL.Models
 
         public static void UpdateData()
         {
-            Data = BuisnessLogic.GetListOfEntities(DataType, false);
+            Data = DependencyResolver.Instance.ProjectBLL.GetListOfEntities(DataType, false);
         }
     }
 }

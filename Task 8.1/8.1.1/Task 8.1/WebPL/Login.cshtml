@@ -1,4 +1,4 @@
-﻿@using BLL;
+﻿@using BL;
 @using Entities;
 @using WebPL.Models;
 
@@ -31,7 +31,7 @@
     {
         if (!string.IsNullOrEmpty(password))
         {
-            if (BuisnessLogic.CheckPassword(password, userName))
+            if (UserAuthentication.AuthenticateTheUser(password, userName))
             {
                 FormsAuthentication.SetAuthCookie(userName, true);
 
