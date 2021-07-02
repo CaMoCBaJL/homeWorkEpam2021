@@ -131,7 +131,7 @@ namespace BL
                 return StringConstants.unsuccessfullOperationResult;
         }        
 
-        public string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds, string password = "")
+        public string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds, string password)
         {
             CommonEntity entityToAdd;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
-using System.Text;
+using System.Linq;
 using DALInterfaces;
 
 namespace JsonDAL
@@ -38,7 +38,7 @@ namespace JsonDAL
             }
         }
 
-        public void CheckDataLocationForExistence()
+        public static void CheckDataLocationForExistence()
         {
             CheckUnitForExistence(PathConstants.dataFolderLocation, FileSystemObjectType.Folder);
 
@@ -57,8 +57,17 @@ namespace JsonDAL
 
             Awards = GetCurrentEntitiesInfo<Award>(PathConstants.awardsDataLocation);
 
-            if (!UserIdentities.CheckUserIdentity("admin", "admin"))
-                UserIdentities.AddAdmin();
+            if (!AdminExists())
+                AddAdmin();
+        }
+
+        bool AdminExists() => Users.FindIndex(user => user.Id == 0) != -1;
+
+        void AddAdmin()
+        {
+            Users.Add(new User("admin", "0.0.0", 0, new List<int>(), 0));
+
+            new UserIdentities().AddIdentity(0, Identity.HashThePassword("admin"));
         }
 
         List<T> GetCurrentEntitiesInfo<T>(string pathToData)
@@ -73,16 +82,16 @@ namespace JsonDAL
 
         public void UpdateData()
         {
-            UpdateIds(EntityType.Award);
+            UpdateConnectedIds(EntityType.Award);
 
-            UpdateIds(EntityType.User);
+            UpdateConnectedIds(EntityType.User);
 
             File.WriteAllText(PathConstants.usersDataLocation, JsonConvert.SerializeObject(Users));
 
             File.WriteAllText(PathConstants.awardsDataLocation, JsonConvert.SerializeObject(Awards));
         }
 
-        public bool AddEntity(CommonEntity entity)
+        public bool AddEntity(CommonEntity entity, int passwordHashSum = -1)
         {
             switch (entity)
             {
@@ -94,6 +103,10 @@ namespace JsonDAL
                     else
                     {
                         Users.Add(user);
+
+                        var identities = new UserIdentities();
+
+                        identities.AddIdentity(user.Id, passwordHashSum);
 
                         UpdateData();
 
@@ -155,7 +168,7 @@ namespace JsonDAL
             }
         }
 
-        public void UpdateIds(EntityType entityType)
+        public void UpdateConnectedIds(EntityType entityType)
         {
             switch (entityType)
             {
@@ -177,7 +190,8 @@ namespace JsonDAL
 
             foreach (var item in entities)
             {
-                item.ChangeId(counter);
+                if (item.Id > 0)
+                    item.ChangeId(counter);
 
                 counter++;
             }
@@ -261,25 +275,6 @@ namespace JsonDAL
                 default:
                     return false;
             }
-        }
-
-        public bool AddNewUser(CommonEntity newUser, string password)
-        {
-            if (AddEntity(newUser))
-            {
-                var identities = new UserIdentities();
-
-                identities.AddIdentity(newUser.Id, password);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool AddEntity(CommonEntity entity, int passwordHashSum)
-        {
-            throw new System.NotImplementedException();
         }
 
         public bool UpdateEntity(CommonEntity entity, int passwordHashSum)

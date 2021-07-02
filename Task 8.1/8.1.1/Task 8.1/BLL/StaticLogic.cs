@@ -29,7 +29,7 @@ namespace BL
             new DAL().UpdateData();
         }
 
-        public static void CheckDataLocation() => new DAL().CheckDataLocationForExistence();
+        public static void CheckDataLocation() => DAL.CheckDataLocationForExistence();
 
     }
 }

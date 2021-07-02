@@ -12,7 +12,7 @@ namespace JsonDAL
     {
         internal void DeleteIdentity(int userId) => UpdateIdentities(new Identity(userId, default), IdentityUpdateType.Delete);
 
-        internal void AddIdentity(int userId, string password) => UpdateIdentities(new Identity(userId, Identity.HashThePassword(password)), IdentityUpdateType.Add);
+        internal void AddIdentity(int userId, int passwordHashSum) => UpdateIdentities(new Identity(userId, passwordHashSum), IdentityUpdateType.Add);
 
         public static bool CheckUserIdentity(string userName, string password)
         {
@@ -49,13 +49,6 @@ namespace JsonDAL
             }
 
             File.WriteAllText(PathConstants.identitiesDataLocation, JsonConvert.SerializeObject(identities));
-        }
-
-        internal static void AddAdmin()
-        {
-            var dal = new DAL();
-
-            dal.AddNewUser(new User("admin", "0.0.0", 0, new List<int>(), 0), "admin");
         }
     }
 }

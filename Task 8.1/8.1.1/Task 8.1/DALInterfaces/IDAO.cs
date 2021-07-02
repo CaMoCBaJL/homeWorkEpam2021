@@ -9,11 +9,9 @@ namespace DALInterfaces
 
         int AwardsCount { get; }
 
-        bool AddEntity(CommonEntity entity, int passwordHashSum);
+        bool AddEntity(CommonEntity entity, int passwordHashSum = -1);
 
-        bool UpdateEntity(CommonEntity entity, int passwordHashSum);
-
-        bool UpdateEntity(CommonEntity entity);
+        bool UpdateEntity(CommonEntity entity, int passwordHashSum = -1);
 
         bool DeleteEntity(CommonEntity entity);
 

@@ -1,8 +1,11 @@
 ﻿@using WebPL.Models;
-@using BLL;
+@using BL;
+@using Dependencies;
 
 @{
-    DataToRoute.Data = BuisnessLogic.GetListOfEntities(DataToRoute.DataType, false);
+    DependencyResolver.Instance.UpdateLayers();
+
+    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.GetListOfEntities(DataToRoute.DataType, false);
 
     DataToRoute.EntityToUpdateId = -1;
 
@@ -42,7 +45,7 @@
 
             if (Request[i.ToString() + "del"] != null)
             {
-                deletionResult = BuisnessLogic.RemoveEntity(DataToRoute.DataType, i);
+                deletionResult = DependencyResolver.Instance.ProjectBLL.RemoveEntity(DataToRoute.DataType, i);
 
                 isAdding = false;
 
@@ -95,7 +98,7 @@
         deletionResult = null;
     }
     <div>
-        @if (UserIdentity.UserName == "admin")
+        @if (User.IsInRole("admin"))
         {
             <form id="form" method="post" action="">
                 <div style="position:fixed; right:20px;">
@@ -119,12 +122,12 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <form id="form" method="post" action="">
-                        @if (UserIdentity.UserName == "admin")
+                        @if (User.IsInRole("admin"))
                         {
-                            <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); " class=" button " type="submit"
-                                   value="@id" />
-                            <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
-                                   value="@id" />
+                            <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); "
+                                   class=" button " type="submit" value=""/>
+                            <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); "
+                                   class=" button " type="submit" value=""/>
                         }
                     </form>
                 }

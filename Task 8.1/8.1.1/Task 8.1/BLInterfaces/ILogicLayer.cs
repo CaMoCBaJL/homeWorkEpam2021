@@ -17,6 +17,6 @@ namespace BLInterfaces
 
         string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds);
 
-        string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds, string password);
+        string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds, string password = "");
     }
 }

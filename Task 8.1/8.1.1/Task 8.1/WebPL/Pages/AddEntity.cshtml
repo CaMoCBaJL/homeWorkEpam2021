@@ -1,4 +1,5 @@
-﻿@using BLL;
+﻿@using BL;
+@using Dependencies;
 @using Entities;
 @using WebPL.Models;
 @using System.Threading;
@@ -59,10 +60,10 @@
         switch (DataToRoute.DataType)
         {
             case EntityType.User:
-                additionalData = BuisnessLogic.GetListOfEntities(EntityType.Award, true);
+                additionalData = DependencyResolver.Instance.ProjectBLL.GetListOfEntities(EntityType.Award, true);
                 break;
             case EntityType.Award:
-                additionalData = BuisnessLogic.GetListOfEntities(EntityType.User, true);
+                additionalData = DependencyResolver.Instance.ProjectBLL.GetListOfEntities(EntityType.User, true);
                 break;
             case EntityType.None:
             default:
@@ -162,18 +163,18 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Страница добавления @DataToRoute.DataType.ToString()</title>
+    <title>Страница добавления/изменения @DataToRoute.DataType.ToString()</title>
 </head>
 <body>
     @if (!string.IsNullOrEmpty(entityName))
     {
         if (userBirthDate != null && userAge != null && DataToRoute.DataType == EntityType.User)
         {
-            if (BuisnessLogic.ValidateParameter(userBirthDate, BuisnessLogic.birthDateRegexPattern))
+            if (StaticLogic.ValidateParameter(userBirthDate, StringConstants.birthDateRegexPattern))
             {
                 if (password != null)
                 {
-                    if (BuisnessLogic.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
+                    if (StaticLogic.ValidateParameter(userAge, StringConstants.ageRegexPattern))
                     {
                         allOk = true;
                     }
@@ -219,72 +220,57 @@
     {
         if (DataToRoute.EntityToUpdateId == -1)
         {
-            if (DataToRoute.DataType == EntityType.User)
+
+            if (DependencyResolver.Instance.ProjectBLL.AddEntity(EntityType.User, BuildNewEntityInfo(), connectedIds, password).StartsWith("Оп"))
             {
-                if (BuisnessLogic.AddUser(BuildNewEntityInfo(), connectedIds, password))
-                {
 
-                    <div class="alert_succesfull">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        Добавление прошло успешно!
-                    </div>
+                <div class="alert_succesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Добавление прошло успешно!
+                </div>
 
-                    DataToRoute.UpdateData();
+                DataToRoute.UpdateData();
 
-                    Response.Redirect("~/Index.cshtml");
-                }
-                else
-                {
-                    <div class="alert_unsuccesfull">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        Не удалось добавить пользователя
-                    </div>
-                }
+                Response.Redirect("~/Index.cshtml");
             }
             else
             {
-                if (BuisnessLogic.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
-                {
-
-                    <div class="alert_succesfull">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        Добавление прошло успешно!
-                    </div>
-
-                    DataToRoute.UpdateData();
-
-                    Response.Redirect("~/Index.cshtml");
-                }
-                else
-                {
-                    <div class="alert_unsuccesfull">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        В базе уже имеется @DataToRoute.DataType.ToString() с таким именем!
-                    </div>
-                }
+                <div class="alert_unsuccesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Не удалось добавить пользователя
+                </div>
             }
         }
+
         else
         {
-            if (updateStarted)
+            <div class="alert_unsuccesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                В базе уже имеется @DataToRoute.DataType.ToString() с таким именем!
+            </div>
+        }
+    }
+    else
+    {
+        if (updateStarted)
+        {
+            if (DependencyResolver.Instance.ProjectBLL.UpdateEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
             {
-                if (BuisnessLogic.UpdateEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
-                {
-                    <div class="alert_succesfull">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        Обновление данных прошло успешно!
-                    </div>
-                }
-                else
-                {
-                    <div class="alert_unsuccesfull">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        Не удалось обновить @DataToRoute.DataType.ToString()
-                    </div>
-                }
+                <div class="alert_succesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Обновление данных прошло успешно!
+                </div>
+            }
+            else
+            {
+                <div class="alert_unsuccesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Не удалось обновить @DataToRoute.DataType.ToString()
+                </div>
             }
         }
     }
+    
     <form method="post" action="">
         <div class="small_text">
             <p>
@@ -301,14 +287,16 @@
                 </p>
 
                 <p>
-                    <label for="userAge"> Дата рождения пользователя</label>
+                    <label for="userAge"> Возраст пользователя</label>
                     <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
                 </p>
-
+                if (DataToRoute.EntityToUpdateId == -1)
+                {
                 <p>
                     <label for="password"> Пароль для входа в учетную запись</label>
                     <input type="password" name="password" id="password" value="@password" placeholder="Пароль" />
                 </p>
+                }
                 if (additionalData.Count > 1)
                 {
                     <p>

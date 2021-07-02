@@ -17,16 +17,23 @@ namespace Dependencies
         {
             get
             {
-                if (_instance  == null)
+                if (_instance == null)
                     _instance = new DependencyResolver();
 
-                return _instance;   
-            } 
+                return _instance;
+            }
         }
         #endregion
 
-        public IDataLayer ProjectDAO => new JsonDAL.DAL();
+        public IDataLayer ProjectDAO { get => new SqlDAL.DAL(); private set { } }
 
-        public ILogicLayer ProjectBLL => new BL.BuisnessLogic(ProjectDAO);
+        public ILogicLayer ProjectBLL { get => new BL.BuisnessLogic(ProjectDAO); private set { } }
+
+        public void UpdateLayers()
+        {
+            ProjectDAO = new SqlDAL.DAL();
+
+            ProjectBLL = new BL.BuisnessLogic(ProjectDAO);
+        }
     }
 }

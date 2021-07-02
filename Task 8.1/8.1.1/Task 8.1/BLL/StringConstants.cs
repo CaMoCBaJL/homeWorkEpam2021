@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    class StringConstants
+    public class StringConstants
     {
         public const string emptyStringValue = " отсутствуют.";
 
