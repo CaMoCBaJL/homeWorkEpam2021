@@ -19,5 +19,6 @@ namespace DALInterfaces
 
         int GetEntityId(EntityType entityType, string entityName);
 
+        bool CheckUserIdentity(string userName, string password);
     }
 }

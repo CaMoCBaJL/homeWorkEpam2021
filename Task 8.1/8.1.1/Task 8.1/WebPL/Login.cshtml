@@ -1,6 +1,7 @@
 ﻿@using BL;
 @using Entities;
 @using WebPL.Models;
+@using IdentityChecker;
 
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
@@ -31,7 +32,7 @@
     {
         if (!string.IsNullOrEmpty(password))
         {
-            if (UserAuthentication.AuthenticateTheUser(password, userName))
+            if (IdentityChecker.CheckIdentity(userName, password))
             {
                 FormsAuthentication.SetAuthCookie(userName, true);
 
@@ -57,11 +58,14 @@
     }
     else
     {
+        if (!string.IsNullOrWhiteSpace(userName))
+        {
         <div class="alert_warning">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
 
             Введите имя пользователя
         </div>
+        }
     }
     <div class="small_text">
         <form method="post" action="">

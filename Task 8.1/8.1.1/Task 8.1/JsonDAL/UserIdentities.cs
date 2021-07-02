@@ -14,20 +14,6 @@ namespace JsonDAL
 
         internal void AddIdentity(int userId, int passwordHashSum) => UpdateIdentities(new Identity(userId, passwordHashSum), IdentityUpdateType.Add);
 
-        public static bool CheckUserIdentity(string userName, string password)
-        {
-            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(PathConstants.identitiesDataLocation));
-
-            if (identities == null)
-                identities = new List<Identity>();
-
-            Identity currentUserIdentity = new Identity(new DAL().GetEntityId(EntityType.User, userName), Identity.HashThePassword(password));
-
-            int index = identities.FindIndex(id => id.PasswordHashSumm == currentUserIdentity.PasswordHashSumm);
-
-            return index > -1;
-        }
-
         void UpdateIdentities(Identity identity, IdentityUpdateType updateType)
         {
             List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(PathConstants.identitiesDataLocation));

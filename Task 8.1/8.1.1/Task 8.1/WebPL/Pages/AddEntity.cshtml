@@ -211,10 +211,13 @@
     }
     else
     {
-        <div class="alert_warning">
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-            Введите имя  @DataToRoute.DataType.ToString()
-        </div>
+        if (!string.IsNullOrWhiteSpace(entityName))
+        {
+            <div class="alert_warning">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Введите имя  @DataToRoute.DataType.ToString()
+            </div>
+        }
     }
     @if (allOk)
     {
@@ -270,7 +273,7 @@
             }
         }
     }
-    
+
     <form method="post" action="">
         <div class="small_text">
             <p>
@@ -292,10 +295,10 @@
                 </p>
                 if (DataToRoute.EntityToUpdateId == -1)
                 {
-                <p>
-                    <label for="password"> Пароль для входа в учетную запись</label>
-                    <input type="password" name="password" id="password" value="@password" placeholder="Пароль" />
-                </p>
+                    <p>
+                        <label for="password"> Пароль для входа в учетную запись</label>
+                        <input type="password" name="password" id="password" value="@password" placeholder="Пароль" />
+                    </p>
                 }
                 if (additionalData.Count > 1)
                 {

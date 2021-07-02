@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JsonDAL
+namespace SqlDAL
 {
-    public enum FileSystemObjectType
+    public enum DataOperationType
     {
         None,
-        File,
-        Folder
+        Add,
+        Update
     }
 }

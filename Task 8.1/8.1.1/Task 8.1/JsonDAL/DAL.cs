@@ -253,28 +253,18 @@ namespace JsonDAL
             }
         }
 
-        public bool UpdateEntity(CommonEntity entity)
+        public bool CheckUserIdentity(string userName, string password)
         {
-            switch (entity)
-            {
-                case User user:
-                    Users[entity.Id - 1] = user;
+            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(PathConstants.identitiesDataLocation));
 
-                    UpdateData();
+            if (identities == null)
+                identities = new List<Identity>();
 
-                    return true;
+            Identity currentUserIdentity = new Identity(new DAL().GetEntityId(EntityType.User, userName), Identity.HashThePassword(password));
 
-                case Award award:
+            int index = identities.FindIndex(id => id.PasswordHashSumm == currentUserIdentity.PasswordHashSumm);
 
-                    Awards[entity.Id - 1] = award;
-
-                    UpdateData();
-
-                    return true;
-
-                default:
-                    return false;
-            }
+            return index > -1;
         }
 
         public bool UpdateEntity(CommonEntity entity, int passwordHashSum)
