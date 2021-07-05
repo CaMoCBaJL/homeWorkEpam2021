@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Linq;
 using DALInterfaces;
+using CommonConstants;
 
 namespace SqlDAL
 {
@@ -252,7 +253,7 @@ namespace SqlDAL
                         result.Add((int)reader[paramName]);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return new List<int>();
                 }
@@ -285,13 +286,13 @@ namespace SqlDAL
             }
         }
 
-        public bool AddEntity(CommonEntity entity, int passwordHashSum = 0)
+        public bool AddEntity(CommonEntity entity, string passwordHashSum = "")
              => ExecuteTheOperation(entity, passwordHashSum, DataOperationType.Add);
 
-        public bool UpdateEntity(CommonEntity entity, int passwordHashSum = 0)
+        public bool UpdateEntity(CommonEntity entity, string passwordHashSum = "")
             => ExecuteTheOperation(entity, passwordHashSum, DataOperationType.Update);
 
-        public bool ExecuteTheOperation(CommonEntity entity, int passwordHashSum, DataOperationType operationType)
+        public bool ExecuteTheOperation(CommonEntity entity, string passwordHashSum, DataOperationType operationType)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -337,7 +338,7 @@ namespace SqlDAL
                 {
                     command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }

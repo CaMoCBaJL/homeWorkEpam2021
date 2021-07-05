@@ -14,30 +14,30 @@ namespace Entities
         public int UserId { get; private set;}
 
         [JsonProperty]
-        public int PasswordHashSumm { get; private set; }
+        public string PasswordHashSumm { get; private set; }
 
 
         public Identity() { }
 
-        public Identity(int userId, int hashSumm)
+        public Identity(int userId, string hashSumm)
         {
             UserId = userId;
 
             PasswordHashSumm = hashSumm;
         }
 
-        public static int HashThePassword(string password)
+        public static string HashThePassword(string password)
         {
             HashAlgorithm sha = SHA256.Create();
 
-            int result = 0;
+            StringBuilder result = new StringBuilder();
 
             foreach (var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
             {
-                result += hashValue;
+                result.Append(hashValue);
             }
 
-            return result;
+            return result.ToString();
         }
     }
 }

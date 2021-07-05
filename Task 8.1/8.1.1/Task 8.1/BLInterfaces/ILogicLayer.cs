@@ -4,19 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonConstants;
+using DALInterfaces;
 
 namespace BLInterfaces
 {
     public interface ILogicLayer
     {
-        List<string> GetListOfEntities(EntityType entityType, List<int> addedEntities);
+        IDataLayer _DAO { get; }
 
-        List<string> GetListOfEntities(EntityType entityType, bool onlyNamesNeeded);
+        string RemoveEntity(int entityId);
 
-        string RemoveEntity(EntityType entityType, int entityId);
+        string UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds);
 
-        string UpdateEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds);
+        string AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password = Constants.emptyString);
 
-        string AddEntity(EntityType entityType, string entityData, List<int> connectedEntitiesIds, string password = "");
+        List<string> GetListOfEntities(List<int> addedEntities);
+
+        List<string> GetListOfEntities(bool onlyNamesNeeded);
     }
 }

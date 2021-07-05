@@ -12,7 +12,7 @@ namespace JsonDAL
     {
         internal void DeleteIdentity(int userId) => UpdateIdentities(new Identity(userId, default), IdentityUpdateType.Delete);
 
-        internal void AddIdentity(int userId, int passwordHashSum) => UpdateIdentities(new Identity(userId, passwordHashSum), IdentityUpdateType.Add);
+        internal void AddIdentity(int userId, string passwordHashSum) => UpdateIdentities(new Identity(userId, passwordHashSum), IdentityUpdateType.Add);
 
         void UpdateIdentities(Identity identity, IdentityUpdateType updateType)
         {

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities
+namespace CommonInterfaces
 {
-    public enum EntityType
+    public interface IAuthentificator
     {
-        None,
-        User,
-        Award
+        bool CheckUserIdentity(string userName, string password);
+
     }
 }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные со сборкой.
-[assembly: AssemblyTitle("IdentityChecker")]
+[assembly: AssemblyTitle("CommonInterfaces")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("IdentityChecker")]
+[assembly: AssemblyProduct("CommonInterfaces")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("fbf17803-0134-4cfe-8b4a-022f57fb6d3b")]
+[assembly: Guid("68c2ee46-29cc-4766-bd98-3e3ea188217a")]
 
 // Сведения о версии сборки состоят из указанных ниже четырех значений:
 //

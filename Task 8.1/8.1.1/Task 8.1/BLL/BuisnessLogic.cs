@@ -12,7 +12,7 @@ namespace BL
 {
     public class BuisnessLogic: ILogicLayer
     {
-        private IDataLayer _DAO;
+        public IDataLayer _DAO { get; }
 
 
         public BuisnessLogic(IDataLayer currentDAO) => _DAO = currentDAO;

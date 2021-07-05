@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DALInterfaces;
 using BLInterfaces;
+using CommonInterfaces;
+using IdentityChecker;
+
 namespace Dependencies
 {
     public class DependencyResolver
@@ -28,6 +31,8 @@ namespace Dependencies
         public IDataLayer ProjectDAO { get => new SqlDAL.DAL(); private set { } }
 
         public ILogicLayer ProjectBLL { get => new BL.BuisnessLogic(ProjectDAO); private set { } }
+
+        public IAuthentificator Authentificator { get => ProjectDAO.CreateAuthentificator(); }
 
         public void UpdateLayers()
         {

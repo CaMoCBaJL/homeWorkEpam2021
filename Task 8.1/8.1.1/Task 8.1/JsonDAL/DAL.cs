@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Linq;
 using DALInterfaces;
+using CommonInterfaces;
 
 namespace JsonDAL
 {
@@ -91,7 +92,7 @@ namespace JsonDAL
             File.WriteAllText(PathConstants.awardsDataLocation, JsonConvert.SerializeObject(Awards));
         }
 
-        public bool AddEntity(CommonEntity entity, int passwordHashSum = -1)
+        public bool AddEntity(CommonEntity entity, string passwordHashSum)
         {
             switch (entity)
             {
@@ -104,9 +105,7 @@ namespace JsonDAL
                     {
                         Users.Add(user);
 
-                        var identities = new UserIdentities();
-
-                        identities.AddIdentity(user.Id, passwordHashSum);
+                        new UserIdentities().AddIdentity(user.Id, passwordHashSum);
 
                         UpdateData();
 
@@ -253,21 +252,7 @@ namespace JsonDAL
             }
         }
 
-        public bool CheckUserIdentity(string userName, string password)
-        {
-            List<Identity> identities = JsonConvert.DeserializeObject<List<Identity>>(File.ReadAllText(PathConstants.identitiesDataLocation));
-
-            if (identities == null)
-                identities = new List<Identity>();
-
-            Identity currentUserIdentity = new Identity(new DAL().GetEntityId(EntityType.User, userName), Identity.HashThePassword(password));
-
-            int index = identities.FindIndex(id => id.PasswordHashSumm == currentUserIdentity.PasswordHashSumm);
-
-            return index > -1;
-        }
-
-        public bool UpdateEntity(CommonEntity entity, int passwordHashSum)
+        public bool UpdateEntity(CommonEntity entity, string passwordHashSum)
         {
             throw new System.NotImplementedException();
         }
@@ -291,5 +276,7 @@ namespace JsonDAL
                     return new List<CommonEntity>();
             }
         }
+
+        public IAuthentificator CreateAuthentificator() => new JSONAuthentificator();
     }
 }
