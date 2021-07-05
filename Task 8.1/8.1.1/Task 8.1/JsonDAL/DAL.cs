@@ -12,43 +12,7 @@ namespace JsonDAL
 
     public class DAL : IDataLayer
     {
-        List<User> Users { get; }
-
-        List<Award> Awards { get; }
-
-        public int UsersCount { get => Users.Count; }
-
-        public int AwardsCount { get => Awards.Count; }
-
-
-        static void CheckUnitForExistence(string path, FileSystemObjectType type)
-        {
-            switch (type)
-            {
-                case FileSystemObjectType.File:
-                    if (!File.Exists(path))
-                        new FileStream(path, FileMode.CreateNew).Dispose();
-                    break;
-                case FileSystemObjectType.Folder:
-                    if (!Directory.Exists(path))
-                        new DirectoryInfo(PathConstants.dataFolderLocation).Create();
-                    break;
-                case FileSystemObjectType.None:
-                default:
-                    break;
-            }
-        }
-
-        public static void CheckDataLocationForExistence()
-        {
-            CheckUnitForExistence(PathConstants.dataFolderLocation, FileSystemObjectType.Folder);
-
-            CheckUnitForExistence(PathConstants.usersDataLocation, FileSystemObjectType.File);
-
-            CheckUnitForExistence(PathConstants.awardsDataLocation, FileSystemObjectType.File);
-
-            CheckUnitForExistence(PathConstants.identitiesDataLocation, FileSystemObjectType.File);
-        }
+        
 
         public DAL()
         {
@@ -60,15 +24,6 @@ namespace JsonDAL
 
             if (!AdminExists())
                 AddAdmin();
-        }
-
-        bool AdminExists() => Users.FindIndex(user => user.Id == 0) != -1;
-
-        void AddAdmin()
-        {
-            Users.Add(new User("admin", "0.0.0", 0, new List<int>(), 0));
-
-            new UserIdentities().AddIdentity(0, Identity.HashThePassword("admin"));
         }
 
         List<T> GetCurrentEntitiesInfo<T>(string pathToData)

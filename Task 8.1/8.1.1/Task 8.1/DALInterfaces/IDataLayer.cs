@@ -7,13 +7,11 @@ namespace DALInterfaces
 {
     public interface IDataLayer
     {
-        int UsersCount { get; }
+        int EntityCount { get; }
 
-        int AwardsCount { get; }
+        bool AddEntity(CommonEntity entity, string passwordHashSum);
 
-        bool AddEntity(CommonEntity entity, string passwordHashSum = Constants.emptyString);
-
-        bool UpdateEntity(CommonEntity entity, string passwordHashSum = Constants.emptyString);
+        bool UpdateEntity(CommonEntity entity);
 
         bool DeleteEntity(CommonEntity entity);
 
