@@ -8,7 +8,7 @@ using System.IO;
 
 namespace JsonDAL
 {
-    public class UserIdentities
+    public class IdentityDataLogic
     {
         internal void DeleteIdentity(int userId) => UpdateIdentities(new Identity(userId, default), IdentityUpdateType.Delete);
 

@@ -5,39 +5,64 @@ using System.Text;
 using System.Threading.Tasks;
 using BLInterfaces;
 using DALInterfaces;
+using Entities;
 
-namespace BLL
+namespace BL
 {
     public class AwardLogic : ILogicLayer
     {
-        public IDataLayer _DAO { get; }
+        IDataLayer _DAO { get; }
 
 
         public AwardLogic(IDataLayer dataLayer) => _DAO = dataLayer;
 
-        string ILogicLayer.AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password)
+        bool ILogicLayer.AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password)
         {
-            throw new NotImplementedException();
+            if (ValidateEntityData(dataToAdd))
+            {
+                return _DAO.AddEntity(new Award(dataToAdd, connectedEntitiesIds), password);
+                    }
+
+            return false;
         }
 
-        List<string> ILogicLayer.GetListOfEntities(List<int> addedEntities)
+        List<string> ILogicLayer.GetConnectedEntities(List<int> addedEntities)
         {
-            throw new NotImplementedException();
+            List<string> result = new List<string>();
+
+            foreach (var entity in _DAO.GetConnectedEntities())
+            {
+                result.Add(entity.ToString());
+            }
+
+            return result;
+        }
+        List<string> ILogicLayer.GetConnectedEntitiesNames()
+        {
+            List<string> result = new List<string>();
+
+            foreach (var entity in _DAO.GetConnectedEntities())
+            {
+                result.Add((entity as User).Name);
+            }
+
+            return result;
         }
 
-        List<string> ILogicLayer.GetListOfEntities(bool onlyNamesNeeded)
+        bool ILogicLayer.RemoveEntity(int entityId)
+            => _DAO.RemoveEntity(entityId);
+
+        bool ILogicLayer.UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds)
         {
-            throw new NotImplementedException();
+            if (ValidateEntityData(dataToUpdate))
+            {
+                return _DAO.UpdateEntity(new Award(dataToUpdate, newConnectedEntitiesIds));
+            }
+
+            return false;
         }
 
-        string ILogicLayer.RemoveEntity(int entityId)
-        {
-            throw new NotImplementedException();
-        }
-
-        string ILogicLayer.UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds)
-        {
-            throw new NotImplementedException();
-        }
+        public bool ValidateEntityData(List<string> entityData)
+        => true;
     }
 }

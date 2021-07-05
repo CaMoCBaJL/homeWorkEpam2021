@@ -29,13 +29,13 @@ namespace Entities
             ConnectedEntities = userAwards;
         }
 
-        public User(List<string> userData, List<int> awards, int id) : base(id)
+        public User(List<string> userData, List<int> awards) : base(int.Parse(userData[0]))
         {
-            Name = userData[0];
+            Name = userData[1];
 
-            DateOfBirth = userData[1];
+            DateOfBirth = userData[2];
 
-            Age = int.Parse(userData[2]);
+            Age = int.Parse(userData[3]);
 
             ConnectedEntities = awards;
         }

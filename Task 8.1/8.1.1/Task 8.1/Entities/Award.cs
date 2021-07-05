@@ -13,11 +13,11 @@ namespace Entities
 
         protected Award() {}
 
-        public Award(string title, List<int> awardedUsers, int id) : base(id)
+        public Award(List<string> entityData, List<int> connectedIds) : base(int.Parse(entityData[0]))
         {
-            Title = title;
+            Title = entityData[1];
 
-            ConnectedEntities = awardedUsers;
+            ConnectedEntities = connectedIds;
         }
 
         public override string ToString()

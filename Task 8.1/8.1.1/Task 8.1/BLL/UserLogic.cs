@@ -6,39 +6,71 @@ using System.Threading.Tasks;
 using BLInterfaces;
 using Entities;
 using DALInterfaces;
+using System.Text.RegularExpressions;
 
-namespace BLL
+namespace BL
 {
     public class UserLogic : ILogicLayer
     {
-        public IDataLayer _DAO { get; }
+        IDataLayer _DAO { get; }
 
 
         public UserLogic(IDataLayer dataLayer) => _DAO = dataLayer;
 
-        public string AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password = "")
+        bool ILogicLayer.AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password)
         {
-            throw new NotImplementedException();
+            if (ValidateEntityData(dataToAdd))
+            {
+                return _DAO.AddEntity(new User(dataToAdd, connectedEntitiesIds), password);
+            }
+
+            return false;
         }
 
-        public List<string> GetListOfEntities(List<int> addedEntities)
+        List<string> ILogicLayer.GetConnectedEntities(List<int> addedEntities)
         {
-            throw new NotImplementedException();
+            List<string> result = new List<string>();
+
+            foreach (var entity in _DAO.GetConnectedEntities())
+            {
+                result.Add(entity.ToString());
+            }
+
+            return result;
+        }
+        List<string> ILogicLayer.GetConnectedEntitiesNames()
+        {
+            List<string> result = new List<string>();
+
+            foreach (var entity in _DAO.GetConnectedEntities())
+            {
+                result.Add((entity as Award).Title);
+            }
+
+            return result;
         }
 
-        public List<string> GetListOfEntities(bool onlyNamesNeeded)
+        bool ILogicLayer.RemoveEntity(int entityId)
+            => _DAO.RemoveEntity(entityId);
+
+        bool ILogicLayer.UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds)
         {
-            throw new NotImplementedException();
+            if (ValidateEntityData(dataToUpdate))
+            {
+                return _DAO.UpdateEntity(new Award(dataToUpdate, newConnectedEntitiesIds));
+            }
+
+            return false;
         }
 
-        public string RemoveEntity(int entityId)
-        {
-            throw new NotImplementedException();
-        }
+        public bool ValidateEntityData(List<string> entityData)
+        =>
+            ValidateParameter(entityData[2], StringConstants.birthDateRegexPattern) &&
+                ValidateParameter(entityData[3], StringConstants.ageRegexPattern);
 
-        public string UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds)
-        {
-            throw new NotImplementedException();
-        }
+        public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
+
+        public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(StringConstants.emptyStringValue) || entity.StartsWith("Список ");
+
     }
 }

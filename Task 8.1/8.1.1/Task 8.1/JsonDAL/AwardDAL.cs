@@ -55,9 +55,12 @@ namespace JsonDAL
         {
             var users = JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(PathConstants.usersDataLocation));
 
-            foreach (var item in Awards)
+            if (users != null)
             {
-                item.ConnectedEntities.RemoveAll(entityId => !users.Contains(users.Find(user => user.Id == entityId)));
+                foreach (var item in Awards)
+                {
+                    item.ConnectedEntities.RemoveAll(entityId => !users.Contains(users.Find(user => user.Id == entityId)));
+                }
             }
         }
 
@@ -79,15 +82,17 @@ namespace JsonDAL
 
         public IAuthentificator CreateAuthentificator() => new JSONAuthentificator();
 
-        public bool DeleteEntity(CommonEntity entity)
+        public bool RemoveEntity(int entityId)
         {
-            if (!Awards.Contains(entity as Award))
+            var awardToRemove = Awards.Find(award => award.Id == entityId);
+
+            if (awardToRemove == null)
                 return false;
             else
             {
-                Awards.Remove(entity as Award);
+                Awards.Remove(awardToRemove);
 
-                new UserIdentities().DeleteIdentity(entity.Id);
+                new IdentityDataLogic().DeleteIdentity(entityId);
 
                 UpdateData();
 
@@ -101,18 +106,28 @@ namespace JsonDAL
 
         public bool UpdateEntity(CommonEntity entity)
         {
-            int indx = Awards.FindIndex(u => u.Id == entity.Id);
+            int index = Awards.FindIndex(u => u.Id == entity.Id);
 
-            if (indx == -1)
+            if (index == -1)
                 return false;
             else
             {
-                Awards[indx] = entity as Award;
+                Awards[index] = entity as Award;
 
                 UpdateData();
 
                 return true;
             }
+        }
+
+        public IEnumerable<CommonEntity> GetConnectedEntities()
+        {
+            var result = JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(PathConstants.usersDataLocation));
+
+            if (result == null)
+                return new List<User>();
+
+            return result;
         }
     }
 }

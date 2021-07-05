@@ -69,7 +69,7 @@ namespace JsonDAL
         {
             Users.Add(new User("admin", "0.0.0", 0, new List<int>(), 0));
 
-            new UserIdentities().AddIdentity(0, Identity.HashThePassword("admin"));
+            new IdentityDataLogic().AddIdentity(0, Identity.HashThePassword("admin"));
         }
 
         public bool AddEntity(CommonEntity entity, string passwordHashSum)
@@ -82,7 +82,7 @@ namespace JsonDAL
             {
                 Users.Add(entity as User);
 
-                new UserIdentities().AddIdentity(entity.Id, passwordHashSum);
+                new IdentityDataLogic().AddIdentity(entity.Id, passwordHashSum);
 
                 UpdateData();
 
@@ -92,15 +92,17 @@ namespace JsonDAL
 
         public IAuthentificator CreateAuthentificator() => new JSONAuthentificator();
 
-        public bool DeleteEntity(CommonEntity entity)
+        public bool RemoveEntity(int entityId)
         {
-            if (!Users.Contains(entity as User))
+            var userToRemove = Users.Find(user => user.Id == entityId);
+
+            if (userToRemove == null)
                 return false;
             else
             {
-                Users.Remove(entity as User);
+                Users.Remove(userToRemove);
 
-                new UserIdentities().DeleteIdentity(entity.Id);
+                new IdentityDataLogic().DeleteIdentity(entityId);
 
                 UpdateData();
 
@@ -126,6 +128,16 @@ namespace JsonDAL
 
                 return true;
             }
+        }
+
+        public IEnumerable<CommonEntity> GetConnectedEntities()
+        {
+            var result = JsonConvert.DeserializeObject<List<Award>>(File.ReadAllText(PathConstants.awardsDataLocation));
+
+            if (result == null)
+                return new List<Award>();
+
+            return result;
         }
     }
 }

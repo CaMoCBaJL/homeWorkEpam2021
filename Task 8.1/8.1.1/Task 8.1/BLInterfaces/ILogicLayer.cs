@@ -11,16 +11,16 @@ namespace BLInterfaces
 {
     public interface ILogicLayer
     {
-        IDataLayer _DAO { get; }
+        bool ValidateEntityData(List<string> entityData);
 
-        string RemoveEntity(int entityId);
+        bool RemoveEntity(int entityId);
 
-        string UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds);
+        bool UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds);
 
-        string AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password = Constants.emptyString);
+        bool AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password);
 
-        List<string> GetListOfEntities(List<int> addedEntities);
+        List<string> GetConnectedEntities(List<int> addedEntities);
 
-        List<string> GetListOfEntities(bool onlyNamesNeeded);
+        List<string> GetConnectedEntitiesNames();
     }
 }

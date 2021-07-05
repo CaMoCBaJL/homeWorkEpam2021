@@ -9,5 +9,7 @@ namespace CommonConstants
     public class Constants
     {
         public const string emptyString = "";
+
+
     }
 }

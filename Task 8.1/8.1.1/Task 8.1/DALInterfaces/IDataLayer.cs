@@ -13,9 +13,11 @@ namespace DALInterfaces
 
         bool UpdateEntity(CommonEntity entity);
 
-        bool DeleteEntity(CommonEntity entity);
+        bool RemoveEntity(int entityId);
 
         IEnumerable<CommonEntity> GetEntities();
+
+        IEnumerable<CommonEntity> GetConnectedEntities();
 
         int GetEntityId(string entityName);
 
