@@ -22,5 +22,7 @@ namespace BLInterfaces
         List<string> GetConnectedEntities(List<int> addedEntities);
 
         List<string> GetConnectedEntitiesNames();
+
+        List<string> GetEntities();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BL;
 using DALInterfaces;
 using BLInterfaces;
 using CommonInterfaces;
@@ -28,17 +29,17 @@ namespace Dependencies
         }
         #endregion
 
-        public IDataLayer ProjectDAO { get => new SqlDAL.DAL(); private set { } }
+        public IDALController ProjectDAO { get => new SqlDAL.DAL(); private set { } }
 
-        public ILogicLayer ProjectBLL { get => new BL.BuisnessLogic(ProjectDAO); private set { } }
+        public IBLController ProjectBLL { get => new BuisnessLogic(ProjectDAO); private set { } }
 
-        public IAuthentificator Authentificator { get => ProjectDAO.CreateAuthentificator(); }
+        public IAuthentificator Authentificator { get => ProjectDAO.UserDAL.CreateAuthentificator(); }
 
         public void UpdateLayers()
         {
             ProjectDAO = new SqlDAL.DAL();
 
-            ProjectBLL = new BL.BuisnessLogic(ProjectDAO);
+            ProjectBLL = new BuisnessLogic(ProjectDAO);
         }
     }
 }

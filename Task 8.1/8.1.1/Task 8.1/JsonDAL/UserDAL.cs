@@ -8,6 +8,7 @@ using CommonInterfaces;
 using DALInterfaces;
 using Entities;
 using Newtonsoft.Json;
+using CommonLogic;
 
 namespace JsonDAL
 {
@@ -69,7 +70,8 @@ namespace JsonDAL
         {
             Users.Add(new User("admin", "0.0.0", 0, new List<int>(), 0));
 
-            new IdentityDataLogic().AddIdentity(0, Identity.HashThePassword("admin"));
+            new IdentityDataLogic().AddIdentity(0,
+                new PasswordHasher().HashThePassword("admin"));
         }
 
         public bool AddEntity(CommonEntity entity, string passwordHashSum)
@@ -90,7 +92,7 @@ namespace JsonDAL
             }
         }
 
-        public IAuthentificator CreateAuthentificator() => new JSONAuthentificator();
+        public IAuthentificator CreateAuthentificator() => new JSONAuthentificator(this);
 
         public bool RemoveEntity(int entityId)
         {

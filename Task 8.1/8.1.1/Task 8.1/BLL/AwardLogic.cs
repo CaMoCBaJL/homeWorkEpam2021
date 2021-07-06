@@ -64,5 +64,17 @@ namespace BL
 
         public bool ValidateEntityData(List<string> entityData)
         => true;
+
+        public List<string> GetEntities()
+        {
+            List<string> result = new List<string>();
+
+            foreach (var item in _DAO.GetEntities())
+            {
+                result.Add(item.ToString());
+            }
+
+            return result;
+        }
     }
 }

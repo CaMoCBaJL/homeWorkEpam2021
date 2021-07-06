@@ -41,10 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBLController.cs" />
     <Compile Include="ILogicLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Constants\CommonConstants.csproj">
+      <Project>{67244f66-7399-48b6-b300-63a9db53dbca}</Project>
+      <Name>CommonConstants</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DALInterfaces\DALInterfaces.csproj">
+      <Project>{9c89f4c1-7e99-425a-a53d-f5c53e1ba540}</Project>
+      <Name>DALInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{db4aa9d1-2386-46b5-ac5d-77cd10c21d54}</Project>
       <Name>Entities</Name>

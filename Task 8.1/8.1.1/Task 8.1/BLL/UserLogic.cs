@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLInterfaces;
 using Entities;
 using DALInterfaces;
 using System.Text.RegularExpressions;
+using BLInterfaces;
 
 namespace BL
 {
-    public class UserLogic : ILogicLayer
+    class UserLogic : ILogicLayer
     {
         IDataLayer _DAO { get; }
 
@@ -72,5 +72,16 @@ namespace BL
 
         public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(StringConstants.emptyStringValue) || entity.StartsWith("Список ");
 
+        public List<string> GetEntities()
+        {
+            List<string> result = new List<string>();
+
+            foreach (var item in _DAO.GetEntities())
+            {
+                result.Add(item.ToString());
+            }
+
+            return result;
+        }
     }
 }

@@ -3,11 +3,10 @@
 @using WebPL.Models;
 @using Dependencies;
 @using System.Web.Routing;
+@using DALInterfaces;
 
 @{
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
-
-    StaticLogic.CheckDataLocation();
 
     if (IsPost)
     {
@@ -19,9 +18,14 @@
         }
         else
         {
-            DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.GetListOfEntities((EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"])), false);
-
-            DataToRoute.DataType = (EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"]));
+            if (int.Parse(Request.Form["select"]) == 1)
+            {
+                DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+            }
+            else
+            {
+                DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+            }
 
             Response.Redirect("~/Pages/EntitiesList.cshtml");
         }

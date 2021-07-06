@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{876528D8-2067-4611-8BBC-97EF1AB9D365}</ProjectGuid>
+    <ProjectGuid>{315910D2-2DD9-4AFD-B1FE-F8A09F4BE499}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dependencies</RootNamespace>
-    <AssemblyName>Dependencies</AssemblyName>
+    <RootNamespace>CommonLogic</RootNamespace>
+    <AssemblyName>CommonLogic</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,42 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyResolver.cs" />
+    <Compile Include="PasswordHasher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Authentificator\IdentityChecker.csproj">
-      <Project>{ee1f4d0e-4a95-4220-b405-8a8b861137f9}</Project>
-      <Name>IdentityChecker</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BLInterfaces\BLInterfaces.csproj">
-      <Project>{09cd75cf-1596-4914-a833-04ea6679fb8b}</Project>
-      <Name>BLInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BLL\BL.csproj">
-      <Project>{7e8c4c4d-f55f-4793-ae83-de42d09b20a4}</Project>
-      <Name>BL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonInterfaces\CommonInterfaces.csproj">
-      <Project>{68c2ee46-29cc-4766-bd98-3e3ea188217a}</Project>
-      <Name>CommonInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DALInterfaces\DALInterfaces.csproj">
-      <Project>{9c89f4c1-7e99-425a-a53d-f5c53e1ba540}</Project>
-      <Name>DALInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Entities\Entities.csproj">
-      <Project>{db4aa9d1-2386-46b5-ac5d-77cd10c21d54}</Project>
-      <Name>Entities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JsonDAL\JsonDAL.csproj">
-      <Project>{99963e97-4fda-4cef-aed0-c72775c85118}</Project>
-      <Name>JsonDAL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SqlDAL\SqlDAL.csproj">
-      <Project>{2c52a2cd-a06c-4d36-af85-950e50602b67}</Project>
-      <Name>SqlDAL</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

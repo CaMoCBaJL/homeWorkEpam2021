@@ -41,15 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AwardLogic.cs" />
     <Compile Include="BuisnessLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticLogic.cs" />
     <Compile Include="StringConstants.cs" />
+    <Compile Include="UserLogic.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLInterfaces\BLInterfaces.csproj">
       <Project>{09cd75cf-1596-4914-a833-04ea6679fb8b}</Project>
       <Name>BLInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Constants\CommonConstants.csproj">
+      <Project>{67244f66-7399-48b6-b300-63a9db53dbca}</Project>
+      <Name>CommonConstants</Name>
     </ProjectReference>
     <ProjectReference Include="..\DALInterfaces\DALInterfaces.csproj">
       <Project>{9c89f4c1-7e99-425a-a53d-f5c53e1ba540}</Project>

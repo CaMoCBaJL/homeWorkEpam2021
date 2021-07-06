@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlDAL
+namespace DALInterfaces
 {
-    public enum DataOperationType
+    public interface IDALController
     {
-        None,
-        Add,
-        Update
+        IDataLayer UserDAL { get; }
+
+        IDataLayer AwardDAL { get; }
     }
 }

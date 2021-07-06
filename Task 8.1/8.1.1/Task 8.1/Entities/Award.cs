@@ -13,6 +13,13 @@ namespace Entities
 
         protected Award() {}
 
+        public Award(int id, string title, List<int> connectedEntities) : base(id)
+        {
+            Title = title;
+
+            ConnectedEntities = connectedEntities;
+        }
+
         public Award(List<string> entityData, List<int> connectedIds) : base(int.Parse(entityData[0]))
         {
             Title = entityData[1];

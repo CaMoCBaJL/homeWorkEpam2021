@@ -41,11 +41,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AwardDAL.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="DAL.cs" />
-    <Compile Include="DataOperationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLAuthentificator.cs" />
+    <Compile Include="UserDAL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonInterfaces\CommonInterfaces.csproj">
+      <Project>{68c2ee46-29cc-4766-bd98-3e3ea188217a}</Project>
+      <Name>CommonInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonLogic\CommonLogic.csproj">
+      <Project>{315910d2-2dd9-4afd-b1fe-f8a09f4be499}</Project>
+      <Name>CommonLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Constants\CommonConstants.csproj">
+      <Project>{67244f66-7399-48b6-b300-63a9db53dbca}</Project>
+      <Name>CommonConstants</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DALInterfaces\DALInterfaces.csproj">
       <Project>{9c89f4c1-7e99-425a-a53d-f5c53e1ba540}</Project>
       <Name>DALInterfaces</Name>

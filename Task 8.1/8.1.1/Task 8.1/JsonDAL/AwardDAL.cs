@@ -80,8 +80,6 @@ namespace JsonDAL
             }
         }
 
-        public IAuthentificator CreateAuthentificator() => new JSONAuthentificator();
-
         public bool RemoveEntity(int entityId)
         {
             var awardToRemove = Awards.Find(award => award.Id == entityId);
@@ -129,5 +127,7 @@ namespace JsonDAL
 
             return result;
         }
+
+        public IAuthentificator CreateAuthentificator() => new JSONAuthentificator(this);
     }
 }
