@@ -64,10 +64,6 @@
       <Project>{315910d2-2dd9-4afd-b1fe-f8a09f4be499}</Project>
       <Name>CommonLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Constants\CommonConstants.csproj">
-      <Project>{67244f66-7399-48b6-b300-63a9db53dbca}</Project>
-      <Name>CommonConstants</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DALInterfaces\DALInterfaces.csproj">
       <Project>{9c89f4c1-7e99-425a-a53d-f5c53e1ba540}</Project>
       <Name>DALInterfaces</Name>

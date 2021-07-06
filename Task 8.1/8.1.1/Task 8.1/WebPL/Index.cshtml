@@ -21,10 +21,14 @@
             if (int.Parse(Request.Form["select"]) == 1)
             {
                 DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+
+                DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
             }
             else
             {
                 DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+                DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
             }
 
             Response.Redirect("~/Pages/EntitiesList.cshtml");

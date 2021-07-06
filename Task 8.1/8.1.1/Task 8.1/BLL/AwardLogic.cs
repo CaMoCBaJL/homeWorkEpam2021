@@ -18,7 +18,7 @@ namespace BL
 
         bool ILogicLayer.AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password)
         {
-            if (ValidateEntityData(dataToAdd))
+            if (ValidateEntityData(dataToAdd).StartsWith("All"))
             {
                 return _DAO.AddEntity(new Award(dataToAdd, connectedEntitiesIds), password);
                     }
@@ -54,7 +54,7 @@ namespace BL
 
         bool ILogicLayer.UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds)
         {
-            if (ValidateEntityData(dataToUpdate))
+            if (ValidateEntityData(dataToUpdate).StartsWith("All"))
             {
                 return _DAO.UpdateEntity(new Award(dataToUpdate, newConnectedEntitiesIds));
             }
@@ -62,8 +62,13 @@ namespace BL
             return false;
         }
 
-        public bool ValidateEntityData(List<string> entityData)
-        => true;
+        public string ValidateEntityData(List<string> entityData)
+        {
+            if (entityData[1].Count() > 100)
+                return "Award title is too large. (100 symbols - maximum length).";
+
+            return "All is ok";
+        }
 
         public List<string> GetEntities()
         {

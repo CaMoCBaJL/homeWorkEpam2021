@@ -19,7 +19,7 @@ namespace BL
 
         bool ILogicLayer.AddEntity(List<string> dataToAdd, List<int> connectedEntitiesIds, string password)
         {
-            if (ValidateEntityData(dataToAdd))
+            if (ValidateEntityData(dataToAdd).StartsWith("All"))
             {
                 return _DAO.AddEntity(new User(dataToAdd, connectedEntitiesIds), password);
             }
@@ -55,7 +55,7 @@ namespace BL
 
         bool ILogicLayer.UpdateEntity(List<string> dataToUpdate, List<int> newConnectedEntitiesIds)
         {
-            if (ValidateEntityData(dataToUpdate))
+            if (ValidateEntityData(dataToUpdate).StartsWith("All"))
             {
                 return _DAO.UpdateEntity(new Award(dataToUpdate, newConnectedEntitiesIds));
             }
@@ -63,10 +63,19 @@ namespace BL
             return false;
         }
 
-        public bool ValidateEntityData(List<string> entityData)
-        =>
-            ValidateParameter(entityData[2], StringConstants.birthDateRegexPattern) &&
-                ValidateParameter(entityData[3], StringConstants.ageRegexPattern);
+        public string ValidateEntityData(List<string> entityData)
+        {
+            if (entityData[0].Count() > 100)
+                return "Username is too large. (100 symbols - maximum length).";
+
+            if (!ValidateParameter(entityData[1], StringConstants.birthDateRegexPattern))
+                return "Wrong birth date. (format: 22.22.22)";
+
+            else if (!ValidateParameter(entityData[2], StringConstants.ageRegexPattern))
+                return "Wrong age. (format 0-99)";
+
+            return "All is ok)";
+        }
 
         public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
 
@@ -83,5 +92,7 @@ namespace BL
 
             return result;
         }
+
+        
     }
 }

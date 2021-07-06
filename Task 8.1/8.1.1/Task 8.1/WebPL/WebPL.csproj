@@ -100,10 +100,10 @@
     <Content Include="Index.cshtml" />
     <Content Include="Login.cshtml" />
     <None Include="packages.config" />
-    <Content Include="Pages\EntitiesList.cshtml" />
-    <Content Include="Pages\AddEntity.cshtml" />
-    <Content Include="Pages\Layout\_AddEntityLayout.cshtml" />
     <Content Include="Pages\AddUser.cshtml" />
+    <Content Include="Pages\AddAward.cshtml" />
+    <Content Include="Pages\AwardList.cshtml" />
+    <Content Include="Pages\UserList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

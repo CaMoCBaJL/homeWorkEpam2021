@@ -7,7 +7,6 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Linq;
 using DALInterfaces;
-using CommonConstants;
 
 namespace SqlDAL
 {

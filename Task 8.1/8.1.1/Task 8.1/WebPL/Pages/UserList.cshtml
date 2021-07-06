@@ -3,9 +3,9 @@
 @using Dependencies;
 
 @{
-    DependencyResolver.Instance.UpdateLayers();
+    UpdateDataToRoute();
 
-    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.GetListOfEntities(DataToRoute.DataType, false);
+    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
 
     DataToRoute.EntityToUpdateId = -1;
 
@@ -19,23 +19,22 @@
     {
         DefineClickTarget();
     }
-
-    if (isAdding.HasValue)
-    {
-        if (isAdding.Value)
-        {
-            Response.Redirect("~/Pages/AddEntity.cshtml");
-        }
-    }
 }
 
 @functions{
     public string id;
 
-    public bool? isAdding = null;
+    public bool isAdding = true;
 
-    public string deletionResult = null;
+    public bool deletionResult = default;
 
+
+    void UpdateDataToRoute()
+    {
+        DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+        DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+    }
 
     void DefineClickTarget()
     {
@@ -45,7 +44,7 @@
 
             if (Request[i.ToString() + "del"] != null)
             {
-                deletionResult = DependencyResolver.Instance.ProjectBLL.RemoveEntity(DataToRoute.DataType, i);
+                deletionResult = DependencyResolver.Instance.ProjectBLL.AwardLogic.RemoveEntity(i);
 
                 isAdding = false;
 
@@ -54,17 +53,19 @@
 
             if (Request[i.ToString() + "upd"] != null)
             {
-                isAdding = true;
+                isAdding = false;
 
                 DataToRoute.EntityToUpdateId = i;
+
+                Response.Redirect("~/Pages/AddUser.cshtml");
 
                 break;
             }
         }
 
-        if (!isAdding.HasValue)
+        if (isAdding)
         {
-            isAdding = true;
+            Response.Redirect("~/Pages/AddUser.cshtml");
         }
     }
 }
@@ -77,32 +78,33 @@
     <title></title>
 </head>
 <body>
-    @if (deletionResult != null)
-    {
-        if (deletionResult.StartsWith("Не"))
-        {
-            <div class="alert_unsuccesfull">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                @deletionResult
-            </div>
-        }
-        else
-        {
-            <div class="alert_succesfull">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                @deletionResult
-            </div>
-        }
-        DataToRoute.UpdateData();
 
-        deletionResult = null;
+    @if (deletionResult)
+    {
+        <div class="alert_unsuccesfull">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            @StringConstants.successfullOperationResult
+        </div>
+
+        UpdateDataToRoute();
+
+        deletionResult = false;
     }
+    else
+    {
+        <div class="alert_succesfull">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            @StringConstants.unsuccessfullOperationResult
+            Ошибка сервера.
+        </div>
+    }
+
     <div>
         @if (User.IsInRole("admin"))
         {
             <form id="form" method="post" action="">
                 <div style="position:fixed; right:20px;">
-                    <button class="button add_button"> Добавить сущность</button>
+                    <button class="button add_button"> Добавить награду</button>
                 </div>
             </form>
         }
@@ -125,9 +127,9 @@
                         @if (User.IsInRole("admin"))
                         {
                             <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); "
-                                   class=" button " type="submit" value=""/>
+                                   class=" button " type="submit" value="" />
                             <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); "
-                                   class=" button " type="submit" value=""/>
+                                   class=" button " type="submit" value="" />
                         }
                     </form>
                 }

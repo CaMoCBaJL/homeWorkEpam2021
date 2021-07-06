@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommonConstants;
 using DALInterfaces;
 
 namespace BLInterfaces
 {
     public interface ILogicLayer
     {
-        bool ValidateEntityData(List<string> entityData);
+        string ValidateEntityData(List<string> entityData);
 
         bool RemoveEntity(int entityId);
 

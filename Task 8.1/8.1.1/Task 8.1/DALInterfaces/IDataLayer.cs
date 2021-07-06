@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Entities;
 using CommonInterfaces;
-using CommonConstants;
 
 namespace DALInterfaces
 {

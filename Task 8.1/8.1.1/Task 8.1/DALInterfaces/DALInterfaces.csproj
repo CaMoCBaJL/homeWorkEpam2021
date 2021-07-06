@@ -50,10 +50,6 @@
       <Project>{68c2ee46-29cc-4766-bd98-3e3ea188217a}</Project>
       <Name>CommonInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Constants\CommonConstants.csproj">
-      <Project>{67244f66-7399-48b6-b300-63a9db53dbca}</Project>
-      <Name>CommonConstants</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{db4aa9d1-2386-46b5-ac5d-77cd10c21d54}</Project>
       <Name>Entities</Name>
