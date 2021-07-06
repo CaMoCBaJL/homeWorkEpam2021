@@ -28,10 +28,12 @@ CREATE TABLE UsersAndAwards
 	CONSTRAINT PairsAreUnique UNIQUE (UserId, AwardId)
 )
 
+drop table UserIdentity
+
 CREATE TABLE UserIdentity
 (
 	[UserId] INT UNIQUE FOREIGN KEY REFERENCES AppUser(ID) ON DELETE CASCADE,
-	[PasswordHashSum] INT NOT NULL 
+	[PasswordHashSum] NVARCHAR(255) NOT NULL 
 )
 
 
@@ -64,12 +66,12 @@ BEGIN
 	WHERE [dbo].[UsersAndAwards].[UserId] = @UserID 
 END
 
-CREATE PROCEDURE AddUser
+ALTER PROCEDURE AddUser
 @UserId int,
 @UserName nvarchar(255),
 @UserBirthDate nvarchar(10),
 @UserAge int,
-@PasswordHashSum int,
+@PasswordHashSum nvarchar(255),
 @UserAwards AS [dbo].IntTable READONLY
 AS
 BEGIN
@@ -173,12 +175,13 @@ BEGIN
 	COMMIT
 END
 
-CREATE PROCEDURE CheckIdentity
+ALTER PROCEDURE CheckIdentity
 @UserId int,
-@PasswordHashSum int
+@PasswordHashSum nvarchar(255)
 AS
 BEGIN
-	IF (SELECT [dbo].[UserIdentity].[PasswordHashSum] FROM [dbo].[UserIdentity] WHERE @UserId = [dbo].[UserIdentity].[UserId]) = @PasswordHashSum
+	IF (SELECT [dbo].[UserIdentity].[PasswordHashSum] FROM [dbo].[UserIdentity]
+	WHERE @UserId = [dbo].[UserIdentity].[UserId]) = @PasswordHashSum
 		RETURN 1
 	ELSE
 		RETURN 0
