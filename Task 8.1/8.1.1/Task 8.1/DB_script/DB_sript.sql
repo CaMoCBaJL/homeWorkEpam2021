@@ -23,8 +23,8 @@ CREATE TABLE UserAward
 
 CREATE TABLE UsersAndAwards
 (
-	[UserId] INT FOREIGN KEY REFERENCES AppUser(ID) ON DELETE CASCADE,
-	[AwardId] INT FOREIGN KEY REFERENCES UserAward(ID) ON DELETE CASCADE,
+	[UserId] INT FOREIGN KEY REFERENCES AppUser(ID) ON DELETE CASCADE ON UPDATE CASCADE,
+	[AwardId] INT FOREIGN KEY REFERENCES UserAward(ID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT PairsAreUnique UNIQUE (UserId, AwardId)
 )
 
@@ -37,6 +37,8 @@ CREATE TABLE UserIdentity
 )
 
 select * from AppUser
+
+select * from UserIdentity
 
 CREATE PROCEDURE GetUsers
 AS 
@@ -134,6 +136,10 @@ BEGIN
 	END
 END
 
+select * from AppUser
+
+delete from UserAward where id = 7
+
 CREATE PROCEDURE AddAward
 @AwardId int,
 @AwardTitle nvarchar(255),
@@ -212,7 +218,7 @@ BEGIN TRANSACTION
 	COMMIT
 END
 
-CREATE PROCEDURE UpdateIds
+ALTER PROCEDURE UpdateIds
 @EntityType binary
 AS 
 BEGIN
@@ -236,15 +242,19 @@ BEGIN
 		IF (@CurrentId > 0)
 		BEGIN
 			IF @EntityType = 1
-				UPDATE [dbo].[AppUser] SET [dbo].[AppUser].[ID] = @CurrentId
+				UPDATE [dbo].[AppUser] SET [dbo].[AppUser].[ID] = @Counter
 			ELSE
-				UPDATE [dbo].[UserAward] SET [dbo].[UserAward].[ID] = @CurrentId
+				UPDATE [dbo].[UserAward] SET [dbo].[UserAward].[ID] = @Counter
 		END
 		FETCH NEXT FROM MyCursor INTO @CurrentId
 	END
 
 	CLOSE MyCursor
 END
+
+select * from UserAward
+
+exec RemoveEntity 0, 1
 
 CREATE PROCEDURE UpdateConnectedIds
 @EntityId int,
