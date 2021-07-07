@@ -16,18 +16,15 @@ namespace SqlDAL
     {
         public int EntityCount => Awards.Count;
 
-        List<Award> Awards
+        List<Award> Awards { get; set; }
+
+
+
+        public AwardDAL()
         {
-            get
-            {
-                if (Awards == null)
-                    Awards = GetEntitiesFromDB();
-
-                return Awards;
-            }
-            set { }
+            if (Awards == null)
+                Awards = GetEntitiesFromDB();
         }
-
 
         public bool AddEntity(CommonEntity entity, string passwordHashSum)
         {
@@ -43,9 +40,6 @@ namespace SqlDAL
 
                     SqlCommand command = new SqlCommand("AddAward", connection);
 
-                    SqlParameter connectedIds = new SqlParameter("@ConnectedIds", SqlDbType.Int);
-                    connectedIds.Value = entity.ConnectedEntities;
-
                     command.Parameters.AddWithValue("@AwardId", award.Id);
                     command.Parameters.AddWithValue("@AwardTitle", award.Title);
 
@@ -59,7 +53,7 @@ namespace SqlDAL
                     {
                         command.ExecuteNonQuery();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         return false;
                     }
@@ -125,7 +119,7 @@ namespace SqlDAL
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("GetUsers", connection);
+                SqlCommand command = new SqlCommand("GetAwards", connection);
 
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -143,21 +137,28 @@ namespace SqlDAL
                             ));
                     }
 
+                    foreach (var award in result)
+                    {
+                        reader.Close();
+
+                        command = new SqlCommand("GetAwardedusers", connection);
+
+                        command.Parameters.AddWithValue("@AwardId", award.Id);
+
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        reader = command.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            award.ConnectedEntities.Add((int)reader["UserId"]);
+                        }
+                    }
+
                 }
                 catch (Exception)
                 {
                     return new List<Award>();
-                }
-            }
-
-            var connectedEntities = GetConnectedEntities() as List<User>;
-
-            foreach (var entity in result)
-            {
-                foreach (var user in connectedEntities)
-                {
-                    if (user.ConnectedEntities.Contains(entity.Id))
-                        entity.ConnectedEntities.Add(user.Id);
                 }
             }
 

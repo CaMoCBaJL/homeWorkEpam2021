@@ -36,6 +36,7 @@ CREATE TABLE UserIdentity
 	[PasswordHashSum] NVARCHAR(255) NOT NULL 
 )
 
+select * from AppUser
 
 CREATE PROCEDURE GetUsers
 AS 

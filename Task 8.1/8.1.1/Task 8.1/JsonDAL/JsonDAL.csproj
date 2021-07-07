@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AwardDAL.cs" />
-    <Compile Include="DAL.cs" />
+    <Compile Include="DataDependencyResolver.cs" />
     <Compile Include="DataInegrity.cs" />
     <Compile Include="FileSystemObjectType.cs" />
     <Compile Include="IdentityUpdateType.cs" />

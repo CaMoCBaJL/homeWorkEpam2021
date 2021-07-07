@@ -18,7 +18,7 @@ namespace SqlDAL
 
         public SQLAuthentificator(IDataLayer dataLayer)
         {
-            if (_DAO.GetType() != typeof(UserDAL))
+            if (dataLayer.GetType() != typeof(UserDAL))
                 throw new Exception("Инициализация аутентификатора из неверного класса DAL!");
 
             _DAO = dataLayer;
@@ -27,9 +27,6 @@ namespace SqlDAL
 
         public bool CheckUserIdentity(string userName, string password)
         {
-            if (_DAO.GetType() != typeof(UserDAL))
-                return false;
-
             using (SqlConnection connection = new SqlConnection(Common._connectionString))
             {
                 connection.Open();

@@ -5,8 +5,6 @@
 @{
     UpdateDataToRoute();
 
-    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
-
     DataToRoute.EntityToUpdateId = -1;
 
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
@@ -27,14 +25,14 @@
 
     public bool isAdding = true;
 
-    public bool deletionResult = default;
+    public bool? deletionResult = false;
 
 
     void UpdateDataToRoute()
     {
-        DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+        DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetConnectedEntitiesNames();
 
-        DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+        DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
     }
 
     void DefineClickTarget()
@@ -80,7 +78,7 @@
 </head>
 <body>
 
-    @if (deletionResult)
+    @if (deletionResult.GetValueOrDefault())
     {
         <div class="alert_unsuccesfull">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -91,9 +89,9 @@
 
         deletionResult = false;
     }
-    else
+    else if (deletionResult == null)
     {
-        <div class="alert_succesfull">
+        <div class="alert_warning">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             @StringConstants.unsuccessfullOperationResult
             Ошибка сервера.
@@ -109,9 +107,9 @@
                 </div>
             </form>
         }
-        <h2 class="header_text"> @DataToRoute.Data[0]</h2>
+        <h2 class="header_text"> Список наград</h2>
 
-        @for (int i = 1; i < DataToRoute.Data.Count; i++)
+        @for (int i = 0; i < DataToRoute.Data.Count; i++)
         {
             <div style="float:left;">
                 <ul>

@@ -7,7 +7,7 @@ using DALInterfaces;
 
 namespace JsonDAL 
 {
-    class DAL : IDALController
+    class DataDependencyResolver : IDALController
     {
         public IDataLayer UserDAL => new UserDAL();
 

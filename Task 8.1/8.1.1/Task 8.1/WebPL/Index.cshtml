@@ -23,15 +23,17 @@
                 DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
 
                 DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+                Response.Redirect("~/Pages/UserList.cshtml");
             }
             else
             {
                 DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
 
                 DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
-            }
 
-            Response.Redirect("~/Pages/EntitiesList.cshtml");
+                Response.Redirect("~/Pages/AwardList.cshtml");
+            }
         }
     }
 }

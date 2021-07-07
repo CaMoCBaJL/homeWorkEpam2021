@@ -18,34 +18,29 @@ namespace JsonDAL
 
         public int EntityCount => Users.Count;
 
-        List<User> Users
-        {
-            get
-            {
-                if (Users != null)
-                    return Users;
-                else
-                {
-                    var data = JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(PathConstants.usersDataLocation));
-
-                    if (data == null)
-                        return new List<User>();
-                    else
-                        return data;
-                }
-            }
-            set { }
-        }
+        List<User> Users { get; set; }
 
 
         public UserDAL()
         {
+            Users = GetEntitiesData();
+
             DataInegrity.CheckDataExistence();
 
             UpdateData();
 
             if (!AdminExists)
                 AddAdmin();
+        }
+
+        List<User> GetEntitiesData()
+        {
+            var data = JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(PathConstants.usersDataLocation));
+
+            if (data == null)
+                return new List<User>();
+            else
+                return data;
         }
 
         void UpdateData()

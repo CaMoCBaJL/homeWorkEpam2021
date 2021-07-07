@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonLogic;
 using CommonInterfaces;
 using DALInterfaces;
 using Entities;
@@ -15,18 +16,24 @@ namespace SqlDAL
     {
         public int EntityCount => Users.Count;
 
-        List<User> Users
-        {
-            get
-            {
-                if (Users == null)
-                    Users = GetEntitiesFromDB();
+        List<User> Users { get; set; }
 
-                return Users;
-            }
-            set { }
+
+        public UserDAL()
+        {
+            if (Users == null)
+                Users = GetEntitiesFromDB();
+
+            if (!AdminExists)
+                AddAdmin();
         }
 
+        bool AdminExists { get => Users.FindIndex(user => user.Id == 0) != -1; }
+
+        void AddAdmin()
+        {
+            AddEntity(new User(0, "admin", "0.0.0", 0, new List<int>()), "admin");
+        }
 
         public List<User> GetEntitiesFromDB()
         {
@@ -56,6 +63,24 @@ namespace SqlDAL
                              ));
                     }
 
+                    foreach (var user in result)
+                    {
+                        reader.Close();
+
+                        command = new SqlCommand("GetUserAwards", connection);
+
+                        command.Parameters.AddWithValue("@UserId", user.Id);
+
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        reader = command.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            user.ConnectedEntities.Add((int)reader["AwardId"]);
+                        }
+                    }
+
                 }
                 catch (Exception)
                 {
@@ -63,21 +88,10 @@ namespace SqlDAL
                 }
             }
 
-            var connectedEntities = GetConnectedEntities() as List<Award>;
-
-            foreach (var entity in result)
-            {
-                foreach (var award in connectedEntities)
-                {
-                    if (award.ConnectedEntities.Contains(entity.Id))
-                        entity.ConnectedEntities.Add(award.Id);
-                }
-            }
-
             return result;
         }
 
-        public bool AddEntity(CommonEntity entity, string passwordHashSum)
+        public bool AddEntity(CommonEntity entity, string password)
         {
             if (Users.FindIndex(User => User.Id == entity.Id) != -1)
                 return false;
@@ -89,7 +103,7 @@ namespace SqlDAL
                 {
                     connection.Open();
 
-                    SqlCommand command = new SqlCommand("AddAward", connection);
+                    SqlCommand command = new SqlCommand("AddUser", connection);
 
                     SqlParameter connectedIds = new SqlParameter("@ConnectedIds", SqlDbType.Int);
                     connectedIds.Value = entity.ConnectedEntities;
@@ -98,7 +112,7 @@ namespace SqlDAL
                     command.Parameters.AddWithValue("@UserName", user.Name);
                     command.Parameters.AddWithValue("@UserBirthDate", user.DateOfBirth);
                     command.Parameters.AddWithValue("@UserAge", user.Age);
-                    command.Parameters.AddWithValue("@PasswordHashSum", passwordHashSum);
+                    command.Parameters.AddWithValue("@PasswordHashSum", new PasswordHasher().HashThePassword(password));
 
                     var specParam = new SqlParameter("@UserAwards", SqlDbType.Structured);
                     specParam.Value = Common.ParseConnectedIds(user.ConnectedEntities);
@@ -154,22 +168,14 @@ namespace SqlDAL
 
             }
 
-            foreach (var award in result)
-            {
-                foreach (var user in Users)
-                {
-                    if (user.ConnectedEntities.Contains(award.Id))
-                        award.ConnectedEntities.Add(user.Id);
-                }
-            }
-
             return result;
         }
 
         public IEnumerable<CommonEntity> GetEntities() => Users;
 
         public int GetEntityId(string entityName)
-            => Users.FindIndex(User => User.Name == entityName);
+        => Users.FindIndex(user => user.Name == entityName);
+
 
         public IAuthentificator CreateAuthentificator() => new SQLAuthentificator(this);
 

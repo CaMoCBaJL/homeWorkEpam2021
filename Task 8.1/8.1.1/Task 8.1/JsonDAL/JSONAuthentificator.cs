@@ -19,7 +19,7 @@ namespace JsonDAL
 
         public JSONAuthentificator(IDataLayer dataLayer)
         {
-            if (_DAO.GetType() != typeof(UserDAL))
+            if (dataLayer.GetType() != typeof(UserDAL))
                 throw new Exception("Инициализация аутентификатора из неверного класса DAL!");
 
             _DAO = dataLayer;

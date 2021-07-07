@@ -29,17 +29,11 @@ namespace Dependencies
         }
         #endregion
 
-        public IDALController ProjectDAO { get => new SqlDAL.DAL(); private set { } }
+        public IDALController ProjectDAO => new SqlDAL.DataDependencyResolver();
 
-        public IBLController ProjectBLL { get => new BuisnessLogic(ProjectDAO); private set { } }
+        public IBLController ProjectBLL => new LogicDependencyResolver(ProjectDAO);
 
-        public IAuthentificator Authentificator { get => ProjectDAO.UserDAL.CreateAuthentificator(); }
+        public IAuthentificator Authentificator => ProjectDAO.UserDAL.CreateAuthentificator(); 
 
-        public void UpdateLayers()
-        {
-            ProjectDAO = new SqlDAL.DAL();
-
-            ProjectBLL = new BuisnessLogic(ProjectDAO);
-        }
     }
 }

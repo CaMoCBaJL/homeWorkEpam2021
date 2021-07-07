@@ -10,7 +10,7 @@ using DALInterfaces;
 
 namespace SqlDAL
 {
-    public class DAL : IDALController
+    public class DataDependencyResolver : IDALController
     {
         public IDataLayer UserDAL => new UserDAL();
 

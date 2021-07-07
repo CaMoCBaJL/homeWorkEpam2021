@@ -15,31 +15,26 @@ namespace JsonDAL
     {
         public int EntityCount => Awards.Count;
 
-        List<Award> Awards
-        {
-            get
-            {
-                if (Awards != null)
-                    return Awards;
-                else
-                {
-                    var data = JsonConvert.DeserializeObject<List<Award>>(File.ReadAllText(PathConstants.awardsDataLocation));
-
-                    if (data == null)
-                        return new List<Award>();
-                    else
-                        return data;
-                }
-            }
-            set { }
-        }
+        List<Award> Awards { get; set; }
 
 
         public AwardDAL()
         {
+            Awards = GetEntitiesData();
+
             DataInegrity.CheckDataExistence();
 
             UpdateData();
+        }
+
+        List<Award> GetEntitiesData()
+        {
+            var data = JsonConvert.DeserializeObject<List<Award>>(File.ReadAllText(PathConstants.awardsDataLocation));
+
+            if (data == null)
+                return new List<Award>();
+            else
+                return data;
         }
 
         void UpdateData()

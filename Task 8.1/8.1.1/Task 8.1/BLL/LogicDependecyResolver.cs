@@ -8,11 +8,11 @@ using BLInterfaces;
 
 namespace BL
 {
-    public class BuisnessLogic : IBLController
+    public class LogicDependencyResolver : IBLController
     {
         IDALController _DAO;
 
-        public BuisnessLogic(IDALController dataLayer) => _DAO = dataLayer;
+        public LogicDependencyResolver(IDALController dataLayer) => _DAO = dataLayer;
 
         public ILogicLayer UserLogic => new UserLogic(_DAO.UserDAL);
 

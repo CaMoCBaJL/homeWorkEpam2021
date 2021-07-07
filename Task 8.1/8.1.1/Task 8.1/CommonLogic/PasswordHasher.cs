@@ -17,7 +17,7 @@ namespace CommonLogic
 
             foreach (var hashValue in sha.ComputeHash(Encoding.UTF8.GetBytes(password)))
             {
-                result.Append(hashValue);
+                result.Append(hashValue + " ");
             }
 
             return result.ToString();

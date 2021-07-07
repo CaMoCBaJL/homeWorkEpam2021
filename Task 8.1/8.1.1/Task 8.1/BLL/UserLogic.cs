@@ -65,13 +65,13 @@ namespace BL
 
         public string ValidateEntityData(List<string> entityData)
         {
-            if (entityData[0].Count() > 100)
+            if (entityData[1].Count() > 100)
                 return "Username is too large. (100 symbols - maximum length).";
 
-            if (!ValidateParameter(entityData[1], StringConstants.birthDateRegexPattern))
+            if (!ValidateParameter(entityData[2], StringConstants.birthDateRegexPattern))
                 return "Wrong birth date. (format: 22.22.22)";
 
-            else if (!ValidateParameter(entityData[2], StringConstants.ageRegexPattern))
+            else if (!ValidateParameter(entityData[3], StringConstants.ageRegexPattern))
                 return "Wrong age. (format 0-99)";
 
             return "All is ok)";

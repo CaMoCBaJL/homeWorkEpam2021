@@ -2,16 +2,37 @@
 @using Dependencies;
 
 @{
+    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+    DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetConnectedEntitiesNames();
+
     Layout = "~/Pages/Layout/_BasicLayout.cshtml";
 
     if (IsPost)
     {
         GetPageData();
     }
+
+    if (DataToRoute.EntityToUpdateId != -1)
+    {
+        var entity = DataToRoute.Data[DataToRoute.EntityToUpdateId - 1];
+
+        var data = entity.Split(new char[] {'\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        entityName = data[0].Split(':')[1];
+
+        for (int i = 2; i < data.Length; i++)
+        {
+            if (!data[i].StartsWith("Список"))
+            {
+                connectedIds.Add(int.Parse(data[i]));
+            }
+        }
+    }
 }
 
 @functions{
-    public string entityName = default;
+    public string entityName = string.Empty;
 
     public List<int> connectedIds = new List<int>();
 
@@ -19,6 +40,8 @@
     List<string> GetPageData()
     {
         List<string> result = new List<string>();
+
+        result.Add((DependencyResolver.Instance.ProjectDAO.AwardDAL.EntityCount + 1).ToString());
 
         entityName = Request["name"];
 
@@ -48,20 +71,23 @@
     <title>Страница добавления/редактирования награды</title>
 </head>
 <body>
-    @if (DependencyResolver.Instance.ProjectBLL.AwardLogic.AddEntity(GetPageData(), connectedIds, string.Empty))
+    @if (!string.IsNullOrEmpty(entityName))
     {
-        DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+        if (DependencyResolver.Instance.ProjectBLL.AwardLogic.AddEntity(GetPageData(), connectedIds, string.Empty))
+        {
+            DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
 
-        DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+            DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
 
-        Response.Redirect("~/Pages/AwardList.cshtml");
-    }
-    else
-    {
+            Response.Redirect("~/Pages/AwardList.cshtml");
+        }
+        else
+        {
         <div class="alert_warning">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             @DependencyResolver.Instance.ProjectBLL.AwardLogic.ValidateEntityData(GetPageData());
         </div>
+        }
     }
 
     <form method="post" action="">
@@ -79,10 +105,10 @@
             }
 
         </div>
-        @for (int i = 1; i < DataToRoute.AdditionalData.Count; i++)
+        @for (int i = 0; i < DataToRoute.AdditionalData.Count; i++)
         {
             <p class="small_text">
-                <label for="@i.ToString()">@DependencyResolver.Instance.ProjectBLL.UserLogic.GetConnectedEntitiesNames()</label>
+                <label for="@i.ToString()">@DataToRoute.AdditionalData[i]</label>
 
                 @if (connectedIds.Contains(i))
                 {
@@ -97,7 +123,7 @@
             </p>
         }
 
-        <button class="add_button button" type="submit"> Добавить пользователя</button>
+        <button class="add_button button" type="submit"> Добавить награду</button>
 
 
     </form>
