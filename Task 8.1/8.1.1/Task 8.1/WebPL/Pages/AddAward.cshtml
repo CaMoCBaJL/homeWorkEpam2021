@@ -11,6 +11,8 @@
     if (IsPost)
     {
         GetPageData();
+
+        DataToRoute.EntityToUpdateId = -1;
     }
 
     if (DataToRoute.EntityToUpdateId != -1)
@@ -71,7 +73,7 @@
     <title>Страница добавления/редактирования награды</title>
 </head>
 <body>
-    @if (!string.IsNullOrEmpty(entityName))
+    @if (!string.IsNullOrEmpty(entityName) && DataToRoute.EntityToUpdateId == -1)
     {
         if (DependencyResolver.Instance.ProjectBLL.AwardLogic.AddEntity(GetPageData(), connectedIds, string.Empty))
         {

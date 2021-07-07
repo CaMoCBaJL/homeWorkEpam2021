@@ -37,13 +37,15 @@
 
     void DefineClickTarget()
     {
-        for (int i = 1; i < DataToRoute.Data.Count; i++)
+        for (int i = 0; i < DataToRoute.Data.Count; i++)
         {
             var c = Request[i.ToString()];
 
             if (Request[i.ToString() + "del"] != null)
             {
-                deletionResult = DependencyResolver.Instance.ProjectBLL.AwardLogic.RemoveEntity(i);
+                deletionResult = DependencyResolver.Instance.ProjectBLL.AwardLogic.RemoveEntity(i + 1);
+
+                UpdateDataToRoute();
 
                 isAdding = false;
 
@@ -54,7 +56,7 @@
             {
                 isAdding = false;
 
-                DataToRoute.EntityToUpdateId = i;
+                DataToRoute.EntityToUpdateId = i + 1;
 
                 Response.Redirect("~/Pages/AddAward.cshtml");
 
@@ -80,7 +82,7 @@
 
     @if (deletionResult.GetValueOrDefault())
     {
-        <div class="alert_unsuccesfull">
+        <div class="alert_succesfull">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             @StringConstants.successfullOperationResult
         </div>
@@ -131,6 +133,10 @@
                                    class=" button " type="submit" value="" />
                         }
                     </form>
+                }
+                else
+                {
+                    Response.Redirect("~/Pages/Login.cshtml");
                 }
             </div>
         }

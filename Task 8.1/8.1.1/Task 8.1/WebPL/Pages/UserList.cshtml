@@ -36,13 +36,11 @@
 
     void DefineClickTarget()
     {
-        for (int i = 1; i < DataToRoute.Data.Count; i++)
+        for (int i = 0; i < DataToRoute.Data.Count; i++)
         {
-            var c = Request[i.ToString()];
-
             if (Request[i.ToString() + "del"] != null)
             {
-                deletionResult = DependencyResolver.Instance.ProjectBLL.AwardLogic.RemoveEntity(i);
+                deletionResult = DependencyResolver.Instance.ProjectBLL.UserLogic.RemoveEntity(i + 1);
 
                 isAdding = false;
 
@@ -53,7 +51,7 @@
             {
                 isAdding = false;
 
-                DataToRoute.EntityToUpdateId = i;
+                DataToRoute.EntityToUpdateId = i + 1;
 
                 Response.Redirect("~/Pages/AddUser.cshtml");
 
@@ -79,7 +77,7 @@
 
     @if (deletionResult.GetValueOrDefault())
     {
-        <div class="alert_unsuccesfull">
+        <div class="alert_succesfull">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             @StringConstants.successfullOperationResult
         </div>
@@ -102,13 +100,13 @@
         {
             <form id="form" method="post" action="">
                 <div style="position:fixed; right:20px;">
-                    <button class="button add_button"> Добавить награду</button>
+                    <button class="button add_button"> Добавить пользователя</button>
                 </div>
             </form>
         }
         <h2 class="header_text"> Список наград:</h2>
 
-        @for (int i = 1; i < DataToRoute.Data.Count; i++)
+        @for (int i = 0; i < DataToRoute.Data.Count; i++)
         {
             <div style="float:left;">
                 <ul>

@@ -174,7 +174,7 @@ namespace SqlDAL
         public IEnumerable<CommonEntity> GetEntities() => Users;
 
         public int GetEntityId(string entityName)
-        => Users.FindIndex(user => user.Name == entityName);
+        => Users.Find(user => user.Name == entityName).Id;
 
 
         public IAuthentificator CreateAuthentificator() => new SQLAuthentificator(this);
@@ -201,6 +201,8 @@ namespace SqlDAL
                     return false;
                 }
             }
+
+            Users = GetEntitiesFromDB();
 
             return true;
         }

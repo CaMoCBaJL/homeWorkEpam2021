@@ -168,7 +168,7 @@ namespace SqlDAL
         public IEnumerable<CommonEntity> GetEntities() => Awards;
 
         public int GetEntityId(string entityName)
-            => Awards.FindIndex(award => award.Title == entityName);
+            => Awards.Find(award => award.Title == entityName).Id;
 
 
         public bool RemoveEntity(int entityId)
@@ -193,6 +193,8 @@ namespace SqlDAL
                     return false;
                 }
             }
+
+            Awards = GetEntitiesFromDB();
 
             return true;
         }

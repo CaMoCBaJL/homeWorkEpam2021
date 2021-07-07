@@ -11,11 +11,29 @@
     if (IsPost)
     {
         GetPageData();
+
+        DataToRoute.EntityToUpdateId = -1;
     }
 
-    if (!User.Identity.IsAuthenticated)
+    if (DataToRoute.EntityToUpdateId != -1)
     {
-        DataToRoute.EntityToUpdateId = -1;
+        var entity = DataToRoute.Data[DataToRoute.EntityToUpdateId - 1];
+
+        var data = entity.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        entityName = data[0].Split(':')[1];
+
+        userAge = data[3].Split(':')[1];
+
+        userBirthDate = data[2].Split(':')[1];
+
+        for (int i = 4; i < data.Length; i++)
+        {
+            if (!data[i].StartsWith("Список"))
+            {
+                connectedIds.Add(int.Parse(data[i]));
+            }
+        }
     }
 }
 
@@ -75,7 +93,7 @@
     <title>Страница добавления/редактирования пользователя</title>
 </head>
 <body>
-    @if (!string.IsNullOrEmpty(entityName))
+    @if (!string.IsNullOrEmpty(entityName) && DataToRoute.EntityToUpdateId == -1)
     {
         if (DependencyResolver.Instance.ProjectBLL.UserLogic.AddEntity(GetPageData(), connectedIds, password))
         {
