@@ -10,6 +10,8 @@ namespace BLInterfaces
 {
     public interface ILogicLayer
     {
+        string FindEntity(string entityName);
+
         string ValidateEntityData(List<string> entityData);
 
         bool RemoveEntity(int entityId);

@@ -168,7 +168,14 @@ namespace SqlDAL
         public IEnumerable<CommonEntity> GetEntities() => Awards;
 
         public int GetEntityId(string entityName)
-            => Awards.Find(award => award.Title == entityName).Id;
+        {
+            var awardToFind = Awards.Find(award => award.Title == entityName);
+
+            if (awardToFind != null)
+                return awardToFind.Id;
+            else
+                return -1;
+        }
 
 
         public bool RemoveEntity(int entityId)

@@ -26,6 +26,14 @@ namespace BL
             return false;
         }
 
+        public string FindEntity(string entityName)
+        {
+            if (_DAO.GetEntityId(entityName) != -1)
+                return _DAO.GetEntities().ElementAt(_DAO.GetEntityId(entityName)).ToString();
+
+            return "Не было найдено наград с указанным названием.";
+        }
+
         List<string> ILogicLayer.GetConnectedEntities(List<int> addedEntities)
         {
             List<string> result = new List<string>();

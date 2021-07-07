@@ -50,6 +50,14 @@ namespace BL
             return result;
         }
 
+        public string FindEntity(string entityName)
+        {
+            if (_DAO.GetEntityId(entityName) != -1)
+                return _DAO.GetEntities().ElementAt(_DAO.GetEntityId(entityName)).ToString();
+
+            return "Не было найдено пользователей с указанным названием.";
+        }
+
         bool ILogicLayer.RemoveEntity(int entityId)
             => _DAO.RemoveEntity(entityId);
 
