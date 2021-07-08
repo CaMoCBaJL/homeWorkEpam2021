@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BLInterfaces;
 using DALInterfaces;
 using Entities;
+using DataValidation;
 
 namespace BL
 {
@@ -21,7 +19,7 @@ namespace BL
             if (ValidateEntityData(dataToAdd).StartsWith("All"))
             {
                 return _DAO.AddEntity(new Award(dataToAdd, connectedEntitiesIds), password);
-                    }
+            }
 
             return false;
         }
@@ -71,12 +69,7 @@ namespace BL
         }
 
         public string ValidateEntityData(List<string> entityData)
-        {
-            if (entityData[1].Count() > 100)
-                return "Award title is too large. (100 symbols - maximum length).";
-
-            return "All is ok";
-        }
+        => new Validator().ValidateAward(entityData);
 
         public List<string> GetEntities()
         {

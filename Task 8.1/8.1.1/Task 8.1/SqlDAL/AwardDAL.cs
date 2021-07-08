@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using CommonInterfaces;
@@ -17,7 +13,6 @@ namespace SqlDAL
         public int EntityCount => Awards.Count;
 
         List<Award> Awards { get; set; }
-
 
 
         public AwardDAL()
@@ -53,7 +48,7 @@ namespace SqlDAL
                     {
                         command.ExecuteNonQuery();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return false;
                     }

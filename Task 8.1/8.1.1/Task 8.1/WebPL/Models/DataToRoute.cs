@@ -1,7 +1,5 @@
-﻿using Entities;
-using System.Collections.Generic;
-using BL;
-using Dependencies;
+﻿using System.Collections.Generic;
+
 
 namespace WebPL.Models
 {

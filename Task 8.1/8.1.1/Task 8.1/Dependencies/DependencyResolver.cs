@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BL;
+﻿using BL;
 using DALInterfaces;
 using BLInterfaces;
 using CommonInterfaces;
-using IdentityChecker;
 
 namespace Dependencies
 {

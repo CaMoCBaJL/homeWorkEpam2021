@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Text;
 using Entities;
-using System.Security.Cryptography;
 using System.IO;
 
 namespace JsonDAL
