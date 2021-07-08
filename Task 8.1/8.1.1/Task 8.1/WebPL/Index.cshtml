@@ -11,13 +11,7 @@
     {
         var entityToSearch = Request["searchBar"];
 
-        if (entityToSearch != null)
-        {
-            searchData.Add(DependencyResolver.Instance.ProjectBLL.UserLogic.FindEntity(entityToSearch));
-
-            searchData.Add(DependencyResolver.Instance.ProjectBLL.AwardLogic.FindEntity(entityToSearch));
-        }
-        else if (Request["signOut"] != null)
+        if (Request["signOut"] != null)
         {
             FormsAuthentication.SignOut();
 
@@ -25,23 +19,34 @@
         }
         else
         {
-            if (int.Parse(Request.Form["select"]) == 1)
+            if (Request["redirect"] != null)
             {
-                DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+                if (int.Parse(Request.Form["select"]) == 1)
+                {
+                    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
 
-                DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+                    DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
 
-                Response.Redirect("~/Pages/UserList.cshtml");
-            }
-            else
-            {
-                DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+                    Response.Redirect("~/Pages/UserList.cshtml");
+                }
+                else
+                {
+                    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
 
-                DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+                    DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
 
-                Response.Redirect("~/Pages/AwardList.cshtml");
+                    Response.Redirect("~/Pages/AwardList.cshtml");
+                }
             }
         }
+
+        if (entityToSearch != null)
+        {
+            searchData.Add(DependencyResolver.Instance.ProjectBLL.UserLogic.FindEntity(entityToSearch));
+
+            searchData.Add(DependencyResolver.Instance.ProjectBLL.AwardLogic.FindEntity(entityToSearch));
+        }
+
     }
 }
 
@@ -63,7 +68,7 @@
                 <option value="2"> Просмотр и редактирование списка наград </option>
             </select>
             <p>
-                <input style=" width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/ose/128x128/arrowright.png)" type="submit" value="" />
+                <input name="redirect" style=" width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/ose/128x128/arrowright.png)" type="submit" value="" />
             </p>
             <button name="signOut" type="submit" class="button add_button">SignOut </button>
             <label class="small_text" for="search"> Поиск</label>
@@ -79,7 +84,7 @@
                 }
             }
 
-            <button class="button ok_button" type="submit"> Поиск</button>
+            <input class="button ok_button" type="submit" value="Поиск"/> 
         </form>
     }
     else

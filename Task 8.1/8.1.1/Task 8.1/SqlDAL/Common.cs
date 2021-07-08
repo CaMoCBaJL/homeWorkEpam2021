@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 
 
@@ -6,7 +7,7 @@ namespace SqlDAL
 {
     class Common
     {
-        public const string _connectionString = "Data Source=DESKTOP-VHEEB1U;Initial Catalog=UsersAndAwards;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        internal static string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static DataTable ParseConnectedIds(List<int> connectedIds)
         {

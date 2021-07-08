@@ -121,7 +121,7 @@ namespace SqlDAL
                     {
                         command.ExecuteNonQuery();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         return false;
                     }

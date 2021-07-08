@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using CommonInterfaces;
 using DALInterfaces;
 using CommonLogic;
