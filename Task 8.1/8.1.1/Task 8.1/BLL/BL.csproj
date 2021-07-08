@@ -44,7 +44,6 @@
     <Compile Include="AwardLogic.cs" />
     <Compile Include="LogicDependecyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringConstants.cs" />
     <Compile Include="UserLogic.cs" />
   </ItemGroup>
   <ItemGroup>

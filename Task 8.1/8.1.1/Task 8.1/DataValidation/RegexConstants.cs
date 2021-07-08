@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataValidation
 {
-    public class Constants
+    public class RegexConstants
     {
         public const string birthDateRegexPattern = "\\d{1,2}(\\.\\d{1,2}){2}";
 

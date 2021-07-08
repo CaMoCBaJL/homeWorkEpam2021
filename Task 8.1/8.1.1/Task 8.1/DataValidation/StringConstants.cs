@@ -1,4 +1,4 @@
-﻿namespace BL
+﻿namespace DataValidation
 {
     public class StringConstants
     {

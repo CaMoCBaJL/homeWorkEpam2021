@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AwardPL.cs" />
+    <Compile Include="CommonConsoleLogic.cs" />
     <Compile Include="PresentationLayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserPL.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -58,6 +61,10 @@
     <ProjectReference Include="..\BLL\BL.csproj">
       <Project>{7e8c4c4d-f55f-4793-ae83-de42d09b20a4}</Project>
       <Name>BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataValidation\DataValidation.csproj">
+      <Project>{5748b70f-d741-4409-90d2-f09e5ea4d267}</Project>
+      <Name>DataValidation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dependencies\Dependencies.csproj">
       <Project>{876528d8-2067-4611-8bbc-97ef1ab9d365}</Project>

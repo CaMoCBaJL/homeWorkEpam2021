@@ -72,8 +72,6 @@ namespace BL
         public string ValidateEntityData(List<string> entityData)
             => new Validator().ValidateUser(entityData);
 
-        public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(StringConstants.emptyStringValue) || entity.StartsWith("Список ");
-
         public List<string> GetEntities()
         {
             List<string> result = new List<string>();
