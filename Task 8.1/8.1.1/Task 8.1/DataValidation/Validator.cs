@@ -9,23 +9,23 @@ namespace DataValidation
         public string ValidateAward(List<string> awardData)
         {
             if (awardData[1].Count() > 100)
-                return "Award title is too large. (100 symbols - maximum length).";
+                return StringConstants.tooLargeAwardTitle;
 
-            return "All is ok";
+            return StringConstants.allOk;
         }
 
         public string ValidateUser(List<string> userData)
         {
             if (userData[1].Count() > 100)
-                return "Username is too large. (100 symbols - maximum length).";
+                return StringConstants.tooLargeAwardTitle;
 
-            if (!ValidateParameter(userData[2], RegexConstants.birthDateRegexPattern))
-                return "Wrong birth date. (format: 22.22.22)";
+            if (!ValidateParameter(userData[2], StringConstants.birthDateRegexPattern))
+                return StringConstants.wrongBithDate;
 
-            else if (!ValidateParameter(userData[3], RegexConstants.ageRegexPattern))
-                return "Wrong age. (format 0-99)";
+            else if (!ValidateParameter(userData[3], StringConstants.ageRegexPattern))
+                return StringConstants.wrongAge;
 
-            return "All is ok)";
+            return StringConstants.allOk;
         }
 
         public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);

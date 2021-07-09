@@ -24,9 +24,9 @@ namespace ConsolePL
 
             userInfo.Add(Console.ReadLine());
 
-            userInfo.Add(CorrectParameterInput("Дата рождения(дд.мм.гг)", RegexConstants.birthDateRegexPattern) + Environment.NewLine);
+            userInfo.Add(CorrectParameterInput("Дата рождения(дд.мм.гг)", StringConstants.birthDateRegexPattern) + Environment.NewLine);
 
-            userInfo.Add(CorrectParameterInput("Возраст", RegexConstants.ageRegexPattern));
+            userInfo.Add(CorrectParameterInput("Возраст", StringConstants.ageRegexPattern));
 
             Console.WriteLine($"{Environment.NewLine}Наградите пользователя:{Environment.NewLine}");
 
