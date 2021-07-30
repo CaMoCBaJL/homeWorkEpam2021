@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JsonDAL
+namespace CommonInterfaces
 {
-    public enum FileSystemObjectType
+    public interface IAuthentificator
     {
-        None,
-        File,
-        Folder
+        bool CheckUserIdentity(string userName, string password);
+
     }
 }

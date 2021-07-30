@@ -94,3 +94,11 @@ input_button{
     .closebtn:hover {
         color: black;
     }
+
+    .ok_button{
+        width:100px;
+        height:50px;
+        background-color:mediumpurple;
+        border-radius:3px;
+        font-size:16px;
+    }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{66EF492E-2647-41AD-B875-B6589CAE550B}</ProjectGuid>
+    <ProjectGuid>{4D28520F-2A1E-4826-B92C-1BCD3DC6DF93}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ConsolePL</RootNamespace>
     <AssemblyName>ConsolePL</AssemblyName>
@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsolePL.cs" />
+    <Compile Include="PresentationLayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,9 +51,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BLL\BLL.csproj">
+    <ProjectReference Include="..\BLInterfaces\BLInterfaces.csproj">
+      <Project>{09cd75cf-1596-4914-a833-04ea6679fb8b}</Project>
+      <Name>BLInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BLL\BL.csproj">
       <Project>{7e8c4c4d-f55f-4793-ae83-de42d09b20a4}</Project>
-      <Name>BLL</Name>
+      <Name>BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\Dependencies.csproj">
+      <Project>{876528d8-2067-4611-8bbc-97ef1ab9d365}</Project>
+      <Name>Dependencies</Name>
     </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{db4aa9d1-2386-46b5-ac5d-77cd10c21d54}</Project>

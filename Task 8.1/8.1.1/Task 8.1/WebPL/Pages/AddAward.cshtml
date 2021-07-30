@@ -1,0 +1,133 @@
+﻿@using WebPL.Models;
+@using Dependencies;
+
+@{
+    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+    DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetConnectedEntitiesNames();
+
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    if (IsPost)
+    {
+        GetPageData();
+
+        DataToRoute.EntityToUpdateId = -1;
+    }
+
+    if (DataToRoute.EntityToUpdateId != -1)
+    {
+        var entity = DataToRoute.Data[DataToRoute.EntityToUpdateId - 1];
+
+        var data = entity.Split(new char[] {'\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        entityName = data[0].Split(':')[1];
+
+        for (int i = 2; i < data.Length; i++)
+        {
+            if (!data[i].StartsWith("Список"))
+            {
+                connectedIds.Add(int.Parse(data[i]));
+            }
+        }
+    }
+}
+
+@functions{
+    public string entityName = string.Empty;
+
+    public List<int> connectedIds = new List<int>();
+
+
+    List<string> GetPageData()
+    {
+        List<string> result = new List<string>();
+
+        result.Add((DependencyResolver.Instance.ProjectDAO.AwardDAL.EntityCount + 1).ToString());
+
+        entityName = Request["name"];
+
+        result.Add(entityName);
+
+        connectedIds = new List<int>();
+
+        //This works like the thing previously described in EntitiesList.DefineClickTarget
+
+        for (int i = 1; i < DataToRoute.AdditionalData.Count; i++)
+        {
+            if (Request[i.ToString()] != null)
+            {
+                connectedIds.Add(i);
+            }
+        }
+
+        return result;
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Страница добавления/редактирования награды</title>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(entityName) && DataToRoute.EntityToUpdateId == -1)
+    {
+        if (DependencyResolver.Instance.ProjectBLL.AwardLogic.AddEntity(GetPageData(), connectedIds, string.Empty))
+        {
+            DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+            DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+            Response.Redirect("~/Pages/AwardList.cshtml");
+        }
+        else
+        {
+        <div class="alert_warning">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            @DependencyResolver.Instance.ProjectBLL.AwardLogic.ValidateEntityData(GetPageData());
+        </div>
+        }
+    }
+
+    <form method="post" action="">
+        <div class="small_text">
+            <p>
+                <label for="entityName"> Введите название награды</label>
+                <input type="text" name="name" id="entityName" value="@entityName" placeholder="Название награды" />
+            </p>
+
+            @if (DataToRoute.AdditionalData.Count > 1)
+            {
+                <p>
+                    Наградить пользователей:
+                </p>
+            }
+
+        </div>
+        @for (int i = 0; i < DataToRoute.AdditionalData.Count; i++)
+        {
+            <p class="small_text">
+                <label for="@i.ToString()">@DataToRoute.AdditionalData[i]</label>
+
+                @if (connectedIds.Contains(i))
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" checked />
+                }
+
+                else
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" />
+
+                }
+            </p>
+        }
+
+        <button class="add_button button" type="submit"> Добавить награду</button>
+
+
+    </form>
+</body>
+</html>

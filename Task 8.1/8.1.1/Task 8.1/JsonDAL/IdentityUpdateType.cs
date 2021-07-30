@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities
+namespace JsonDAL
 {
-    public enum EntityType
+    public enum IdentityUpdateType
     {
         None,
-        User,
-        Award
+        Add,
+        Delete
     }
 }

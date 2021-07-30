@@ -1,0 +1,169 @@
+﻿@using WebPL.Models;
+@using Dependencies;
+
+@{
+    DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+
+    DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.UserLogic.GetConnectedEntitiesNames();
+
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    if (IsPost)
+    {
+        GetPageData();
+
+        DataToRoute.EntityToUpdateId = -1;
+    }
+
+    if (DataToRoute.EntityToUpdateId != -1)
+    {
+        var entity = DataToRoute.Data[DataToRoute.EntityToUpdateId - 1];
+
+        var data = entity.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        entityName = data[0].Split(':')[1];
+
+        userAge = data[3].Split(':')[1];
+
+        userBirthDate = data[2].Split(':')[1];
+
+        for (int i = 4; i < data.Length; i++)
+        {
+            if (!data[i].StartsWith("Список"))
+            {
+                connectedIds.Add(int.Parse(data[i]));
+            }
+        }
+    }
+}
+
+@functions{
+    public string entityName = string.Empty;
+
+    public string userBirthDate = string.Empty;
+
+    public string userAge = string.Empty;
+
+    public string password = string.Empty;
+
+    public List<int> connectedIds = new List<int>();
+
+
+    List<string> GetPageData()
+    {
+        List<string> result = new List<string>();
+
+        result.Add((DependencyResolver.Instance.ProjectDAO.UserDAL.EntityCount + 1).ToString());
+
+        entityName = Request["name"];
+
+        result.Add(entityName);
+
+        userBirthDate = Request["birthDate"];
+
+        result.Add(userBirthDate);
+
+        userAge = Request["age"];
+
+        result.Add(userAge);
+
+        password = Request["password"];
+
+        connectedIds = new List<int>();
+
+        //This works like the thing previously described in EntitiesList.DefineClickTarget
+
+        for (int i = 1; i < DataToRoute.AdditionalData.Count; i++)
+        {
+            if (Request[i.ToString()] != null)
+            {
+                connectedIds.Add(i);
+            }
+        }
+
+        return result;
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Страница добавления/редактирования пользователя</title>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(entityName) && DataToRoute.EntityToUpdateId == -1)
+    {
+        if (DependencyResolver.Instance.ProjectBLL.UserLogic.AddEntity(GetPageData(), connectedIds, password))
+        {
+            DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+
+            DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.AwardLogic.GetEntities();
+
+            Response.Redirect("~/Index.cshtml");
+        }
+        else
+        {
+        <div class="alert_warning">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            @DependencyResolver.Instance.ProjectBLL.UserLogic.ValidateEntityData(GetPageData());
+        </div>
+        }
+    }
+
+    <form method="post" action="">
+        <div class="small_text">
+            <p>
+                <label for="entityName"> Введите имя пользователя</label>
+                <input type="text" name="name" id="entityName" value="@entityName" placeholder="Имя пользователя" />
+            </p>
+
+            <p>
+                <label for="userBirthDate"> Введите дату рождения пользователя</label>
+                <input type="text" name="birthDate" id="userBirthDate" value="@userBirthDate" placeholder="Дата рождения " />
+            </p>
+
+            <p>
+                <label for="userAge"> Введите возраст пользователя</label>
+                <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
+            </p>
+            @if (DataToRoute.EntityToUpdateId == -1)
+            {
+                <p>
+                    <label for="password"> Пароль для входа в учетную запись</label>
+                    <input type="password" name="password" id="password" value="@password" placeholder="Пароль" />
+                </p>
+            }
+            @if (DataToRoute.AdditionalData.Count > 1)
+            {
+                <p>
+                    Добавить награды:
+                </p>
+            }
+
+        </div>
+        @for (int i = 0; i < DataToRoute.AdditionalData.Count; i++)
+        {
+            <p class="small_text">
+                <label for="@i.ToString()">@DataToRoute.AdditionalData[i]</label>
+
+                @if (connectedIds.Contains(i))
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" checked />
+                }
+
+                else
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" />
+
+                }
+            </p>
+        }
+
+        <button class="add_button button" type="submit"> Добавить пользователя</button>
+
+
+    </form>
+</body>
+</html>

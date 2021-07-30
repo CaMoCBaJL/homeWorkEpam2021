@@ -1,0 +1,85 @@
+﻿@using BL;
+@using Entities;
+@using WebPL.Models;
+@using Dependencies;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    string userName = null;
+
+    string password = null;
+
+    if (IsPost)
+    {
+        userName = Request["login"];
+
+        password = Request["password"];
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(userName))
+    {
+        if (!string.IsNullOrEmpty(password))
+        {
+            if (DependencyResolver.Instance.Authentificator.CheckUserIdentity(userName, password))
+            {
+                FormsAuthentication.SetAuthCookie(userName, true);
+
+                Response.Redirect("~/Index.cshtml");
+            }
+            else
+            {
+                <div class="alert_unsuccesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+                    Пользователь с введенными данными не найден
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert_warning">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+                Введите пароль
+            </div>
+        }
+    }
+    else
+    {
+        if (!string.IsNullOrWhiteSpace(userName))
+        {
+        <div class="alert_warning">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+            Введите имя пользователя
+        </div>
+        }
+    }
+    <div class="small_text">
+        <form method="post" action="">
+            <p>
+                <label for="loginInput"> Введите имя пользователя</label>
+                <input value="@userName" type="text" name="login" id="loginInput" placeholder="Имя пользователя" />
+            </p>
+            <p>
+                <label for="passwordInput"> Введите пароль</label>
+                <input value="@password" type="password" name="password" id="passwordInput" placeholder="пароль" />
+            </p>
+            <button class="ok_button" type="submit"> Ок</button>
+            <p>
+                <a href="~/Pages/AddUser.cshtml"> Регистрация</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

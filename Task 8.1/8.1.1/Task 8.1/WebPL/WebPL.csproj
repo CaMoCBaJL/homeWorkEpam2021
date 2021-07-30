@@ -93,13 +93,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\DataToRoute.cs" />
+    <Compile Include="Models\ProjectRoleProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Index.cshtml" />
+    <Content Include="Login.cshtml" />
     <None Include="packages.config" />
-    <Content Include="Pages\EntitiesList.cshtml" />
-    <Content Include="Pages\AddEntity.cshtml" />
+    <Content Include="Pages\AddUser.cshtml" />
+    <Content Include="Pages\AddAward.cshtml" />
+    <Content Include="Pages\AwardList.cshtml" />
+    <Content Include="Pages\UserList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -109,9 +113,17 @@
     <Content Include="Pages\Layout\_BasicLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BLL\BLL.csproj">
+    <ProjectReference Include="..\BLInterfaces\BLInterfaces.csproj">
+      <Project>{09CD75CF-1596-4914-A833-04EA6679FB8B}</Project>
+      <Name>BLInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BLL\BL.csproj">
       <Project>{7e8c4c4d-f55f-4793-ae83-de42d09b20a4}</Project>
-      <Name>BLL</Name>
+      <Name>BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\Dependencies.csproj">
+      <Project>{876528d8-2067-4611-8bbc-97ef1ab9d365}</Project>
+      <Name>Dependencies</Name>
     </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{db4aa9d1-2386-46b5-ac5d-77cd10c21d54}</Project>

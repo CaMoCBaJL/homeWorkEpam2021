@@ -1,0 +1,137 @@
+﻿@using WebPL.Models;
+@using BL;
+@using Dependencies;
+
+@{
+    UpdateDataToRoute();
+
+    DataToRoute.EntityToUpdateId = -1;
+
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    //I didn't work out how to add an event listener to the page, but I've found another solution for this problem.
+    //I understood that input's property "value" had changed after the click from null to string.Empty.
+    //The code below finds element with appropriate id to delete/update correct entity.
+
+    if (IsPost)
+    {
+        DefineClickTarget();
+    }
+}
+
+@functions{
+    public string id;
+
+    public bool isAdding = true;
+
+    public bool? deletionResult = null;
+
+
+    void UpdateDataToRoute()
+    {
+        DataToRoute.AdditionalData = DependencyResolver.Instance.ProjectBLL.UserLogic.GetConnectedEntitiesNames();
+
+        DataToRoute.Data = DependencyResolver.Instance.ProjectBLL.UserLogic.GetEntities();
+    }
+
+    void DefineClickTarget()
+    {
+        for (int i = 0; i < DataToRoute.Data.Count; i++)
+        {
+            if (Request[i.ToString() + "del"] != null)
+            {
+                deletionResult = DependencyResolver.Instance.ProjectBLL.UserLogic.RemoveEntity(i + 1);
+
+                isAdding = false;
+
+                break;
+            }
+
+            if (Request[i.ToString() + "upd"] != null)
+            {
+                isAdding = false;
+
+                DataToRoute.EntityToUpdateId = i + 1;
+
+                Response.Redirect("~/Pages/AddUser.cshtml");
+
+                break;
+            }
+        }
+
+        if (isAdding)
+        {
+            Response.Redirect("~/Pages/AddUser.cshtml");
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+
+    @if (deletionResult.GetValueOrDefault())
+    {
+        <div class="alert_succesfull">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            @StringConstants.successfullOperationResult
+        </div>
+
+        UpdateDataToRoute();
+
+        deletionResult = false;
+    }
+    else if (deletionResult != null)
+    {
+        <div class="alert_unsuccesfull">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            @StringConstants.unsuccessfullOperationResult
+            Ошибка сервера.
+        </div>
+    }
+
+    <div>
+        @if (User.IsInRole("admin"))
+        {
+            <form id="form" method="post" action="">
+                <div style="position:fixed; right:20px;">
+                    <button class="button add_button"> Добавить пользователя</button>
+                </div>
+            </form>
+        }
+        <h2 class="header_text"> Список наград:</h2>
+
+        @for (int i = 0; i < DataToRoute.Data.Count; i++)
+        {
+            <div style="float:left;">
+                <ul>
+                    @foreach (var str in DataToRoute.Data[i].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <li class="list_element">
+                            @str
+                        </li>
+                    }
+                </ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form id="form" method="post" action="">
+                        @if (User.IsInRole("admin"))
+                        {
+                            <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); "
+                                   class=" button " type="submit" value="" />
+                            <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); "
+                                   class=" button " type="submit" value="" />
+                        }
+                    </form>
+                }
+            </div>
+        }
+
+    </div>
+</body>
+</html>
