@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommonLogic;
 using CommonInterfaces;
 using DALInterfaces;
@@ -14,21 +11,16 @@ namespace SqlDAL
 {
     public class UserDAL : IDataLayer
     {
-        public int EntityCount => Users.Count;
-
-        List<User> Users { get; set; }
+        public int EntityCount => GetEntitiesFromDB().Count;
 
 
         public UserDAL()
         {
-            if (Users == null)
-                Users = GetEntitiesFromDB();
-
             if (!AdminExists)
                 AddAdmin();
         }
 
-        bool AdminExists { get => Users.FindIndex(user => user.Id == 0) != -1; }
+        bool AdminExists { get => GetEntitiesFromDB().FindIndex(user => user.Id == 0) != -1; }
 
         void AddAdmin()
         {
@@ -93,7 +85,7 @@ namespace SqlDAL
 
         public bool AddEntity(CommonEntity entity, string password)
         {
-            if (Users.FindIndex(User => User.Id == entity.Id) != -1)
+            if (GetEntitiesFromDB().FindIndex(User => User.Id == entity.Id) != -1)
                 return false;
             else
             {
@@ -171,11 +163,11 @@ namespace SqlDAL
             return result;
         }
 
-        public IEnumerable<CommonEntity> GetEntities() => Users;
+        public IEnumerable<CommonEntity> GetEntities() => GetEntitiesFromDB();
 
         public int GetEntityId(string entityName)
         {
-            var userToFind = Users.Find(user => user.Name == entityName);
+            var userToFind = GetEntitiesFromDB().Find(user => user.Name == entityName);
 
             if (userToFind != null)
                 return userToFind.Id;
@@ -207,8 +199,6 @@ namespace SqlDAL
                     return false;
                 }
             }
-
-            Users = GetEntitiesFromDB();
 
             return true;
         }

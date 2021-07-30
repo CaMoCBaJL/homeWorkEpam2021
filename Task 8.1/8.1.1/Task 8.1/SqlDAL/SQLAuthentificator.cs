@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entities;
 using CommonInterfaces;
 using DALInterfaces;
 using CommonLogic;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace SqlDAL
 {

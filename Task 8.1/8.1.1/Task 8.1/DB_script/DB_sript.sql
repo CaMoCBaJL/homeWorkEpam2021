@@ -1,6 +1,6 @@
-CREATE DATABASE DAL
+CREATE DATABASE UsersAndAwards
 
-USE DAL
+USE UsersAndAwards
 
 CREATE TYPE [dbo].IntTable AS TABLE
 (
@@ -23,20 +23,16 @@ CREATE TABLE UserAward
 
 CREATE TABLE UsersAndAwards
 (
-	[UserId] INT FOREIGN KEY REFERENCES AppUser(ID) ON DELETE CASCADE,
-	[AwardId] INT FOREIGN KEY REFERENCES UserAward(ID) ON DELETE CASCADE,
+	[UserId] INT FOREIGN KEY REFERENCES AppUser(ID) ON DELETE CASCADE ON UPDATE CASCADE,
+	[AwardId] INT FOREIGN KEY REFERENCES UserAward(ID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT PairsAreUnique UNIQUE (UserId, AwardId)
 )
-
-drop table UserIdentity
 
 CREATE TABLE UserIdentity
 (
 	[UserId] INT UNIQUE FOREIGN KEY REFERENCES AppUser(ID) ON DELETE CASCADE,
 	[PasswordHashSum] NVARCHAR(255) NOT NULL 
 )
-
-select * from AppUser
 
 CREATE PROCEDURE GetUsers
 AS 
@@ -58,7 +54,7 @@ BEGIN
 	WHERE [dbo].[UsersAndAwards].[AwardId] = @AwardId
 END
 
-ALTER PROCEDURE GetUserAwards
+CREATE PROCEDURE GetUserAwards
 @UserId int
 AS
 BEGIN
@@ -67,7 +63,7 @@ BEGIN
 	WHERE [dbo].[UsersAndAwards].[UserId] = @UserID 
 END
 
-ALTER PROCEDURE AddUser
+CREATE PROCEDURE AddUser
 @UserId int,
 @UserName nvarchar(255),
 @UserBirthDate nvarchar(10),
@@ -176,7 +172,7 @@ BEGIN
 	COMMIT
 END
 
-ALTER PROCEDURE CheckIdentity
+CREATE PROCEDURE CheckIdentity
 @UserId int,
 @PasswordHashSum nvarchar(255)
 AS
@@ -188,7 +184,7 @@ BEGIN
 		RETURN 0
 END
 
-ALTER PROCEDURE UpdateUser
+CREATE PROCEDURE UpdateUser
 @UserId int,
 @UserName nvarchar(255),
 @UserBirthDate nvarchar(10),
@@ -236,9 +232,9 @@ BEGIN
 		IF (@CurrentId > 0)
 		BEGIN
 			IF @EntityType = 1
-				UPDATE [dbo].[AppUser] SET [dbo].[AppUser].[ID] = @CurrentId
+				UPDATE [dbo].[AppUser] SET [dbo].[AppUser].[ID] = @Counter
 			ELSE
-				UPDATE [dbo].[UserAward] SET [dbo].[UserAward].[ID] = @CurrentId
+				UPDATE [dbo].[UserAward] SET [dbo].[UserAward].[ID] = @Counter
 		END
 		FETCH NEXT FROM MyCursor INTO @CurrentId
 	END

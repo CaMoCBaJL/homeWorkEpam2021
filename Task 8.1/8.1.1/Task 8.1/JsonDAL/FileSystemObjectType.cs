@@ -1,5 +1,4 @@
-﻿
-namespace JsonDAL
+﻿namespace JsonDAL
 {
     public enum FileSystemObjectType
     {

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Entities;
 using DALInterfaces;
 using System.Text.RegularExpressions;
 using BLInterfaces;
+using DataValidation;
 
 namespace BL
 {
@@ -72,22 +70,7 @@ namespace BL
         }
 
         public string ValidateEntityData(List<string> entityData)
-        {
-            if (entityData[1].Count() > 100)
-                return "Username is too large. (100 symbols - maximum length).";
-
-            if (!ValidateParameter(entityData[2], StringConstants.birthDateRegexPattern))
-                return "Wrong birth date. (format: 22.22.22)";
-
-            else if (!ValidateParameter(entityData[3], StringConstants.ageRegexPattern))
-                return "Wrong age. (format 0-99)";
-
-            return "All is ok)";
-        }
-
-        public static bool ValidateParameter(string parameter, string regexExpression) => new Regex(regexExpression).IsMatch(parameter);
-
-        public static bool DoesStringContainsCommonParts(string entity) => entity.EndsWith(StringConstants.emptyStringValue) || entity.StartsWith("Список ");
+            => new Validator().ValidateUser(entityData);
 
         public List<string> GetEntities()
         {
@@ -101,6 +84,6 @@ namespace BL
             return result;
         }
 
-        
+
     }
 }

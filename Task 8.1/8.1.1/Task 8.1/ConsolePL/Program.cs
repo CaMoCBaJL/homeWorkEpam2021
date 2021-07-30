@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dependencies;
+﻿using Dependencies;
 
 namespace ConsolePL
 {
@@ -11,7 +6,7 @@ namespace ConsolePL
     {
         static void Main(string[] args)
         {
-            new PresentationLayer(DependencyResolver.Instance.ProjectBLL);
+            new PresentationLayer(DependencyResolver.Instance.ProjectBLL).Start();
         }
     }
 }

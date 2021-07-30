@@ -44,7 +44,6 @@
     <Compile Include="AwardLogic.cs" />
     <Compile Include="LogicDependecyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringConstants.cs" />
     <Compile Include="UserLogic.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +54,10 @@
     <ProjectReference Include="..\DALInterfaces\DALInterfaces.csproj">
       <Project>{9c89f4c1-7e99-425a-a53d-f5c53e1ba540}</Project>
       <Name>DALInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataValidation\DataValidation.csproj">
+      <Project>{5748b70f-d741-4409-90d2-f09e5ea4d267}</Project>
+      <Name>DataValidation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{db4aa9d1-2386-46b5-ac5d-77cd10c21d54}</Project>

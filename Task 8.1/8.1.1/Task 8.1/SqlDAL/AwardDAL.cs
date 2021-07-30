@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using CommonInterfaces;
@@ -14,21 +10,12 @@ namespace SqlDAL
 {
     public class AwardDAL : IDataLayer
     {
-        public int EntityCount => Awards.Count;
+        public int EntityCount => GetEntitiesFromDB().Count;
 
-        List<Award> Awards { get; set; }
-
-
-
-        public AwardDAL()
-        {
-            if (Awards == null)
-                Awards = GetEntitiesFromDB();
-        }
 
         public bool AddEntity(CommonEntity entity, string passwordHashSum)
         {
-            if (Awards.FindIndex(award => award.Id == entity.Id) != -1)
+            if (GetEntitiesFromDB().FindIndex(award => award.Id == entity.Id) != -1)
                 return false;
             else
             {
@@ -53,7 +40,7 @@ namespace SqlDAL
                     {
                         command.ExecuteNonQuery();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return false;
                     }
@@ -101,7 +88,7 @@ namespace SqlDAL
 
             foreach (var user in result)
             {
-                foreach (var award in Awards)
+                foreach (var award in GetEntitiesFromDB())
                 {
                     if (award.ConnectedEntities.Contains(user.Id))
                         user.ConnectedEntities.Add(award.Id);
@@ -119,7 +106,7 @@ namespace SqlDAL
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("GetAwards", connection);
+                SqlCommand command = new SqlCommand("GetGetEntitiesFromDB()", connection);
 
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -165,11 +152,11 @@ namespace SqlDAL
             return result;
         }
 
-        public IEnumerable<CommonEntity> GetEntities() => Awards;
+        public IEnumerable<CommonEntity> GetEntities() => GetEntitiesFromDB();
 
         public int GetEntityId(string entityName)
         {
-            var awardToFind = Awards.Find(award => award.Title == entityName);
+            var awardToFind = GetEntitiesFromDB().Find(award => award.Title == entityName);
 
             if (awardToFind != null)
                 return awardToFind.Id;
@@ -200,8 +187,6 @@ namespace SqlDAL
                     return false;
                 }
             }
-
-            Awards = GetEntitiesFromDB();
 
             return true;
         }
