@@ -1,0 +1,42 @@
+﻿@using BLL;
+@using Entities;
+@using WebPL.Models;
+@using System.Web.Routing;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    BuisnessLogic.CheckDataLocation();
+
+    if (IsPost)
+    {
+        var bll = new BuisnessLogic();
+
+        DataToRoute.Data = bll.GetListOfEntities((EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"])), false);
+
+        DataToRoute.DataType = (EntityType)Enum.GetValues(typeof(EntityType)).GetValue(int.Parse(Request.Form["select"]));
+
+        Response.Redirect("~/Pages/EntitiesList.cshtml");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title> Главная страница</title>
+</head>
+<body>
+    <h1 class="header_text"> Меню сайта</h1>
+    <hr />
+    <form method="post" action="">
+        <select id="select" name="select" class="small_text">
+            <option value="1"> Просмотр и редактирование списка пользователей </option>
+            <option value="2"> Просмотр и редактирование списка наград </option>
+        </select>
+        <h2>
+            <input style=" width: 130px; height: 130px; background-image: url(https://v1.iconsearch.ru/uploads/icons/ose/128x128/arrowright.png)" ; type="submit" ; value="" />
+        </h2>
+    </form>
+</body>
+</html>

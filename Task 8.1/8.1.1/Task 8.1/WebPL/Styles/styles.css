@@ -1,0 +1,96 @@
+﻿body {
+    background: linear-gradient(0.75turn, #3f87a6, #ebf8e1, #f69d3c);
+}
+
+.small_text{
+    font-family: 'Viaoda Libre', cursive;
+    font-size:22px;
+    font-weight:600;
+}
+
+.header_text {
+    font-family: 'Roboto Slab', sans-serif;
+    font-weight:900;
+}
+
+.list_element{
+    list-style-type:none;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:18px;
+    font-weight:600;
+}
+
+.add_button_position{
+    position:absolute;
+    right:15px;
+    padding:10px;
+}
+
+.button {
+    border-radius: 4px;
+    border: none;
+    font-size:3px;
+}
+
+.add_button{
+    background:lawngreen;
+    font-size:28px;
+    width:200px;
+    position:fixed;
+    right:20px;
+    padding:20px;
+
+}
+
+.remove_button {
+    background: black;
+    width: 100px;
+    float:left;
+}
+
+input_button{
+    background-color:black;
+    font-size:10px;
+}
+
+.ul_location{
+    float:left;
+}
+
+.alert_warning {
+    padding: 20px;
+    background-color:goldenrod;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.alert_succesfull {
+    padding: 20px;
+    background-color:forestgreen; 
+    color: white;
+    margin-bottom: 15px;
+}
+
+.alert_unsuccesfull {
+    padding: 20px;
+    background-color: #f44336; 
+    color: white;
+    margin-bottom: 15px;
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    /* When moving the mouse over the close button */
+    .closebtn:hover {
+        color: black;
+    }

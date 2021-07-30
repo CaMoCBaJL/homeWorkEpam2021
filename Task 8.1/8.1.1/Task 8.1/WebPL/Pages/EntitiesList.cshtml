@@ -1,0 +1,125 @@
+﻿@using WebPL.Models;
+@using BLL;
+
+@{
+    DataToRoute.Data = bll.GetListOfEntities(DataToRoute.DataType, false);
+
+    DataToRoute.EntityToUpdateId = 0;
+
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    //I didn't work out how to add an event listener to the page, but I've found another solution for this problem.
+    //I understood that input's property "value" had changed after the click from null to string.Empty.
+    //The code below finds element with appropriate id to delete/update correct entity.
+
+    if (IsPost)
+    {
+        DefineClickTarget();
+    }
+
+    if (isAdding.HasValue)
+    {
+        if (isAdding.Value)
+        {
+            Response.Redirect("~/Pages/AddEntity.cshtml");
+        }
+    }
+}
+
+@functions{
+    BuisnessLogic bll = new BuisnessLogic();
+
+    public bool? isAdding = null;
+
+    public string deletionResult = null;
+
+
+    void DefineClickTarget()
+    {
+        for (int i = 1; i < DataToRoute.Data.Count; i++)
+        {
+            if (Request[i.ToString() + "del"] != null)
+            {
+                deletionResult = bll.RemoveEntity(DataToRoute.DataType, i);
+
+                isAdding = false;
+
+                break;
+            }
+
+            if (Request[i.ToString() + "upd"] != null)
+            {
+                isAdding = true;
+
+                DataToRoute.EntityToUpdateId = i;
+
+                break;
+            }
+        }
+
+        if (!isAdding.HasValue)
+        {
+            isAdding = true;
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    @if (deletionResult != null)
+    {
+        if (deletionResult.StartsWith("Не"))
+        {
+            <div class="alert_unsuccesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                @deletionResult
+            </div>
+        }
+        else
+        {
+            <div class="alert_succesfull">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                @deletionResult
+            </div>
+        }
+        DataToRoute.UpdateData();
+
+        deletionResult = null;
+    }
+    <div>
+        <form id="form" method="post" action="">
+            <div style="position:fixed; right:20px;">
+                <button class="button add_button"> Добавить сущность</button>
+            </div>
+        </form>
+        <h2 class="header_text"> @DataToRoute.Data[0]</h2>
+
+        @for (int i = 1; i < DataToRoute.Data.Count; i++)
+        {
+            <div style="float:left;">
+                <ul>
+                    @foreach (var str in DataToRoute.Data[i].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <li class="list_element">
+                            @str
+                        </li>
+                    }
+                </ul>
+                <form id="form" method="post" action="">
+                    <input name='@i.ToString()del' style="margin-left:40px; width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/delete.png); " class=" button " type="submit"
+                           value="" />
+                    <input name='@i.ToString()upd' style="width: 64px; height: 64px; background-image: url(https://v1.iconsearch.ru/uploads/icons/prettyoffice/64x64/edit.png); " class=" button " type="submit"
+                           value="" />
+                </form>
+            </div>
+        }
+
+    </div>
+</body>
+</html>

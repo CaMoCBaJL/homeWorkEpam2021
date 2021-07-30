@@ -1,0 +1,31 @@
+diff a/Task 8.1/8.1.1/Task 8.1/DAL/DAL.cs b/Task 8.1/8.1.1/Task 8.1/DAL/DAL.cs	(rejected hunks)
+@@ -112,6 +112,29 @@
+             }
+         }
+ 
++        void UpdateEntitiesConnectedWithDeleted(CommonEntity deletedEntity)
++        {
++            IEnumerable<CommonEntity> connectedEntities;
++
++            switch (deletedEntity)
++            {
++                case User user:
++                    connectedEntities = Awards;
++                    break;
++                case Award award:
++                    connectedEntities = Users;
++                    break;
++                default:
++                    return;
++            }
++
++            foreach (var entity in connectedEntities)
++            {
++                if (entity.ConnectedEntities.Contains(deletedEntity.Id))
++                    entity.ConnectedEntities.Remove(deletedEntity.Id);
++            }
++        }
++
+         public bool DeleteEntity(CommonEntity entity)
+         {
+             switch (entity)

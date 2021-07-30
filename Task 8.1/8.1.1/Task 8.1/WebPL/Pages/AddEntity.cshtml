@@ -1,0 +1,317 @@
+﻿@using BLL;
+@using Entities;
+@using WebPL.Models;
+@using System.Threading;
+@using System.Text;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+
+    GetAdditionalData();
+
+    connectedIds = new List<int>();
+
+
+    if (DataToRoute.EntityToUpdateId > 0)
+    {
+        ParseDataToUpdate();
+
+        buttonName = $"Изменить {DataToRoute.DataType.ToString()}";
+    }
+    else
+    {
+        buttonName = $"Добавить {DataToRoute.DataType.ToString()}";
+    }
+
+    if (IsPost)
+    {
+        GetPageData();
+    }
+}
+
+@functions{
+    BuisnessLogic bll = new BuisnessLogic();
+
+    string buttonName;
+
+    bool updateStarted = false;
+
+    public List<string> additionalData;
+
+    public bool allOk = false;
+
+    public string entityName = null;
+
+    public string userBirthDate = null;
+
+    public string userAge = null;
+
+    public List<int> connectedIds;
+
+
+    void GetAdditionalData()
+    {
+        switch (DataToRoute.DataType)
+        {
+            case EntityType.User:
+                additionalData = bll.GetListOfEntities(EntityType.Award, true);
+                break;
+            case EntityType.Award:
+                additionalData = bll.GetListOfEntities(EntityType.User, true);
+                break;
+            case EntityType.None:
+            default:
+                additionalData = new List<string>();
+
+                additionalData.Add("Список пуст.");
+                break;
+        }
+    }
+
+    void GetPageData()
+    {
+        entityName = Request["name"];
+
+        if (DataToRoute.DataType == Entities.EntityType.User)
+        {
+            userBirthDate = Request["birthDate"];
+
+            userAge = Request["age"];
+        }
+
+        connectedIds = new List<int>();
+
+        //This works like the thing previously described in EntitiesList.DefineClickTarget
+
+        for (int i = 1; i < additionalData.Count; i++)
+        {
+
+            if (Request[i.ToString()] != null)
+            {
+                connectedIds.Add(i);
+            }
+        }
+
+        if (DataToRoute.EntityToUpdateId > 0)
+        {
+            updateStarted = true;
+        }
+    }
+
+    string BuildNewEntityInfo()
+    {
+        StringBuilder result = new StringBuilder();
+
+        result.Append(entityName + Environment.NewLine);
+
+        if (DataToRoute.DataType == EntityType.User)
+        {
+            result.Append(userBirthDate + Environment.NewLine);
+
+            result.Append(userAge + Environment.NewLine);
+        }
+
+        if (DataToRoute.EntityToUpdateId > 0)
+        {
+            result.Append(DataToRoute.EntityToUpdateId.ToString() + Environment.NewLine);
+        }
+
+        return result.ToString();
+    }
+
+    void ParseDataToUpdate()
+    {
+        var entityInfo = DataToRoute.Data[DataToRoute.EntityToUpdateId].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        entityName = entityInfo[0].Split(':')[1];
+
+        switch (DataToRoute.DataType)
+        {
+            case EntityType.User:
+                userAge = entityInfo[1].Split(':')[1];
+
+                userBirthDate = entityInfo[2].Split(':')[1];
+
+                for (int i = 5; i < entityInfo.Length; i++)
+                {
+                    connectedIds.Add(int.Parse(entityInfo[i]));
+                }
+                break;
+            case EntityType.Award:
+                for (int i = 3; i < entityInfo.Length; i++)
+                {
+                    connectedIds.Add(int.Parse(entityInfo[i]));
+                }
+                break;
+            case EntityType.None:
+            default:
+                return;
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Страница добавления @DataToRoute.DataType.ToString()</title>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(entityName))
+    {
+        if (userBirthDate != null && userAge != null && DataToRoute.DataType == EntityType.User)
+        {
+            if (bll.ValidateParameter(userBirthDate, BuisnessLogic.birthDateRegexPattern))
+            {
+                if (bll.ValidateParameter(userAge, BuisnessLogic.ageRegexPattern))
+                {
+                    allOk = true;
+                }
+                else
+                {
+                    userAge = null;
+                    <div class="alert_warning">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Возраст пользователя введен неверно!
+                    </div>
+                }
+            }
+            else
+            {
+                userBirthDate = null;
+                <div class="alert_warning">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Дата рождения пользователя введена неверно!
+                </div>
+            }
+        }
+        else
+        {
+            allOk = true;
+        }
+    }
+    else
+    {
+        <div class="alert_warning">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            Введите имя  @DataToRoute.DataType.ToString()
+        </div>
+    }
+    @if (allOk)
+    {
+        if (DataToRoute.EntityToUpdateId == 0)
+        {
+            if (bll.AddEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+            {
+
+                <div class="alert_succesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    Добавление прошло успешно!
+                </div>
+
+                DataToRoute.UpdateData();
+
+                Response.Redirect("~/Pages/EntitiesList.cshtml");
+            }
+            else
+            {
+                <div class="alert_unsuccesfull">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    В базе уже имеется @DataToRoute.DataType.ToString() с таким именем!
+                </div>
+            }
+        }
+        else
+        {
+            if (updateStarted)
+            {
+                if (bll.UpdateEntity(DataToRoute.DataType, BuildNewEntityInfo(), connectedIds).StartsWith("Оп"))
+                {
+                    <div class="alert_succesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Обновление данных прошло успешно!
+                    </div>
+                }
+                else
+                {
+                    <div class="alert_unsuccesfull">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        Не удалось обновить @DataToRoute.DataType.ToString()
+                    </div>
+                }
+            }
+        }
+    }
+    <form method="post" action="">
+
+        <div class="small_text">
+            <p>
+                <label for="entityName"> Название @DataToRoute.DataType.ToString()</label>
+                <input type="text" name="name" id="entityName" value="@entityName" placeholder="Имя @DataToRoute.DataType.ToString()" />
+            </p>
+
+            @if (DataToRoute.DataType == EntityType.User)
+            {
+                <p>
+                    <label for="userBirthDate"> Дата рождения пользователя</label>
+                    <input type="text" name="birthDate" id="userBirthDate" value="@userBirthDate" placeholder="Дата рождения " />
+                </p>
+                <p>
+                    <label for="userAge"> Дата рождения пользователя</label>
+                    <input type="text" name="age" id="userAge" value="@userAge" placeholder="Возраст пользователя" />
+                </p>
+                if (additionalData.Count > 1)
+                {
+                    <p>
+                        Добавить награды:
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        @additionalData[0]
+                    </p>
+                }
+            }
+            else
+            {
+                if (additionalData.Count > 1)
+                {
+                    <p>
+                        Добавить пользователей:
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        @additionalData[0]
+                    </p>
+                }
+            }
+
+        </div>
+        @for (int i = 1; i < additionalData.Count; i++)
+        {
+            <p class="small_text">
+                <label for="@i.ToString()">@additionalData[i]</label>
+
+                @if (connectedIds.Contains(i))
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" checked />
+                }
+
+                else
+                {
+                    <input value="" name="@i.ToString()" id="@i.ToString()" type="checkbox" />
+
+                }
+            </p>
+        }
+
+        <button class="add_button button" type="submit"> @buttonName</button>
+
+
+    </form>
+</body>
+</html>
